@@ -24,4 +24,7 @@ int main (int argc, char *argv[]) {
 		return execl(final_cmd, final_cmd, argv[1], argv[2], argv[3], argv[4], argv[5], argv[6], argv[7], (char*)0);
 	else if(argc == 9)
 		return execl(final_cmd, final_cmd, argv[1], argv[2], argv[3], argv[4], argv[5], argv[6], argv[7], argv[8], (char*)0);
+	else
+		printf("Not supported\n");
+	return 1;
 }
