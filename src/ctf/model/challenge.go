@@ -1,14 +1,21 @@
 package model
 
-import (
-	"github.com/jinzhu/gorm"
-)
+type Parameter struct{
+	Name        string       `json:"name"`
+	Placeholder string       `json:"placeholder"`
+}
+
+type Language struct{
+	Name        string        `json:"name"`
+	Extension   string        `json:"extension"`
+}
 
 type Challenge struct {
-	gorm.Model
-	Name        string    `json:"name"` //unique!!
-	Points      uint      `json:"points"`
-	Description string    `json:"description"`
-}
+	Name        string       `json:"name"`
+	Points      uint         `json:"points"`
+	Description string       `json:"description"`
+	Parameters  []Parameter  `json:"parameters"`
+	Languages   []Language   `json:"languages"`
+} 
 
 type Challenges []Challenge

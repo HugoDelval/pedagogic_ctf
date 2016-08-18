@@ -32,6 +32,12 @@ var routes = model.Routes{
 		"/todo",
 		handlers.TodoCreate,
 	},
+	model.Route{
+		"ChallengeShow",
+		"GET",
+		"/challenge/{challengeName}",
+		handlers.ChallengeShow,
+	},
 
 }
 

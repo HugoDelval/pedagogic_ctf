@@ -2,22 +2,35 @@ package handlers
 
 import (
 	"net/http"
+	"encoding/json"
 	"ctf/utils"
-	"ctf/model"
+	"io/ioutil"
+	"log"
 )
 
-func Index(w http.ResponseWriter, r *http.Request) {
-	// create challenge + show all challenges
-	chall := model.Challenge{Name: "TestChall", Points: 18, Description: "test"}
-	db, err := model.GetDB()
-	if err != nil{
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	db.Create(&chall)
+type ChallengesJSON struct{
 
-	var challenges model.Challenges
-	db.Find(&challenges)
+} 
+
+func Index(w http.ResponseWriter, r *http.Request) {
+	// show all challenges
+	challengesRaw, err := ioutil.ReadFile(utils.BasePath + "/challenges.json")
+    if err != nil {
+	    w.WriteHeader(http.StatusInternalServerError)
+    	utils.SendResponseJSON(w, utils.InternalErrorMessage)
+        log.Printf("File error: %v\n", err)
+        return
+    }
+
+    var challengesJSON map[string]interface{}
+	err = json.Unmarshal(challengesRaw, &challengesJSON)
+	if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+		utils.SendResponseJSON(w, utils.InternalErrorMessage)
+        log.Printf("File error: %v\n", err)
+        return
+	}
+
 	w.WriteHeader(http.StatusOK)
-	utils.SendResponseJSON(w, challenges)
+	utils.SendResponseJSON(w, challengesJSON)
 }
