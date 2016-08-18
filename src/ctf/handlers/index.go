@@ -8,10 +8,6 @@ import (
 	"log"
 )
 
-type ChallengesJSON struct{
-
-} 
-
 func Index(w http.ResponseWriter, r *http.Request) {
 	// show all challenges
 	challengesRaw, err := ioutil.ReadFile(utils.BasePath + "/challenges.json")

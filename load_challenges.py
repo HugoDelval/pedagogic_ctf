@@ -128,6 +128,10 @@ def create_wrapper_and_change_perms(arguments):
 			if return_code != 0:
 				print({"error": "An error occured while chowning : " + str(streamdata)})
 				exit_fail()
+			streamdata, return_code = run_cmd(['chown', user+":"+user, os.path.join(folder_path, "secret")])
+			if return_code != 0:
+				print({"error": "An error occured while chowning : " + str(streamdata)})
+				exit_fail()
 			streamdata, return_code = run_cmd(['chmod', "g+x,u+xs", current_wrapper_bin_path])
 			if return_code != 0:
 				print({"error": "An error occured while chmoding : " + str(streamdata)})
