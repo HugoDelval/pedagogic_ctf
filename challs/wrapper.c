@@ -2,10 +2,12 @@
 #include <unistd.h> 
 
 int main (int argc, char *argv[]) {
-    char* path = "/srv/ctf_interne/challs/";
+    const char* PATH = "/srv/ctf_interne/challs/";
     char final_cmd[512];
-    snprintf(final_cmd, sizeof final_cmd, "%s%s", path, "CHALLENGE");
+    snprintf(final_cmd, sizeof final_cmd, "%s%s", PATH, "CHALLENGE");
+    // have to do this to keep the suid
     setreuid(geteuid(), geteuid());
+    // yeahh.. not pretty
     if(argc == 1)
 	    return execl(final_cmd, final_cmd, (char*)0);
 	else if(argc == 2)
@@ -25,6 +27,6 @@ int main (int argc, char *argv[]) {
 	else if(argc == 9)
 		return execl(final_cmd, final_cmd, argv[1], argv[2], argv[3], argv[4], argv[5], argv[6], argv[7], argv[8], (char*)0);
 	else
-		printf("Not supported\n");
+		printf("Not supported\n");	
 	return 1;
 }

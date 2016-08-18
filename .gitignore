@@ -1,6 +1,7 @@
-challs/*.dir
 .idea/
 database.db
 pkg/
 bin/
 ctf_go.iml
+challenges.json
+challs/*.dir/wrapper*

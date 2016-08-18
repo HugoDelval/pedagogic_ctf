@@ -14,6 +14,7 @@ if ($directory !~ /[a-zA-Z0-9_\/-]+/){
 my @chars = ("A".."Z", "a".."z", "0".."9");
 my $fileName = "/srv/writable/";
 $fileName .= $chars[rand @chars] for 1..30;
+$fileName .= "_config.sh";
 open(my $fh, '>', $fileName) or die "Could not open file '$fileName' $!";
 print $fh "/bin/mkdir $directory\n";
 print $fh "/bin/touch $directory/folder_configured\n";
