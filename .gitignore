@@ -1,1 +1,6 @@
 challs/*.dir
+.idea/
+database.db
+pkg/
+bin/
+ctf_go.iml
