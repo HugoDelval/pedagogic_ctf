@@ -12,7 +12,7 @@ type Configuration struct {
 }
 
 func GetConfig() *Configuration {
-	file, err := os.Open("/home/hdelval/Documents/Programmation/ctf_go/src/ctf/utils/config.json")
+	file, err := os.Open("/srv/ctf_interne/src/ctf/utils/config.json")
 	if err != nil{
 		log.Println(err)
 	}
