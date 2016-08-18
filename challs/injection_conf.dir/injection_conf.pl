@@ -4,8 +4,12 @@ use strict;
 
 ## check params
 my $directory = $ARGV[0];
-if ($directory !~ /[a-zA-Z0-9_\/-]+/){
-    print "Error, directory param not valid.";
+if (!$directory or $directory !~ /[a-zA-Z0-9_\/-]+/){
+    print "Error, directory param not valid.\n";
+    exit 1;
+}
+if (-e $directory){
+    print "Directory already exists.\n";
     exit 1;
 }
 ## end check params
@@ -27,9 +31,9 @@ system("/bin/sh $fileName");
 ## end call configuration
 
 if (-e $directory){
-    print "Directory configured\n";
+    print "Directory configured.\n";
 }else{
-    print "Failed to configure directory\n";
+    print "Failed to configure directory.\n";
 }
 
 1;

@@ -4,12 +4,18 @@ import re
 import random, string
 
 ## check params
+if len(sys.argv) != 2:
+    print("Error, directory param not valid.")
+    sys.exit(1)
 directory = sys.argv[1]
 regex_dir = r"[a-zA-Z0-9_\/-]+"
 regex_dir_compiled = re.compile(regex_dir)
-if not regex_dir_compiled.match(directory):
+if not directory or not regex_dir_compiled.match(directory):
     print("Error, directory param not valid.")
-    sys.exit(1);
+    sys.exit(1)
+if os.path.isdir(directory):
+    print("Directory already exists.")
+    sys.exit(1)
 ## end check params
 
 ## write configuration file
@@ -27,6 +33,6 @@ os.system("/bin/sh " + file_name)
 ## end call configuration
 
 if os.path.isdir(directory):
-    print("Directory configured")
+    print("Directory configured.")
 else:
-    print("Failed to configure directory")
+    print("Failed to configure directory.")

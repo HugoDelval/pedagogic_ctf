@@ -5,6 +5,7 @@ bin/
 ctf_go.iml
 challenges.json
 challs/*.dir/wrapper*
+challs/*.dir/secret
 src/github.com/
 src/ctf/utils/config.json
 main

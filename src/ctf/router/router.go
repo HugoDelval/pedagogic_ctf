@@ -15,30 +15,23 @@ var routes = model.Routes{
 		handlers.Index,
 	},
 	model.Route{
-		"TodoIndex",
-		"GET",
-		"/todo",
-		handlers.TodoIndex,
-	},
-	model.Route{
-		"TodoShow",
-		"GET",
-		"/todo/{todoId}",
-		handlers.TodoShow,
-	},
-	model.Route{
-		"TodoCreate",
-		"POST",
-		"/todo",
-		handlers.TodoCreate,
-	},
-	model.Route{
 		"ChallengeShow",
 		"GET",
 		"/challenge/{challengeName}",
 		handlers.ChallengeShow,
 	},
-
+	model.Route{
+		"ChallengeValidate",
+		"POST",
+		"/challenge/{challengeName}/validate",
+		handlers.ChallengeValidate,
+	},
+	model.Route{
+		"ChallengeExecute",
+		"POST",
+		"/challenge/{challengeName}/execute",
+		handlers.ChallengeExecute,
+	},
 }
 
 

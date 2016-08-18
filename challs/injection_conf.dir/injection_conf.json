@@ -1,1 +1,1 @@
-{"description": "This is a test", "points": 50, "name": "Test"}
+{"name":"Test","points":50,"description":"This is a test","parameters":[{"name": "directory", "placeholder": "sdfsdfds"}],"languages":[{"name": "PYTHON", "extension": ".py"},{"name": "PERL", "extension": ".pl"}]}

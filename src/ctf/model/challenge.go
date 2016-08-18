@@ -8,6 +8,7 @@ type Parameter struct{
 type Language struct{
 	Name        string        `json:"name"`
 	Extension   string        `json:"extension"`
+	FileContent string        `json:"file_content"`
 }
 
 type Challenge struct {
