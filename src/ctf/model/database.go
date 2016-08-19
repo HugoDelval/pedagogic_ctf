@@ -5,19 +5,27 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"log"
 	"ctf/utils"
+	"net/http"
 )
 
-func GetDB() (db *gorm.DB, err error)  {
+func getDB()(db *gorm.DB, err error){
 	db, err = gorm.Open("sqlite3", "database.db")
+	return
+}
+
+func GetDB(w http.ResponseWriter) (db *gorm.DB, err error)  {
+	db, err = getDB()
 	if err != nil {
 		log.Printf("Failed to connect database : %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		utils.SendResponseJSON(w, utils.InternalErrorMessage)
 	}
 	return
 }
 
 func Migrate() (err error){
-	db, err := GetDB()
-	if err!= nil{
+	db, err := getDB()
+	if err != nil{
 		return
 	}
 

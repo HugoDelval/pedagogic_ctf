@@ -32,6 +32,24 @@ var routes = model.Routes{
 		"/challenge/{challengeName}/execute",
 		handlers.ChallengeExecute,
 	},
+	model.Route{
+		"AuthenticateUser",
+		"POST",
+		"/user/login",
+		handlers.AuthenticateUser,
+	},
+	model.Route{
+		"UserRegister",
+		"POST",
+		"/user/register",
+		handlers.UserRegister,
+	},
+	model.Route{
+		"UserRegister",
+		"POST",
+		"/user/register",
+		handlers.UserRegister,
+	},
 }
 
 

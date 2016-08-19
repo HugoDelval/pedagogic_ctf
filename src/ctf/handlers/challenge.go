@@ -9,8 +9,10 @@ import (
 	"log"
 	"fmt"
 	"github.com/gorilla/mux"
+	"strconv"
 	"os"
 	"os/exec"
+	"time"
 )
 
 // exists returns whether the given file or directory exists or not
@@ -78,7 +80,7 @@ func ChallengeShow(w http.ResponseWriter, r *http.Request) {
 }
 
 func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
-	_, challengeFolderPath, _, err := getChallengeInfos(w, r)
+	challengeName, challengeFolderPath, challenge, err := getChallengeInfos(w, r)
 	if err != nil{
 		return
 	}
@@ -90,10 +92,40 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO : add points to user / add validated challenge
+	registeredUser, user, err := IsUserAuthenticated(w, r)
+	if err != nil {
+		return
+	}else if !registeredUser{
+		w.WriteHeader(http.StatusOK)
+		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in."})
+	}else{
+		newValidatedChall := model.ValidatedChallenge{
+			ChallengeID: challengeName,
+			User: user,
+			UserID: strconv.Itoa(int(user.ID)),
+			DateValidated: time.Now(),
+		}
+		db, err := model.GetDB(w)
+		if err != nil {return}
 
-	w.WriteHeader(http.StatusOK)
-	utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :)"})
+		var alreadyValidated model.ValidatedChallenge
+		notFound := db.Where(&model.ValidatedChallenge{ChallengeID: challengeName, UserID: strconv.Itoa(int(user.ID))}).First(&alreadyValidated).RecordNotFound()
+		if !notFound{
+			w.WriteHeader(http.StatusNotAcceptable)
+			utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) But you already validated this challenge, so no points this time."})
+			return
+		}
+
+		if err := db.Create(&newValidatedChall).Error; err != nil{
+			w.WriteHeader(http.StatusInternalServerError)
+			utils.SendResponseJSON(w, utils.InternalErrorMessage)
+			log.Printf("%v\n", err)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You earned " + strconv.Itoa(int(challenge.Points)) + "pts for that."})
+	}
 }
 
 
