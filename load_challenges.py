@@ -150,7 +150,7 @@ def create_wrapper_and_change_perms(arguments):
 				with open("challenges.json") as challs_json_handler:
 					challs_json = json.loads(challs_json_handler.read())
 			except:
-				challs_json = {}
+				challs_json = []
 			chall_json_path = os.path.join(folder_path, user + '.json')
 			try:
 				with open(chall_json_path) as chall_json_handler:
@@ -160,7 +160,8 @@ def create_wrapper_and_change_perms(arguments):
 			if not chall_json:
 				print({"error": "An error occured while loading challenge's JSON description"})
 				exit_fail()
-			challs_json[user] = chall_json
+			chall_json['challenge_id'] = user
+			challs_json.append(chall_json)
 			with open("challenges.json", "w") as challs_json_handler:
 				challs_json_handler.write(json.dumps(challs_json))
 

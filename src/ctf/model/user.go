@@ -12,7 +12,6 @@ type User struct {
 	IsAdmin             bool                  `json:"-"`
 	TimeAuthenticated   time.Time             `json:"-"`
 	Token               string                `sql:"size:40" json:"-"`
-	ValidatedChallenges []ValidatedChallenge  `json:"validated_challenges"`
 }
 
 type Users []User

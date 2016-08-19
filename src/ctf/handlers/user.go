@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"golang.org/x/crypto/bcrypt"
+	"github.com/gorilla/mux"
 	"time"
 	"log"
 	"net/http"
@@ -48,7 +49,7 @@ func UserRegister(w http.ResponseWriter, r *http.Request) {
 	utils.SendResponseJSON(w, utils.Message{"User successfully created."})
 }
 
-func AuthenticateUser(w http.ResponseWriter, r *http.Request){
+func UserAuthenticate(w http.ResponseWriter, r *http.Request){
 	nick := r.FormValue("nick")
 	password := r.FormValue("password")
 
@@ -107,3 +108,116 @@ func IsUserAuthenticated(w http.ResponseWriter, r *http.Request) (registeredUser
 	return 
 }
 
+func UserShow(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	userID := vars["userID"]
+	
+	db, err := model.GetDB(w)
+	if err != nil {return}
+
+	var user model.User
+	notFound := db.Where("id = ?", userID).First(&user).RecordNotFound()
+	if notFound{
+		w.WriteHeader(http.StatusNotFound)
+		utils.SendResponseJSON(w, utils.NotFoundErrorMessage)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	utils.SendResponseJSON(w, user)
+}
+
+func UserShowOwn(w http.ResponseWriter, r *http.Request){
+	registeredUser, user, err := IsUserAuthenticated(w, r)
+	if err != nil{return}
+	if !registeredUser{
+		w.WriteHeader(http.StatusUnauthorized)
+		utils.SendResponseJSON(w, utils.NotLoggedInMessage)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	utils.SendResponseJSON(w, user)
+}
+
+func UserShowAll(w http.ResponseWriter, r *http.Request){
+	db, err := model.GetDB(w)
+	if err != nil {return}
+	var users model.Users
+	db.Find(&users)
+
+	w.WriteHeader(http.StatusOK)
+	utils.SendResponseJSON(w, users)
+}
+
+func UserShowValidatedChallenges(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	userID := vars["userID"]
+	
+	db, err := model.GetDB(w)
+	if err != nil {return}
+
+	var validatedChallenges model.ValidatedChallenges
+	db.Where(&model.ValidatedChallenge{UserID: userID}).Find(&validatedChallenges)
+
+
+	w.WriteHeader(http.StatusOK)
+	utils.SendResponseJSON(w, validatedChallenges)
+}
+
+func UserChangePassword(w http.ResponseWriter, r *http.Request){
+	registeredUser, user, err := IsUserAuthenticated(w, r)
+	if err != nil{return}
+	if !registeredUser{
+		w.WriteHeader(http.StatusUnauthorized)
+		utils.SendResponseJSON(w, utils.NotLoggedInMessage)
+		return
+	}
+
+	password := r.FormValue("password")
+
+	db, err := model.GetDB(w)
+	if err != nil{
+		return
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	if err != nil{
+		w.WriteHeader(http.StatusInternalServerError)
+		utils.SendResponseJSON(w, utils.InternalErrorMessage)
+		log.Printf("%v\n", err)
+		return
+	}
+	user.Password = string(hashedPassword)
+	user.Token = ""
+	user.TimeAuthenticated, _ = time.Parse(time.RFC3339, "1970-01-01T00:00:00+00:00")
+
+	db.Update(&user)
+
+	w.WriteHeader(http.StatusAccepted)
+	utils.SendResponseJSON(w, utils.Message{"Password successfully changed. Please regenerate a token."})
+}
+
+
+func UserDelete(w http.ResponseWriter, r *http.Request){
+	registeredUser, user, err := IsUserAuthenticated(w, r)
+	if err != nil{return}
+	if !registeredUser{
+		w.WriteHeader(http.StatusUnauthorized)
+		utils.SendResponseJSON(w, utils.NotLoggedInMessage)
+		return
+	}
+
+	db, err := model.GetDB(w)
+	if err != nil{
+		return
+	}
+
+	user.Token = ""
+	user.TimeAuthenticated, _ = time.Parse(time.RFC3339, "1970-01-01T00:00:00+00:00")
+	db.Update(&user)
+	db.Delete(&user)
+
+	w.WriteHeader(http.StatusAccepted)
+	utils.SendResponseJSON(w, utils.Message{"User deleted. Bye !"})
+}

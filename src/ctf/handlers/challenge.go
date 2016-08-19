@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"time"
+	"errors"
 )
 
 // exists returns whether the given file or directory exists or not
@@ -33,7 +34,11 @@ func getChallengeInfos(w http.ResponseWriter, r *http.Request) (challengeName st
 	if !exists || err != nil{
 	    w.WriteHeader(http.StatusNotFound)
     	utils.SendResponseJSON(w, utils.NotFoundErrorMessage)
-        log.Printf("Cannot find folder : %v\n", err)
+    	if err == nil{
+	    	err = errors.New("File Not Found.")
+	    }else{
+	        log.Printf("Cannot find folder : %v\n", err)
+	    }
         return
 	}
 
@@ -101,7 +106,6 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 	}else{
 		newValidatedChall := model.ValidatedChallenge{
 			ChallengeID: challengeName,
-			User: user,
 			UserID: strconv.Itoa(int(user.ID)),
 			DateValidated: time.Now(),
 		}
@@ -154,3 +158,26 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 	utils.SendResponseJSON(w, utils.Message{string(out[:])})
 }
 
+func ChallengeShowAll(w http.ResponseWriter, r *http.Request) {
+	challengesPath := utils.BasePath + "challenges.json"
+	
+	challengesRaw, err := ioutil.ReadFile(challengesPath)
+    if err != nil {
+	    w.WriteHeader(http.StatusInternalServerError)
+    	utils.SendResponseJSON(w, utils.InternalErrorMessage)
+        log.Printf("File error: %v\n", err)
+        return
+    }
+
+    var challenges model.Challenges
+	err = json.Unmarshal(challengesRaw, &challenges)
+	if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+		utils.SendResponseJSON(w, utils.InternalErrorMessage)
+        log.Printf("File error: %v\n", err)
+        return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	utils.SendResponseJSON(w, challenges)
+}

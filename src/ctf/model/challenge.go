@@ -17,6 +17,7 @@ type Challenge struct {
 	Description string       `json:"description"`
 	Parameters  []Parameter  `json:"parameters"`
 	Languages   []Language   `json:"languages"`
+	ChallengeId string       `json:"challenge_id"`
 } 
 
 type Challenges []Challenge

@@ -15,6 +15,12 @@ var routes = model.Routes{
 		handlers.Index,
 	},
 	model.Route{
+		"ChallengeShowAll",
+		"GET",
+		"/challenge",
+		handlers.ChallengeShowAll,
+	},
+	model.Route{
 		"ChallengeShow",
 		"GET",
 		"/challenge/{challengeName}",
@@ -33,10 +39,10 @@ var routes = model.Routes{
 		handlers.ChallengeExecute,
 	},
 	model.Route{
-		"AuthenticateUser",
+		"UserAuthenticate",
 		"POST",
 		"/user/login",
-		handlers.AuthenticateUser,
+		handlers.UserAuthenticate,
 	},
 	model.Route{
 		"UserRegister",
@@ -49,6 +55,42 @@ var routes = model.Routes{
 		"POST",
 		"/user/register",
 		handlers.UserRegister,
+	},
+	model.Route{
+		"UserShowOwn",
+		"GET",
+		"/user/me",
+		handlers.UserShowOwn,
+	},
+	model.Route{
+		"UserShow",
+		"GET",
+		"/user/{userID}",
+		handlers.UserShow,
+	},
+	model.Route{
+		"UserShowAll",
+		"GET",
+		"/user",
+		handlers.UserShowAll,
+	},
+	model.Route{
+		"UserShowValidatedChallenges",
+		"GET",
+		"/user/{userID}/validatedChallenges",
+		handlers.UserShowValidatedChallenges,
+	},
+	model.Route{
+		"UserChangePassword",
+		"PUT",
+		"/user/me/changePassword",
+		handlers.UserChangePassword,
+	},
+	model.Route{
+		"UserDelete",
+		"DELETE",
+		"/user/me/unregister",
+		handlers.UserDelete,
 	},
 }
 
