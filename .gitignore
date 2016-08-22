@@ -9,3 +9,10 @@ challs/*.dir/secret
 src/github.com/
 src/ctf/utils/config.json
 main
+frontend-angular/logs/*
+frontend-angular/!.gitkeep
+frontend-angular/node_modules/
+frontend-angular/bower_components/
+frontend-angular/tmp
+frontend-angular/.DS_Store
+frontend-angular/.idea

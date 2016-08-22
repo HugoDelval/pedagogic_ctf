@@ -14,6 +14,7 @@ import (
 	"os/exec"
 	"time"
 	"errors"
+	"regexp"
 )
 
 // exists returns whether the given file or directory exists or not
@@ -28,6 +29,13 @@ func exists(path string) (bool, error) {
 func getChallengeInfos(w http.ResponseWriter, r *http.Request) (challengeName string, challengeFolderPath string, challenge model.Challenge, err error){
 	vars := mux.Vars(r)
 	challengeName = vars["challengeName"]
+
+	regexChallName := regexp.MustCompile(`^[\w-]$`)
+	if !regexChallName.MatchString(challengeName){
+	    w.WriteHeader(http.StatusBadRequest)
+	    utils.SendResponseJSON(w, utils.BadRequestMessage)
+	    return
+	}
 
 	challengeFolderPath = utils.BasePath + utils.ChallengeFolder + challengeName + ".dir/"
 	exists, err := exists(challengeFolderPath)
