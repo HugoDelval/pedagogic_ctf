@@ -30,10 +30,11 @@ func getChallengeInfos(w http.ResponseWriter, r *http.Request) (challengeName st
 	vars := mux.Vars(r)
 	challengeName = vars["challengeName"]
 
-	regexChallName := regexp.MustCompile(`^[\w-]$`)
+	regexChallName := regexp.MustCompile(`^[\w-]+$`)
 	if !regexChallName.MatchString(challengeName){
-	    w.WriteHeader(http.StatusBadRequest)
-	    utils.SendResponseJSON(w, utils.BadRequestMessage)
+	    w.WriteHeader(http.StatusNotFound)
+	    utils.SendResponseJSON(w, utils.NotFoundErrorMessage)
+	    err = errors.New("Challenge name not valid.")
 	    return
 	}
 
