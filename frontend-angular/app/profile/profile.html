@@ -1,0 +1,26 @@
+<section>
+	<h2>Profile</h2>
+	<span>Score : {{score}}</span> <br>
+	<span>Nick : {{user.nick}}</span> <br>
+	<div class="results" ng-bind="response|json"></div>
+	<h3>Validated challenges: </h3>
+	<section ng-repeat="challenge in validatedChallenges | orderBy: 'points'"> 
+		Name : {{ challenge.name }} <br> 
+		points : {{ challenge.points }} <br> 
+		<hr>
+		<!-- End chall -->
+	</section>
+	<h3>Change password:</h3>
+	<form novalidate>
+		<div class="form-group">
+			<label for="password">New Password:</label> <input id="password" type="password" ng-model="request.password" > <br>
+		</div>
+		<div class="form-group">
+			<label for="passwordConfirm">Confirm new Password:</label> <input id="passwordConfirm" type="password" ng-model="request.passwordConfirm" > <br>
+		</div>
+		<input type="submit" ng-click="changePassword()" value="Change password"> <br>
+		<input type="reset" value="Reset"> <br>
+	</form>
+	<button ng-click="deleteAccount()">Delete account</button>
+</section>
+

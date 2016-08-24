@@ -9,17 +9,37 @@ import (
 	"ctf/utils"
 	"ctf/model"
 	"errors"
+	"encoding/json"
 )
 
-
-func UserRegister(w http.ResponseWriter, r *http.Request) {
-	nick := r.FormValue("nick")
-	password := r.FormValue("password")
-
-	db, err := model.GetDB(w)
+func getUserFromJSON(w http.ResponseWriter, r *http.Request) (user model.User, err error){
+	var userRaw []byte
+	err = utils.LoadJSONFromRequest(w, r, &userRaw)
+	if err != nil{return}
+	err = json.Unmarshal(userRaw, &user)
 	if err != nil{
+		utils.SendResponseJSON(w, utils.BadRequestMessage)
+		log.Println(err)
 		return
 	}
+	return
+}
+
+func UserRegister(w http.ResponseWriter, r *http.Request) {
+	userRegister, err := getUserFromJSON(w, r)
+	if err != nil{return}
+
+	nick := userRegister.Nick
+	password := userRegister.Password
+
+	if len(nick) < 1 || len(password) < 1{
+		w.WriteHeader(http.StatusNotAcceptable)
+		utils.SendResponseJSON(w, utils.Message{"Nickname and/or password too short."})
+		return
+	}
+
+	db, err := model.GetDB(w)
+	if err != nil{return}
 
 	var user model.User
 	notFound := db.Where(&model.User{Nick: nick}).First(&user).RecordNotFound()
@@ -50,8 +70,11 @@ func UserRegister(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserAuthenticate(w http.ResponseWriter, r *http.Request){
-	nick := r.FormValue("nick")
-	password := r.FormValue("password")
+	userAuth, err := getUserFromJSON(w, r)
+	if err != nil {return}
+
+	nick := userAuth.Nick
+	password := userAuth.Password
 
 	db, err := model.GetDB(w)
 	if err != nil{
@@ -122,6 +145,7 @@ func UserShow(w http.ResponseWriter, r *http.Request){
 		utils.SendResponseJSON(w, utils.NotFoundErrorMessage)
 		return
 	}
+	user.Password = ""
 
 	w.WriteHeader(http.StatusOK)
 	utils.SendResponseJSON(w, user)
@@ -135,6 +159,7 @@ func UserShowOwn(w http.ResponseWriter, r *http.Request){
 		utils.SendResponseJSON(w, utils.NotLoggedInMessage)
 		return
 	}
+	user.Password = ""
 
 	w.WriteHeader(http.StatusOK)
 	utils.SendResponseJSON(w, user)
@@ -145,6 +170,9 @@ func UserShowAll(w http.ResponseWriter, r *http.Request){
 	if err != nil {return}
 	var users model.Users
 	db.Find(&users)
+	for index, _ := range users {
+		users[index].Password = "" 
+	}
 
 	w.WriteHeader(http.StatusOK)
 	utils.SendResponseJSON(w, users)
@@ -174,8 +202,16 @@ func UserChangePassword(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	password := r.FormValue("password")
+	userChangePassword, err := getUserFromJSON(w, r)
+	if err != nil{return}
+	password := userChangePassword.Password
 
+	if len(password) < 1{
+		w.WriteHeader(http.StatusNotAcceptable)
+		utils.SendResponseJSON(w, utils.Message{"Password too short."})
+		return
+	}
+	
 	db, err := model.GetDB(w)
 	if err != nil{
 		return
@@ -195,7 +231,7 @@ func UserChangePassword(w http.ResponseWriter, r *http.Request){
 	db.Update(&user)
 
 	w.WriteHeader(http.StatusAccepted)
-	utils.SendResponseJSON(w, utils.Message{"Password successfully changed. Please regenerate a token."})
+	utils.SendResponseJSON(w, utils.Message{"Password successfully changed. Please login again."})
 }
 
 
@@ -220,4 +256,26 @@ func UserDelete(w http.ResponseWriter, r *http.Request){
 
 	w.WriteHeader(http.StatusAccepted)
 	utils.SendResponseJSON(w, utils.Message{"User deleted. Bye !"})
+}
+
+
+func UserLogout(w http.ResponseWriter, r *http.Request){
+	registeredUser, user, err := IsUserAuthenticated(w, r)
+	if err != nil{return}
+	if !registeredUser{
+		w.WriteHeader(http.StatusUnauthorized)
+		utils.SendResponseJSON(w, utils.NotLoggedInMessage)
+		return
+	}
+
+	db, err := model.GetDB(w)
+	if err != nil{
+		return
+	}
+
+	user.Token = ""
+	db.Update(&user)
+
+	w.WriteHeader(http.StatusAccepted)
+	utils.SendResponseJSON(w, utils.Message{"User logged out. Bye !"})
 }

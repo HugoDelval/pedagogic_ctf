@@ -98,10 +98,31 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 	if err != nil{
 		return
 	}
-	secret := r.FormValue("secret")
+	var secretRaw []byte
+	var secretJSON map[string]*json.RawMessage
+	if err := utils.LoadJSONFromRequest(w, r, &secretRaw); err != nil{
+		return
+	}
+	if err := json.Unmarshal(secretRaw, &secretJSON); err != nil{
+		w.WriteHeader(http.StatusBadRequest)
+		utils.SendResponseJSON(w, utils.BadRequestMessage)
+		log.Println(err)
+		return
+	}
+
+	secret := ""
+	secretJSONVal, ok := secretJSON["secret"];
+	if(ok){
+		if err := json.Unmarshal(*secretJSONVal, &secret); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			utils.SendResponseJSON(w, utils.BadRequestMessage)
+			log.Println(err)
+			return
+		}
+	}
 	realSecret, err := ioutil.ReadFile(challengeFolderPath + utils.FlagFileName)
 	if secret != string(realSecret[:]){
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusNotAcceptable)
 		utils.SendResponseJSON(w, utils.Message{"Not the good secret sorry. Be carefull with spaces when copy-pasting."})
 		return
 	}
@@ -148,9 +169,23 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var paramsRaw []byte
+	var paramsJSON map[string]*json.RawMessage
+	if err := utils.LoadJSONFromRequest(w, r, &paramsRaw); err != nil{
+		return
+	}
+	_ = json.Unmarshal(paramsRaw, &paramsJSON)
+
 	args := make([]string, len(challenge.Parameters))
 	for index, arg := range challenge.Parameters{
-		args[index] = r.FormValue(arg.Name)
+		paramJSONVal, ok := paramsJSON[arg.Name];
+		if !ok {
+		    args[index] = ""
+		    continue
+		}
+		if err := json.Unmarshal(*paramJSONVal, &(args[index])); err != nil{
+			args[index] = ""
+		}
 	}
 
 	cmd := challengeFolderPath + "wrapper"

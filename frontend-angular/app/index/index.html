@@ -1,0 +1,37 @@
+<section ng-repeat="challenge in challenges | orderBy: 'points'"> 
+	chall : {{ challenge }} <br> 
+	Name : {{ challenge.name }} <br> 
+	points : {{ challenge.points }} <br> 
+	parameters : {{ challenge.parameters }} <br> 
+	<div ng-repeat="language in challenge.languages" >
+		<button ng-click="showChallenge(challenge.challenge_id, language.extension, $parent.$index)">
+			{{ buttonText(challenge.challenge_id, language.extension, language.name) }}
+		</button>
+		<div ng-show="isShown(challenge.challenge_id, language.extension)">
+			description : {{ challenge.description }} <br>
+			content : <pre><code style="padding:15px; border-radius:3px" class="hljs" ng-bind-html="language.file_content | highlight: language.name | unsafe">{{ language.file_content }}</code></pre> <br>
+			<button ng-click="reset(challenge.challenge_id)">Reset challenge</button>
+			<div class="result">
+				{{challengeResults}}
+			</div>
+			<form novalidate>
+				<div class="params" ng-repeat="parameter in challenge.parameters">
+					<div class="form-group">
+						<label for="{{ parameter.name }}">{{ parameter.name }}:</label> <input id="{{ parameter.name }}" type="text" ng-model="request[parameter.name]" > <br>
+					</div>
+				</div>
+				<input type="submit" ng-click="execute(challenge.challenge_id, '/execute')" value="Execute"> <br>
+				<input type="reset" value="Reset"> <br>
+			</form>
+			<form method="POST">
+				<div class="form-group">
+				<label for="secret">Secret :</label><input type="text" ng-model="request.secret" placeholder="The challenge's secret is ?"><br>
+				</div>
+				<input type="submit" ng-click="execute(challenge.challenge_id, '/validate')" value="Validate"> <br>
+				<input type="reset" value="Reset"> <br>
+			</form>
+		</div>
+	</div>
+	<hr>
+	<!-- End chall -->
+</section>

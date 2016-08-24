@@ -5,92 +5,93 @@ import(
 	"ctf/utils"
 	"ctf/handlers"
 	"ctf/model"
+	"net/http"
 )
 
 var routes = model.Routes{
 	model.Route{
 		"Index",
 		"GET",
-		"/",
+		"/v1.0",
 		handlers.Index,
 	},
 	model.Route{
 		"ChallengeShowAll",
 		"GET",
-		"/challenge",
+		"/v1.0/challenge",
 		handlers.ChallengeShowAll,
 	},
 	model.Route{
 		"ChallengeShow",
 		"GET",
-		"/challenge/{challengeName}",
+		"/v1.0/challenge/{challengeName}",
 		handlers.ChallengeShow,
 	},
 	model.Route{
 		"ChallengeValidate",
 		"POST",
-		"/challenge/{challengeName}/validate",
+		"/v1.0/challenge/{challengeName}/validate",
 		handlers.ChallengeValidate,
 	},
 	model.Route{
 		"ChallengeExecute",
 		"POST",
-		"/challenge/{challengeName}/execute",
+		"/v1.0/challenge/{challengeName}/execute",
 		handlers.ChallengeExecute,
 	},
 	model.Route{
 		"UserAuthenticate",
 		"POST",
-		"/user/login",
+		"/v1.0/user/login",
 		handlers.UserAuthenticate,
 	},
 	model.Route{
 		"UserRegister",
 		"POST",
-		"/user/register",
-		handlers.UserRegister,
-	},
-	model.Route{
-		"UserRegister",
-		"POST",
-		"/user/register",
+		"/v1.0/user/register",
 		handlers.UserRegister,
 	},
 	model.Route{
 		"UserShowOwn",
 		"GET",
-		"/user/me",
+		"/v1.0/user/me",
 		handlers.UserShowOwn,
 	},
 	model.Route{
 		"UserShow",
 		"GET",
-		"/user/{userID}",
+		"/v1.0/user/{userID}",
 		handlers.UserShow,
 	},
 	model.Route{
 		"UserShowAll",
 		"GET",
-		"/user",
+		"/v1.0/user",
 		handlers.UserShowAll,
 	},
 	model.Route{
 		"UserShowValidatedChallenges",
 		"GET",
-		"/user/{userID}/validatedChallenges",
+		"/v1.0/user/{userID}/validatedChallenges",
 		handlers.UserShowValidatedChallenges,
 	},
 	model.Route{
 		"UserChangePassword",
 		"PUT",
-		"/user/me/changePassword",
+		"/v1.0/user/me/changePassword",
 		handlers.UserChangePassword,
 	},
 	model.Route{
 		"UserDelete",
 		"DELETE",
-		"/user/me/unregister",
+		"/v1.0/user/me/unregister",
 		handlers.UserDelete,
+	},
+	model.Route{
+		"UserLogout",
+		"POST",
+		"/v1.0/user/logout",
+		handlers.UserLogout,
 	},
 }
 
@@ -106,6 +107,10 @@ func NewRouter() *mux.Router {
 			Path(route.Pattern).
 			Name(route.Name).
 			Handler(handler)
+	}
+	if !utils.GetConfig().IsProduction{
+		router.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend-angular/app/")))
+		http.Handle("/", router)
 	}
 
 	return router

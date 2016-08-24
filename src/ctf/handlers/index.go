@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"encoding/json"
 	"ctf/utils"
+	"ctf/model"
 	"io/ioutil"
 	"log"
 )
@@ -18,8 +19,8 @@ func Index(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    var challengesJSON map[string]interface{}
-	err = json.Unmarshal(challengesRaw, &challengesJSON)
+    var challenges model.Challenges
+	err = json.Unmarshal(challengesRaw, &challenges)
 	if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
 		utils.SendResponseJSON(w, utils.InternalErrorMessage)
@@ -28,5 +29,5 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	utils.SendResponseJSON(w, challengesJSON)
+	utils.SendResponseJSON(w, challenges)
 }
