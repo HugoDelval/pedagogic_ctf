@@ -32,8 +32,19 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 			$scope.user.validatedChallenges = [];
 			// users scores -> rank + nbUsers
 			$http.get('/v1.0/user').success( function ( users ) {
+
 				$scope.nbUsers = users.length;
 				var scores = new Array($scope.nbUsers);
+				var nbUsersDone = 0.00001;
+				var calculateRank = function(increment){
+					nbUsersDone += increment;
+					console.log(nbUsersDone);
+					if($scope.nbUsers <= nbUsersDone){
+						scores.sort().reverse();
+						console.log(scores);
+						$scope.user.rank = scores.indexOf($scope.user.score) + 1;
+					}
+				}
 				for(var userIt=0 ; userIt<$scope.nbUsers ; ++userIt){
 					scores[userIt] = 0;
 					$http.get('/v1.0/user/'+users[userIt].ID+'/validatedChallenges').success((function(userIterator){
@@ -47,18 +58,20 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 											$scope.user.validatedChallenges.push(validatedChall);
 											$scope.user.score += validatedChall.points;
 										}
+										calculateRank(1.0/validatedChalls.length);
 								    }
 								})(userIterator, users[userIterator].ID)).error(function(error){
 									alert("An error occured : " + error.message);
 								});
+							}
+							if (validatedChalls.length == 0){
+								calculateRank(1);
 							}
 						}
 					})(userIt)).error(function(error){
 						alert('An error occured :' + error.message);
 					});
 				}
-				scores.sort();
-				$scope.user.rank = scores.indexOf($scope.user.score) + 1;
 			}).error(function(error){
 				alert('An error occured :' + error.message);
 			});
