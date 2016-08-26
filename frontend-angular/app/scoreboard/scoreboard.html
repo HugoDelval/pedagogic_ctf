@@ -1,5 +1,7 @@
-<section ng-repeat="user in users | orderBy: 'score'"> 
+<section ng-repeat="user in users | orderBy: '-score'"> 
 	user : {{ user }} <br> 
+	rank : {{$index + 1}}/{{users.length}} <br>
+
 	<hr>
 	<!-- End user -->
 </section>
