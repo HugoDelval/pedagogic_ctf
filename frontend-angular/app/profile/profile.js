@@ -35,13 +35,11 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 
 				$scope.nbUsers = users.length;
 				var scores = new Array($scope.nbUsers);
-				var nbUsersDone = 0.00001;
+				var nbUsersDone = 0.00001; // float precision.. We never know.
 				var calculateRank = function(increment){
 					nbUsersDone += increment;
-					console.log(nbUsersDone);
 					if($scope.nbUsers <= nbUsersDone){
 						scores.sort().reverse();
-						console.log(scores);
 						$scope.user.rank = scores.indexOf($scope.user.score) + 1;
 					}
 				}
