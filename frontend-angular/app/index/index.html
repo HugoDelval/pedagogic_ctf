@@ -17,7 +17,7 @@
 			<form novalidate>
 				<div class="params" ng-repeat="parameter in challenge.parameters">
 					<div class="form-group">
-						<label for="{{ parameter.name }}">{{ parameter.name }}:</label> <input id="{{ parameter.name }}" type="text" ng-model="request[parameter.name]" > <br>
+						<label for="{{ parameter.name }}">{{ parameter.name }}:</label> <input id="{{ parameter.name }}" type="text" ng-model="request[challenge.challenge_id][parameter.name]" > <br>
 					</div>
 				</div>
 				<input type="submit" ng-click="execute(challenge.challenge_id, '/execute')" value="Execute"> <br>
@@ -25,7 +25,7 @@
 			</form>
 			<form method="POST">
 				<div class="form-group">
-				<label for="secret">Secret :</label><input type="text" ng-model="request.secret" placeholder="The challenge's secret is ?"><br>
+				<label for="secret">Secret :</label><input type="text" ng-model="request[challenge.challenge_id].secret" placeholder="The challenge's secret is ?"><br>
 				</div>
 				<input type="submit" ng-click="execute(challenge.challenge_id, '/validate')" value="Validate"> <br>
 				<input type="reset" value="Reset"> <br>

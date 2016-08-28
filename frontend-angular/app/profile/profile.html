@@ -1,10 +1,12 @@
 <section>
 	<h2>Profile</h2>
-	<span>Score : {{score}}</span> <br>
+	<span>Score : {{user.score}}/{{totalScoreChallenges}}</span> <br>
+	<span>rank : {{user.rank}}/{{nbUsers}}</span> <br>
+	<span>nb chall validés : {{user.validatedChallenges.length}}/{{nbChallengesAvailable}}</span> <br>
 	<span>Nick : {{user.nick}}</span> <br>
 	<div class="results" ng-bind="response|json"></div>
 	<h3>Validated challenges: </h3>
-	<section ng-repeat="challenge in validatedChallenges | orderBy: 'points'"> 
+	<section ng-repeat="challenge in user.validatedChallenges | orderBy: 'points'"> 
 		Name : {{ challenge.name }} <br> 
 		points : {{ challenge.points }} <br> 
 		<hr>

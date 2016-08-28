@@ -1,0 +1,24 @@
+challs/:
+total 8
+drwxr-x--- 2 hdelval hdelval 4096 Aug 19 07:32 injection_conf.dir
+-rw-r--r-- 1 hdelval hdelval 1311 Aug 18 04:03 wrapper.c
+
+challs/injection_conf.dir:
+total 32
+-rw-r----- 1 hdelval hdelval  213 Aug 18 10:01 injection_conf.json
+-rwxr-x--- 1 hdelval hdelval  903 Aug 18 10:09 injection_conf.pl
+-rwxr-x--- 1 hdelval hdelval 1065 Aug 23 10:36 injection_conf.py
+-rw-r----- 1 hdelval hdelval   40 Aug 18 08:38 secret
+-rwxr-x--- 1 hdelval hdelval 8376 Aug 19 07:32 wrapper
+-rw-r----- 1 hdelval hdelval 1338 Aug 19 07:32 wrapper.c
+-------------e-- challs/wrapper.c
+-------------e-- challs/injection_conf.dir
+
+challs/injection_conf.dir:
+-------------e-- challs/injection_conf.dir/injection_conf.py
+-------------e-- challs/injection_conf.dir/wrapper.c
+-------------e-- challs/injection_conf.dir/wrapper
+-------------e-- challs/injection_conf.dir/secret
+-------------e-- challs/injection_conf.dir/injection_conf.json
+-------------e-- challs/injection_conf.dir/injection_conf.pl
+

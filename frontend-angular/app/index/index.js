@@ -41,7 +41,7 @@ angular.module('myApp.index', ['ngRoute'])
 	}
 	$scope.execute = function(challengeId, path){
 		$http.defaults.headers.common['X-CTF-AUTH'] = $scope.user.token;
-		$http.post('/v1.0/challenge/' + challengeId + path, $scope.request).success( function ( data ) {
+		$http.post('/v1.0/challenge/' + challengeId + path, $scope.request[challengeId]).success( function ( data ) {
 				$scope.challengeResults = data;
 		}).error( function ( data ) {
 				$scope.challengeResults = "An error occured while processing request : " + data.message;
