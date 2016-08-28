@@ -1,8 +1,11 @@
 #!/bin/bash
 
 useradd ctf_interne
+mkdir /srv/ctf_go
+cp . -R /srv/ctf_go
 mkdir /srv/writable
 chmod 733 /srv/writable
-./load_challenges.py injection_conf
-echo "don't forget src/ctf/utils/config.json.example"
-echo "don't forget to change the wrapper too !"
+/srv/cf_go/load_challenges.py injection_conf
+cp /srv/cf_go/src/ctf/utils/config.json.example /srv/cf_go/src/ctf/utils/config.json
+echo "Check src/ctf/utils/config.json !"
+
