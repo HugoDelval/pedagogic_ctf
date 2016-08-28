@@ -11,6 +11,7 @@ chmod o-rwx /srv/ctf_go -R
 
 # Init challenges
 userdel injection_conf
+echo "thesecret" > /srv/ctf_go/challs/injection_conf.dir/secret
 /srv/ctf_go/load_challenges.py injection_conf
 
 echo
