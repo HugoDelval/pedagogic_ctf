@@ -25,6 +25,8 @@ export GOPATH=`pwd`
 export PATH=$PATH:${GOROOT}/bin:${GOPATH}/bin
 echo "Fetching requirements.."
 go get ctf/main
+cd frontend-angular && bower install
+cd /srv/ctf_go
 echo "Building.."
 go build ctf/main
 echo "Built"

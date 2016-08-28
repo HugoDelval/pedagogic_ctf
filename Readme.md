@@ -2,14 +2,30 @@
 
 Ce repo permettra à ceux qui souhaitent apprendre la sécurité informatique de se lancer facilement.
 
+First things first :
+
+    git clone https://github.com/HugoDelval/ctf_pedagogique
+
+## Configure Bower :
+
+Install nodejs && npm && bower :
+
+    apt-get update && apt-get upgrade
+    apt-get install nodejs
+    ln -s /usr/bin/nodejs /usr/bin/node # on some distribs you have to do that
+    apt-get install npm
+    npm install -g bower
+
+Pulling the nedeed files will be done by a script when needed. If you have to do it manually run:
+`bower install`
+    
 ## Installation :
 first, be sure that you have go installed :
 
     sudo apt-get install golang
 
-Then checkout the git repo and run the script *init.sh* :
+Then run the script *init.sh* :
 
-    git clone https://github.com/HugoDelval/ctf_pedagogique
     cd ctf_pedagogique
     sudo ./init.sh
     
@@ -30,4 +46,3 @@ Also add this line to */etc/pam.d/common-session* (if it's not already there) :
 You are now good to go(lang :p) !
 
     sudo -u ctf_interne ./run.sh
-
