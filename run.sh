@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if [ whoami != 'ctf_interne' ] ; then
+user=`whoami`
+if [ ${user} != 'ctf_interne' ] ; then
     echo "please launch using : "
     echo "    sudo -u ctf_interne ./run.sh"
     exit
