@@ -2,7 +2,7 @@
 #include <unistd.h> 
 
 int main (int argc, char *argv[]) {
-    const char* PATH = "/rvctf_go/challs/";
+    const char* PATH = "/srv/ctf_go/challs/";
     char final_cmd[512];
     snprintf(final_cmd, sizeof final_cmd, "%s%s", PATH, "CHALLENGE");
     // have to do this to keep the suid
