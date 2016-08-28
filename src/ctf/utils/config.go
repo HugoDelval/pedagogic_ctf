@@ -25,5 +25,5 @@ func GetConfig() *Configuration {
 }
 
 const ChallengeFolder = "challs/"
-const BasePath = "/srv/ctf_interne/"
+const BasePath = "/srv/ctf_go/"
 const FlagFileName = "secret"
