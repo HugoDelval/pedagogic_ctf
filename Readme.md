@@ -23,11 +23,11 @@ To :
 
     #     UMASK 027
 
-Also add this line to **/etc/pam.d/common-session** (if it's not already there) :
+Also add this line to */etc/pam.d/common-session* (if it's not already there) :
 
     session optional pam_umask.so
 
 You are now good to go(lang :p) !
 
-    sudo ./run.sh
+    sudo -u ctf_interne ./run.sh
 
