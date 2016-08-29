@@ -12,12 +12,13 @@ type Language struct{
 }
 
 type Challenge struct {
-	Name        string       `json:"name"`
-	Points      uint         `json:"points"`
-	Description string       `json:"description"`
-	Parameters  []Parameter  `json:"parameters"`
-	Languages   []Language   `json:"languages"`
-	ChallengeId string       `json:"challenge_id"`
+	Name               string       `json:"name"`
+	Points             uint         `json:"points"`
+	Description        string       `json:"description"`
+	ResolvedConclusion string       `json:"resolved_conclusion,omitempty"`
+	Parameters         []Parameter  `json:"parameters"`
+	Languages          []Language   `json:"languages"`
+	ChallengeId        string       `json:"challenge_id"`
 } 
 
 type Challenges []Challenge

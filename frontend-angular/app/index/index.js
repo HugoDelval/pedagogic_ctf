@@ -13,7 +13,8 @@ angular.module('myApp.index', ['ngRoute'])
 
 	/* ------ BEGIN INIT ------ */
 	$scope.isShownHash = {};
-	$scope.request = {};
+	$scope.request_execute = {};
+	$scope.request_validate = {};
 	$http.get('/v1.0').success( function ( data ) {
 		$scope.challenges = data;
 	}).error(function(data){
@@ -41,14 +42,20 @@ angular.module('myApp.index', ['ngRoute'])
 	}
 	$scope.execute = function(challengeId, path){
 		$http.defaults.headers.common['X-CTF-AUTH'] = $scope.user.token;
-		$http.post('/v1.0/challenge/' + challengeId + path, $scope.request[challengeId]).success( function ( data ) {
+		var req = {};
+		if(path.indexOf("execute") !== -1)
+			req = $scope.request_execute[challengeId];
+		else
+			req = $scope.request_validate[challengeId];
+		$http.post('/v1.0/challenge/' + challengeId + path, req).success( function ( data ) {
 				$scope.challengeResults = data;
 		}).error( function ( data ) {
 				$scope.challengeResults = "An error occured while processing request : " + data.message;
 		})
 	}
 	$scope.reset = function(challengeId){
-		$scope.request = {};
+		$scope.request_execute = {};
+		$scope.request_validate = {};
 		$scope.execute(challengeId, '/execute');
 	}
 	/* ------ END SERVER INTERACTION ------ */

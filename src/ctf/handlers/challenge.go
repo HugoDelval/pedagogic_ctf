@@ -89,6 +89,8 @@ func ChallengeShow(w http.ResponseWriter, r *http.Request) {
 		challenge.Languages[index].FileContent = string(challengeContent[:])
 	}
 
+	challenge.ResolvedConclusion = ""
+
 	w.WriteHeader(http.StatusOK)
 	utils.SendResponseJSON(w, challenge)
 }
@@ -132,7 +134,7 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 		return
 	}else if !registeredUser{
 		w.WriteHeader(http.StatusOK)
-		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in."})
+		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in.\n" + challenge.ResolvedConclusion})
 	}else{
 		newValidatedChall := model.ValidatedChallenge{
 			ChallengeID: challengeName,
@@ -146,7 +148,7 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 		notFound := db.Where(&model.ValidatedChallenge{ChallengeID: challengeName, UserID: strconv.Itoa(int(user.ID))}).First(&alreadyValidated).RecordNotFound()
 		if !notFound{
 			w.WriteHeader(http.StatusNotAcceptable)
-			utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) But you already validated this challenge, so no points this time."})
+			utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) But you already validated this challenge, so no points this time.\n" + challenge.ResolvedConclusion})
 			return
 		}
 
@@ -158,7 +160,7 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You earned " + strconv.Itoa(int(challenge.Points)) + "pts for that."})
+		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You earned " + strconv.Itoa(int(challenge.Points)) + "pts for that.\n" + challenge.ResolvedConclusion})
 	}
 }
 

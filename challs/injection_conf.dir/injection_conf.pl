@@ -6,11 +6,11 @@ use strict;
 my $directory = $ARGV[0];
 if (!$directory or $directory !~ /[a-zA-Z0-9_\/-]+/){
     print "Error, directory param not valid.\n";
-    exit 1;
+    exit 0;
 }
 if (-e $directory){
     print "Directory already exists.\n";
-    exit 1;
+    exit 0;
 }
 ## end check params
 
@@ -20,14 +20,16 @@ my $fileName = "/srv/writable/";
 $fileName .= $chars[rand @chars] for 1..30;
 $fileName .= "_config.sh";
 open(my $fh, '>', $fileName) or die "Could not open file '$fileName' $!";
-print $fh "/bin/mkdir $directory\n";
-print $fh "/bin/touch $directory/folder_configured\n";
-print $fh "exit 0\n";
+print $fh "DATE=`date`\n";
+print $fh "DIRECTORY=$directory\n";
 close $fh;
 ## end write configuration file
 
 ## call configuration
-system("/bin/sh $fileName");
+my $command = ". $fileName && ";
+$command .= 'mkdir "${DIRECTORY}" && ';
+$command .= 'echo ${DATE} > "${DIRECTORY}/folder_configured"';
+system($command);
 ## end call configuration
 
 if (-e $directory){

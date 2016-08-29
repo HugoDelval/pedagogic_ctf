@@ -16,7 +16,7 @@ chmod o+x /srv/ctf_go/challs/
 
 # Init challenges
 userdel injection_conf
-echo "thesecret" > /srv/ctf_go/challs/injection_conf.dir/secret
+printf "thesecret" > /srv/ctf_go/challs/injection_conf.dir/secret
 (cd /srv/ctf_go/ && ./load_challenges.py injection_conf)
 
 chown ctf_interne /srv/ctf_go/challenges.json
