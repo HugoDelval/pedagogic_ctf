@@ -25,7 +25,7 @@ Now you should be able to launch :
 If not, please refer to the official documentation : https://docs.npmjs.com/getting-started/installing-node .
 Finally run :
 
-    npm install bower
+    npm install -g bower
 Pulling the nedeed files will be done by a script when needed. If, one day, you have to do it manually run:
 `bower install` or `bower install [package]`
     
