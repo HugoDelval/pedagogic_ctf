@@ -3,8 +3,12 @@ use warnings;
 use strict;
 
 ## check params
+if (@ARGV == 0 || !$ARGV[0]) {
+	print "Please send me a directory path so I can launch my configuration script !\n";
+	exit 0;
+}
 my $directory = $ARGV[0];
-if (!$directory or $directory !~ /[a-zA-Z0-9_\/-]+/){
+if ($directory !~ /[a-zA-Z0-9_\/-]+/){
     print "Error, directory param not valid.\n";
     exit 0;
 }

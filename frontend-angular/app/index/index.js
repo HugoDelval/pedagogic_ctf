@@ -33,6 +33,7 @@ angular.module('myApp.index', ['ngRoute'])
 			$http.get('/v1.0/challenge/' + challengeId).success( function ( data ) {
 				$scope.challenges[challIndex].languages = data.languages;
 			    $scope.isShownHash[challengeId + extension] = !$scope.isShownHash[challengeId + extension];
+			    $scope.execute(challengeId, '/execute');
 			}).error(function(data){
 				alert("An error occured while processing request : " + data.message);
 			})
@@ -51,7 +52,7 @@ angular.module('myApp.index', ['ngRoute'])
 				$scope.challengeResults = data;
 		}).error( function ( data ) {
 				$scope.challengeResults = "An error occured while processing request : " + data.message;
-		})
+		});
 	}
 	$scope.reset = function(challengeId){
 		$scope.request_execute = {};

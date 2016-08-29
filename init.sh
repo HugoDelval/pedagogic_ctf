@@ -10,8 +10,8 @@ cp /srv/ctf_go/src/ctf/utils/config.json.example /srv/ctf_go/src/ctf/utils/confi
 touch /srv/ctf_go/database.db
 chown ctf_interne /srv/ctf_go -R
 chmod o-rwx /srv/ctf_go -R
-chmod o+x /srv/ctf_go/
-chmod o+x /srv/ctf_go/challs/
+chmod o+rx /srv/ctf_go/
+chmod o+rx /srv/ctf_go/challs/
 
 
 # Init challenges

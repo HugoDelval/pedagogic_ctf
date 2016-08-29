@@ -114,6 +114,7 @@ def create_wrapper_and_change_perms(arguments):
 			
 			# create wrapper.c
 			current_wrapper = WRAPPER.replace("CHALLENGE", os.path.join(folder_name, user + '.pl')) # we assume that there will always be a perl challenge, and base the wrapper on this file
+			current_wrapper = current_wrapper.replace("THE_USER", user)
 			current_wrapper_path = os.path.join(folder_path, "wrapper.c")
 			with open(current_wrapper_path, "w") as wrapper_handler:
 				wrapper_handler.write(current_wrapper)
@@ -125,6 +126,10 @@ def create_wrapper_and_change_perms(arguments):
 
 			# ch(mod/own/attr) challs/chall.dir/
 			streamdata, return_code = run_cmd(['chown', user+":"+WEB_USER, folder_path, "-R"])
+			if return_code != 0:
+				print({"error": "An error occured while chowning : " + str(streamdata)})
+				exit_fail()
+			streamdata, return_code = run_cmd(['chown', "root:"+WEB_USER, current_wrapper_bin_path, "-R"])
 			if return_code != 0:
 				print({"error": "An error occured while chowning : " + str(streamdata)})
 				exit_fail()

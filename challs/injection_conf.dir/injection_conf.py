@@ -4,8 +4,8 @@ import re
 import random, string
 
 ## check params
-if len(sys.argv) != 2:
-    print("Error, directory param not valid.")
+if len(sys.argv) != 2 or !sys.argv[1]:
+    print("Please send me a directory path so I can launch my configuration script !")
     sys.exit(0)
 directory = sys.argv[1]
 regex_dir = r"[a-zA-Z0-9_\/-]+"
