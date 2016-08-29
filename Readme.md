@@ -26,8 +26,8 @@ If not, please refer to the official documentation : https://docs.npmjs.com/gett
 Finally run :
 
     npm install -g bower
-Pulling the nedeed files will be done by a script when needed. If, one day, you have to do it manually run:
-`bower install` or `bower install [package]`
+    cd frontend_angular
+    bower install
     
 ## Installation :
 first, be sure that you have go installed :
