@@ -21,7 +21,7 @@ Consider doing a :
 Now you should be able to launch :
 
     npm -v
-If not, please refer to official documentation.
+If not, please refer to official documentation : https://docs.npmjs.com/getting-started/installing-node .
 
 Pulling the nedeed files will be done by a script when needed. If, one day, you have to do it manually run:
 `npm install bower && bower install && bower install [package]`
