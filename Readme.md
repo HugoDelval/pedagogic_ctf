@@ -14,17 +14,20 @@ Install nodejs && npm && bower :
     apt-get install nodejs
 If you can't do :
 
-    node -v
+    npm -v
 Consider doing a :
-
+    
+    apt-get install npm
     ln -s /usr/bin/nodejs /usr/bin/node # (on some distribs you have to do that)
 Now you should be able to launch :
 
     npm -v
 If not, please refer to the official documentation : https://docs.npmjs.com/getting-started/installing-node .
+Finally run :
 
+    npm install bower
 Pulling the nedeed files will be done by a script when needed. If, one day, you have to do it manually run:
-`npm install bower && bower install && bower install [package]`
+`bower install` or `bower install [package]`
     
 ## Installation :
 first, be sure that you have go installed :

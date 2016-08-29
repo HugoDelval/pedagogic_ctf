@@ -23,5 +23,3 @@ chown ctf_interne /srv/ctf_go/challenges.json
 
 echo
 echo "Check src/ctf/utils/config.json !"
-
-

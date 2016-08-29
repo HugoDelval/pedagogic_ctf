@@ -11,7 +11,6 @@ cd /srv/ctf_go
 export GOPATH=`pwd`
 export PATH=$PATH:${GOROOT}/bin:${GOPATH}/bin
 echo "Fetching bower requirements.."
-npm install bower
 cd frontend-angular && bower install
 cd /srv/ctf_go
 echo
