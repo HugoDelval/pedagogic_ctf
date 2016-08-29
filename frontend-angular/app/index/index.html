@@ -2,7 +2,8 @@
 	chall : {{ challenge }} <br> 
 	Name : {{ challenge.name }} <br> 
 	points : {{ challenge.points }} <br> 
-	parameters : {{ challenge.parameters }} <br> 
+	parameters : {{ challenge.parameters }} <br>
+
 	<div ng-repeat="language in challenge.languages" >
 		<button ng-click="showChallenge(challenge.challenge_id, language.extension, $parent.$index)">
 			{{ buttonText(challenge.challenge_id, language.extension, language.name) }}
@@ -25,7 +26,7 @@
 			</form>
 			<form method="POST">
 				<div class="form-group">
-				<label for="secret">Secret :</label><input type="text" ng-model="request_validate[challenge.challenge_id].secret" placeholder="The challenge's secret is ?"><br>
+				<label for="secret">Secret :</label><input type="text" id="secret" ng-model="request_validate[challenge.challenge_id].secret" placeholder="The challenge's secret is ?"><br>
 				</div>
 				<input type="submit" ng-click="execute(challenge.challenge_id, '/validate')" value="Validate"> <br>
 				<input type="reset" value="Reset"> <br>
