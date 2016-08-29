@@ -36,20 +36,6 @@ Then run the script *init.sh* :
     cd ctf_pedagogique
     sudo ./init.sh
     
-Please consider changing your umask to 0027 for more privacy :
-    
-    sudo vim /etc/login.defs
-Change :
-
-    #     UMASK 022
-To :
-
-    #     UMASK 027
-
-Also add this line to */etc/pam.d/common-session* (if it's not already there) :
-
-    session optional pam_umask.so
-
 You are now good to go(lang :p) !
 
     sudo -u ctf_interne ./run.sh
