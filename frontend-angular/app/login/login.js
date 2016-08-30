@@ -18,7 +18,10 @@ angular.module('myApp.login', ['ngRoute', 'ngCookies'])
 		$scope.user = {}
 	}
 	if($scope.user && $scope.user.isLoggedIn){
-		alert('You are already logged in');
+		$.snackbar({
+			content: "You are already logged in.",
+			timeout: 3000
+		});
 		$location.path('/user/me');
 	}
 	/* ------ END INIT ------ */
@@ -35,11 +38,10 @@ angular.module('myApp.login', ['ngRoute', 'ngCookies'])
 		}).error(function(error){
 			$.snackbar({
 		        content: error.message,
-		        timeout: 5000
+		        timeout: 3000
 		    });
-			$location.path('/');
 		});
-	}
+	};
 
 	/* ------ END SERVER INTERACTION ------ */
 }]);

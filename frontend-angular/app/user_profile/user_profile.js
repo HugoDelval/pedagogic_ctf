@@ -51,7 +51,10 @@ angular.module('myApp.userProfile', ['ngRoute', 'ngCookies'])
 									calculateRank(1.0/validatedChalls.length);
 							    }
 							})(userIterator, users[userIterator].ID, validatedChalls[challIt])).error(function(error){
-								alert("An error occured : " + error.message);
+								$.snackbar({
+									content: "An error occured while processing request : " + error.message,
+									timeout: 3000
+								});
 							});
 						}
 						if (validatedChalls.length == 0){
@@ -59,16 +62,25 @@ angular.module('myApp.userProfile', ['ngRoute', 'ngCookies'])
 						}
 					}
 				})(userIt)).error(function(error){
-					alert('An error occured :' + error.message);
+                    $.snackbar({
+                        content: "An error occured while processing request : " + error.message,
+                        timeout: 3000
+                    });
 				});
 			}
 		}).error(function(error){
-			alert('An error occured :' + error.message);
+            $.snackbar({
+                content: "An error occured while processing request : " + error.message,
+                timeout: 3000
+            });
 		});
 		// END users scores -> rank + nbUsers
 
 	}).error(function(error){
-		alert('User does not exists.');
+        $.snackbar({
+            content: "User does not exists : " + error.message,
+            timeout: 3000
+        });
 		$location.path("/user");
 	});
 	$http.get('/v1.0/challenge').success(function(challenges){
@@ -77,7 +89,10 @@ angular.module('myApp.userProfile', ['ngRoute', 'ngCookies'])
 			$scope.totalScoreChallenges += challenges[challIt].points;
 		}
 	}).error(function(error){
-		alert('An error occured :' + error.message);
+        $.snackbar({
+            content: "An error occured while processing request : " + error.message,
+            timeout: 3000
+        });
 	});
 	/* ------ END INIT ------ */
 

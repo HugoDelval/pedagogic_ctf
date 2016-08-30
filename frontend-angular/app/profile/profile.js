@@ -21,7 +21,10 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 		$scope.user = {}
 	}
 	if(!$scope.user || !$scope.user.isLoggedIn){
-		alert('You must login to access this page.');
+		$.snackbar({
+			content: "You must login to access this page.",
+			timeout: 3000
+		});
 		$location.path("/user/login");
 	}else{
 		$http.defaults.headers.common['X-CTF-AUTH'] = $scope.user.token;
@@ -60,7 +63,10 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 										calculateRank(1.0/validatedChalls.length);
 								    }
 								})(userIterator, users[userIterator].ID, validatedChalls[challIt])).error(function(error){
-									alert("An error occured : " + error.message);
+                                    $.snackbar({
+                                        content: "An error occured while processing request : " + data.message,
+                                        timeout: 3000 + error.message.length * 25
+                                    });
 								});
 							}
 							if (validatedChalls.length == 0){
@@ -68,20 +74,29 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 							}
 						}
 					})(userIt)).error(function(error){
-						alert('An error occured :' + error.message);
+                        $.snackbar({
+                            content: "An error occured while processing request : " + data.message,
+                            timeout: 3000 + error.message.length * 25
+                        });
 					});
 				}
 			}).error(function(error){
-				alert('An error occured :' + error.message);
+                $.snackbar({
+                    content: "An error occured while processing request : " + data.message,
+                    timeout: 3000 + error.message.length * 25
+                });
 			});
 			// END users scores -> rank + nbUsers
 
-		}).error(function(error){
+		}).error(function(){
 			$scope.user.token = "";
 			$scope.user.isLoggedIn = false;
 			$scope.user.nick = "anonymous";
 			$cookies.putObject('user', $scope.user);
-			alert('You must login to access this page.');
+            $.snackbar({
+                content: "You must login to access this page.",
+                timeout: 3000
+            });
 			$location.path("/user/login");
 		});
 		$http.get('/v1.0/challenge').success(function(challenges){
@@ -90,7 +105,10 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 				$scope.totalScoreChallenges += challenges[challIt].points;
 			}
 		}).error(function(error){
-			alert('An error occured :' + error.message);
+            $.snackbar({
+                content: "An error occured while processing request : " + data.message,
+                timeout: 3000 + error.message.length * 25
+            });
 		});
 	}
 	/* ------ END INIT ------ */
@@ -99,26 +117,37 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 	/* ------ BEGIN USER-SERVER INTERACTION ------ */
 	$scope.changePassword = function(){
 		if($scope.request.password !== $scope.request.passwordConfirm){
-			alert("Password mismatch " )
+            $.snackbar({
+                content: "Password mismatch.",
+                timeout: 3000
+            });
 		}else{
 			$http.put('/v1.0/user/me/changePassword', $scope.request).success(function(data){
 				$scope.response = data;
 			}).error(function(data){
-				alert("An error occured while processing request ");
-				$scope.response = data;
+                $.snackbar({
+                    content: "An error occured while processing request : " + data.message,
+                    timeout: 3000 + error.message.length * 25
+                });
 			});
 		}
-	}
+	};
 	$scope.deleteAccount = function(){
 		var ask = confirm("Are you sure?");
 		if(ask){
 			$http.delete('/v1.0/user/me/unregister').success(function(response){
-				alert('Account deleted : ' + response.message);
+                $.snackbar({
+                    content: response.message,
+                    timeout: 3000
+                });
 				$location.path("/");
 			}).error(function(error){
-				alert("An error occured while processing request : " + error.message);
+                $.snackbar({
+                    content: "An error occured while processing request : " + data.message,
+                    timeout: 3000 + error.message.length * 25
+                });
 			});
 		}
-	}
+	};
 	/* ------ END USER-SERVER INTERACTION ------ */
 }]);

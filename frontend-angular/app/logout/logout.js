@@ -15,7 +15,10 @@ angular.module('myApp.logout', ['ngRoute', 'ngCookies'])
 		$scope.user = {}
 	}
 	if(!$scope.user || !$scope.user.isLoggedIn){
-		alert('You are already logged out');
+		$.snackbar({
+			content: "You are already logged out",
+			timeout: 3000
+		});
 		$location.path('/');
 	}else{
 		$http.defaults.headers.common['X-CTF-AUTH'] = $scope.user.token;
@@ -25,10 +28,16 @@ angular.module('myApp.logout', ['ngRoute', 'ngCookies'])
 			$scope.user.token = "";
 			$scope.user.nick = "anonymous";
 			$cookies.putObject('user', $scope.user);
-			alert(data.message);
+            $.snackbar({
+                content: data.message,
+                timeout: 3000
+            });
 			$location.path('/');
-		}).error(function(data){
-			alert("An error occured while processing request ");
+		}).error(function(error){
+            $.snackbar({
+                content: "An error occured while processing request : " + error.message,
+                timeout: 3000 + error.message.length * 25
+            });
 		});
 	}
 }]);

@@ -17,8 +17,11 @@ angular.module('myApp.index', ['ngRoute'])
 	$scope.request_validate = {};
 	$http.get('/v1.0').success( function ( data ) {
 		$scope.challenges = data;
-	}).error(function(data){
-		alert("An error occured while processing request : " + data.message);
+	}).error(function(error){
+		$.snackbar({
+			content: "An error occured while processing request : " + data.message,
+			timeout: 3000 + error.message.length * 25
+		});
 	});
 	$scope.user = $cookies.getObject('user') || {};
 	if(!$scope.user.nick){
@@ -34,13 +37,16 @@ angular.module('myApp.index', ['ngRoute'])
 				$scope.challenges[challIndex].languages = data.languages;
 			    $scope.isShownHash[challengeId + extension] = !$scope.isShownHash[challengeId + extension];
 			    $scope.execute(challengeId, '/execute');
-			}).error(function(data){
-				alert("An error occured while processing request : " + data.message);
+			}).error(function(error){
+                $.snackbar({
+                    content: "An error occured while processing request : " + error.message,
+                    timeout: 3000 + data.message.length * 25
+                });
 			})
 		}else{
 			$scope.isShownHash[challengeId + extension] = !$scope.isShownHash[challengeId + extension];
 		}
-	}
+	};
 	$scope.execute = function(challengeId, path){
 		$http.defaults.headers.common['X-CTF-AUTH'] = $scope.user.token;
 		var req = {};
@@ -55,29 +61,29 @@ angular.module('myApp.index', ['ngRoute'])
 			// validate
 			$http.post('/v1.0/challenge/' + challengeId + path, $scope.request_validate[challengeId]).success( function ( data ) {
 				alert(data.message); // modal
-			}).error( function ( data ) {
-				alert("An error occured while processing request : " + data.message);
+			}).error( function (error) {
+                // modal here too !!
 			});
 		}
-	}
+	};
 	$scope.reset = function(challengeId){
 		$scope.request_execute = {};
 		$scope.request_validate = {};
 		$scope.execute(challengeId, '/execute');
-	}
+	};
 	/* ------ END SERVER INTERACTION ------ */
 
 
 	/* ------ BEGIN UTILS ------ */
 	$scope.isShown = function(challengeId, extension){
 		return $scope.isShownHash[challengeId + extension];
-	}
+	};
 	$scope.buttonText = function(challengeId, extension, languageName){
 		if($scope.isShown(challengeId, extension))
 			return "Hide " + languageName;
 		else
 			return "Show " + languageName;
-	}
+	};
 	/* ------ END UTILS ------ */
 
 }]);

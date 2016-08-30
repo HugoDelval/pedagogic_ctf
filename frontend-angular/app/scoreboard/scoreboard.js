@@ -26,17 +26,25 @@ angular.module('myApp.scoreboard', ['ngRoute'])
 								$scope.users[userIter].score += validatedChall.points;
 							}
 						})(userIterator)).error(function(error){
-							alert("An error occured : " + error.message);
+							$.snackbar({
+								content: "An error occured while processing request : " + error.message,
+								timeout: 3000
+							});
 						});
 					}
 				}
 			})(userIt)).error(function(error){
-				alert('An error occured :' + error.message);
+                $.snackbar({
+                    content: "An error occured while processing request : " + error.message,
+                    timeout: 3000
+                });
 			});
 		}
-
 	}).error(function(error){
-		alert("An error occured while processing request : " + data.error);
+        $.snackbar({
+            content: "An error occured while processing request : " + error.message,
+            timeout: 3000
+        });
 	});
 	/* ------ END INIT ------ */
 

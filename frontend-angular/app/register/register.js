@@ -18,7 +18,10 @@ angular.module('myApp.register', ['ngRoute', 'ngCookies'])
 		$scope.user = {}
 	}
 	if($scope.user && $scope.user.isLoggedIn){
-		alert('You are already logged in')
+        $.snackbar({
+            content: "You are already logged in.",
+            timeout: 3000
+        });
 		$location.path("/user/me");
 	}
 	/* ------ END INIT ------ */
@@ -27,18 +30,22 @@ angular.module('myApp.register', ['ngRoute', 'ngCookies'])
 	/* ------ BEGIN SERVER INTERACTION ------ */
 	$scope.register = function(){
 		if($scope.request.password !== $scope.request.passwordConfirm){
-			alert("Password mismatch" )
-			return;
+            $.snackbar({
+                content: "Password mismatch.",
+                timeout: 3000
+            });
 		}else{
 			$http.post('/v1.0/user/register', $scope.request).success(function(data){
 				$scope.response = data;
 				$location.path("/user/me");
-			}).error(function(data){
-				alert("An error occured while processing request ");
-				$scope.response = data;
+			}).error(function(error){
+                $.snackbar({
+                    content: "An error occured while processing request : " + error.message,
+                    timeout: 3000
+                });
 			});
 		}
-	}
+	};
 
 	/* ------ END SERVER INTERACTION ------ */
 }]);
