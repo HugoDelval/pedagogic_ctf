@@ -48,17 +48,18 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 					$http.get('/v1.0/user/'+users[userIt].ID+'/validatedChallenges').success((function(userIterator){
 						return function(validatedChalls){
 							for (var challIt=0; challIt < validatedChalls.length ; ++challIt){
-								$http.get('/v1.0/challenge/' + validatedChalls[challIt].ChallengeID).success((function(userIter, currId) {
+								$http.get('/v1.0/challenge/' + validatedChalls[challIt].ChallengeID).success((function(userIter, currId, validatedChallLink) {
 								    return function(validatedChall) {
 										scores[userIter] += validatedChall.points;
 										if(me.ID == currId){
 											// user score + validated challenges
+											validatedChall.date_validated = validatedChallLink.date_validated;
 											$scope.user.validatedChallenges.push(validatedChall);
 											$scope.user.score += validatedChall.points;
 										}
 										calculateRank(1.0/validatedChalls.length);
 								    }
-								})(userIterator, users[userIterator].ID)).error(function(error){
+								})(userIterator, users[userIterator].ID, validatedChalls[challIt])).error(function(error){
 									alert("An error occured : " + error.message);
 								});
 							}

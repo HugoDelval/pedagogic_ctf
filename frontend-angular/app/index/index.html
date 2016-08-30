@@ -1,38 +1,41 @@
-<section ng-repeat="challenge in challenges | orderBy: 'points'"> 
-	chall : {{ challenge }} <br> 
-	Name : {{ challenge.name }} <br> 
-	points : {{ challenge.points }} <br> 
-	parameters : {{ challenge.parameters }} <br>
-
-	<div ng-repeat="language in challenge.languages" >
-		<button ng-click="showChallenge(challenge.challenge_id, language.extension, $parent.$index)">
-			{{ buttonText(challenge.challenge_id, language.extension, language.name) }}
-		</button>
-		<div ng-show="isShown(challenge.challenge_id, language.extension)">
-			description : {{ challenge.description }} <br>
-			content : <pre><code style="padding:15px; border-radius:3px" class="hljs" ng-bind-html="language.file_content | highlight: language.name | unsafe">{{ language.file_content }}</code></pre> <br>
-			<button ng-click="reset(challenge.challenge_id)">Reset challenge</button>
-			<div class="result">
-				{{challengeResults}}
-			</div>
-			<form novalidate>
-				<div class="params" ng-repeat="parameter in challenge.parameters">
-					<div class="form-group">
-						<label for="{{ parameter.name }}">{{ parameter.name }}:</label> <input id="{{ parameter.name }}" type="text" ng-model="request_execute[challenge.challenge_id][parameter.name]" > <br>
+<section ng-repeat="challenge in challenges | orderBy: 'points'" class="well row"> 
+	<h3 style="display:inline-block;margin-right:15px;margin-top:5px;">{{ challenge.name }}</h3> <span class="label label-primary" style="font-size:115%">{{ challenge.points }}pts</span>
+	<h3>What is this about ?</h3>
+	<pre>{{challenge.description}}</pre>
+	<b>Available versions</b> of this challenge :
+	<div ng-repeat="language in challenge.languages">
+			<button class="btn btn-raised" ng-click="showChallenge(challenge.challenge_id, language.extension, $parent.$index)">
+				{{ buttonText(challenge.challenge_id, language.extension, language.name) }} 
+				<i class="material-icons" ng-hide="isShown(challenge.challenge_id, language.extension)">redo</i>
+				<i class="material-icons" ng-show="isShown(challenge.challenge_id, language.extension)">undo</i>
+			</button>
+			<div ng-show="isShown(challenge.challenge_id, language.extension)">
+				<pre style="border:0"><code style="padding:10px;" class="hljs" ng-bind-html="language.file_content | highlight: language.name | unsafe">{{ language.file_content }}</code></pre>
+				<h3>Output :</h3>
+				<pre class="result">{{challengeResults.message}}</pre>
+				<br>
+				<h3>Challenge's parameters :</h3>
+				<form novalidate>
+					<div class="params" ng-repeat="parameter in challenge.parameters">
+						<div class="form-group">
+							<label for="{{ parameter.name }}">{{ parameter.name }}</label>
+							<input class="form-control" id="{{ parameter.name }}" ng-model="request_execute[challenge.challenge_id][parameter.name]">
+						</div>
 					</div>
-				</div>
-				<input type="submit" ng-click="execute(challenge.challenge_id, '/execute')" value="Execute"> <br>
-				<input type="reset" value="Reset"> <br>
-			</form>
-			<form method="POST">
-				<div class="form-group">
-				<label for="secret">Secret :</label><input type="text" id="secret" ng-model="request_validate[challenge.challenge_id].secret" placeholder="The challenge's secret is ?"><br>
-				</div>
-				<input type="submit" ng-click="execute(challenge.challenge_id, '/validate')" value="Validate"> <br>
-				<input type="reset" value="Reset"> <br>
-			</form>
-		</div>
+					<input class="btn btn-raised btn-info" type="submit" ng-click="execute(challenge.challenge_id, '/execute')" value="Execute">
+					<button class="btn btn-raised" ng-click="reset(challenge.challenge_id)">Reset</button>
+				</form>
+				<br>
+				<h3>"Secret" revealed after exploiting the vulnerability</h3>
+				<form method="POST">
+					<div class="form-group">
+						<label for="secret">Secret</label>
+						<input class="form-control" id="secret" ng-model="request_validate[challenge.challenge_id].secret" placeholder="The challenge's secret is ?">
+					</div>
+					<input  class="btn btn-raised btn-info" type="submit" ng-click="execute(challenge.challenge_id, '/validate')" value="Validate">
+					<input  class="btn btn-raised" type="reset" value="Reset">
+				</form>
+			</div>
 	</div>
-	<hr>
 	<!-- End chall -->
 </section>

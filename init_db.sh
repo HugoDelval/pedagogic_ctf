@@ -25,11 +25,11 @@ token5=`curl $ENDPOINT/user/login -d '{"nick":"test5","password":"test1"}' | pyt
 
 
 ######### VALIDATE CHALLENGES ##########
-curl $ENDPOINT/challenge/injection_conf/validate -d '{"secret":"TheSup3rS3cr37P@550RDThatn0OneknowsAbout"}' -H "X-CTF-AUTH: $token"
+curl $ENDPOINT/challenge/injection_conf/validate -d '{"secret":"thesecret"}' -H "X-CTF-AUTH: $token"
 # curl $ENDPOINT/challenge/.../validate -d '{"secret":"test"}' -H "X-CTF-AUTH: $token"
 # curl $ENDPOINT/challenge/.../validate -d '{"secret":"test"}' -H "X-CTF-AUTH: $token"
 
-curl $ENDPOINT/challenge/injection_conf/validate -d '{"secret":"TheSup3rS3cr37P@550RDThatn0OneknowsAbout"}' -H "X-CTF-AUTH: $token1"
+curl $ENDPOINT/challenge/injection_conf/validate -d '{"secret":"thesecret"}' -H "X-CTF-AUTH: $token1"
 # curl $ENDPOINT/challenge/.../validate -d '{"secret":"test"}' -H "X-CTF-AUTH: $token1"
 
 # curl $ENDPOINT/challenge/injection_conf/validate -d '{"secret":"TheSup3rS3cr37P@550RDThatn0OneknowsAbout"}' -H "X-CTF-AUTH: $token2"

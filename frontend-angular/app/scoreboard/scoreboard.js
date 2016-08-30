@@ -9,7 +9,7 @@ angular.module('myApp.scoreboard', ['ngRoute'])
   });
 }])
 
-.controller('ScoreboardCtrl', ['$sce', '$scope', '$http', 'UserService', function($sce, $scope, $http, UserService) {
+.controller('ScoreboardCtrl', ['$location', '$scope', '$http', function($location, $scope, $http) {
 
 	/* ------ BEGIN INIT ------ */
 	$scope.request = {};
@@ -39,4 +39,12 @@ angular.module('myApp.scoreboard', ['ngRoute'])
 		alert("An error occured while processing request : " + data.error);
 	});
 	/* ------ END INIT ------ */
+
+
+
+	/* ------ BEGIN SERVER INTERACTION ------ */
+	$scope.go = function ( path ) {
+		$location.path( path );
+	};
+	/* ------ END SERVER INTERACTION ------ */
 }]);

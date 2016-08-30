@@ -44,15 +44,21 @@ angular.module('myApp.index', ['ngRoute'])
 	$scope.execute = function(challengeId, path){
 		$http.defaults.headers.common['X-CTF-AUTH'] = $scope.user.token;
 		var req = {};
-		if(path.indexOf("execute") !== -1)
-			req = $scope.request_execute[challengeId];
-		else
-			req = $scope.request_validate[challengeId];
-		$http.post('/v1.0/challenge/' + challengeId + path, req).success( function ( data ) {
+		if(path.indexOf("execute") !== -1){
+			$http.post('/v1.0/challenge/' + challengeId + path, $scope.request_execute[challengeId]).success( function ( data ) {
 				$scope.challengeResults = data;
-		}).error( function ( data ) {
-				$scope.challengeResults = "An error occured while processing request : " + data.message;
-		});
+			}).error( function ( data ) {
+				$scope.challengeResults.message = "An error occured while processing request : " + data.message;
+			});
+		}
+		else{
+			// validate
+			$http.post('/v1.0/challenge/' + challengeId + path, $scope.request_validate[challengeId]).success( function ( data ) {
+				alert(data.message); // modal
+			}).error( function ( data ) {
+				alert("An error occured while processing request : " + data.message);
+			});
+		}
 	}
 	$scope.reset = function(challengeId){
 		$scope.request_execute = {};
@@ -68,9 +74,9 @@ angular.module('myApp.index', ['ngRoute'])
 	}
 	$scope.buttonText = function(challengeId, extension, languageName){
 		if($scope.isShown(challengeId, extension))
-			return "Reduce";
+			return "Hide " + languageName;
 		else
-			return "Try the " +  languageName + " version of this challenge";
+			return "Show " + languageName;
 	}
 	/* ------ END UTILS ------ */
 

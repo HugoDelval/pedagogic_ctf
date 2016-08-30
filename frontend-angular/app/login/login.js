@@ -32,9 +32,12 @@ angular.module('myApp.login', ['ngRoute', 'ngCookies'])
 			$scope.user.nick = $scope.request.nick;
 			$cookies.putObject('user', $scope.user);
 			$location.path('/user/me');
-		}).error(function(data){
-			alert("An error occured while processing request");
-			$scope.response = data;
+		}).error(function(error){
+			$.snackbar({
+		        content: error.message,
+		        timeout: 5000
+		    });
+			$location.path('/');
 		});
 	}
 

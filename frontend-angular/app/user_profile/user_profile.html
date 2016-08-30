@@ -1,0 +1,30 @@
+<section class="well row">
+	<h2>Profile of {{user.nick}}</h2>
+	<div class="col-xs-12">
+	<br>
+		<span class="label label-primary" style="font-size:115%">Score : {{user.score}}/{{totalScoreChallenges}}</span>
+		<span class="label label-success" style="font-size:115%">Rank : {{user.rank}}/{{nbUsers}}</span>
+		<span class="label label-info" style="font-size:115%">Nb challenges validés : {{user.validatedChallenges.length}}/{{nbChallengesAvailable}}</span>
+		<h3>Validated challenges: </h3>
+		<table class="table table-striped table-hover ">
+			<thead>
+				<tr>
+					<th># Points</th>
+					<th>Challenge Name</th>
+					<th>Validated time</th>
+				</tr>
+			</thead>
+		<tbody>
+		<tr ng-repeat="challenge in user.validatedChallenges | orderBy: 'points'">
+		    <td>{{challenge.points}}</td>
+		    <td>{{challenge.name}}</td>
+		    <td>{{challenge.date_validated | date:'MM/dd/yyyy @ h:mma'}}</td>
+		<!-- End chall -->
+		</tr>
+
+		</tbody>
+		</table>
+	</div>
+
+</section>
+
