@@ -19,7 +19,7 @@ if os.path.isdir(directory):
 ## end check params
 
 ## write configuration file
-configuration_file_name = "/srv/writable/";
+configuration_file_name = "/srv/writable/"
 configuration_file_name += ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
 configuration_file_name += "_config.sh"
 with open(configuration_file_name, "w") as fh:
@@ -28,9 +28,9 @@ with open(configuration_file_name, "w") as fh:
 ## end write configuration file
 
 ## launch application based on the config file
-command = ". " + configuration_file_name + " && ";
-command += 'mkdir "${DIRECTORY}" && ';
-command += 'echo ${DATE} > "${DIRECTORY}/folder_configured"';
+command = ". " + configuration_file_name + " && "
+command += 'mkdir "${DIRECTORY}" && '
+command += 'echo ${DATE} > "${DIRECTORY}/folder_configured"'
 os.system(command)
 ## end launch application based on the config file
 
