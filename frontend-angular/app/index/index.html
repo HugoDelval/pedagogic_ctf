@@ -12,7 +12,7 @@
 			<div ng-show="isShown(challenge.challenge_id, language.extension)">
 				<pre style="padding:0;border:0"><code style="padding:10px;" class="hljs" ng-bind-html="language.file_content | highlight: language.name | unsafe">{{ language.file_content }}</code></pre>
 				<h3>Output :</h3>
-				<pre class="result">{{challengeResults.message}}</pre>
+				<pre class="result">{{challengeResults[challenge.challenge_id].message}}</pre>
 				<br>
 				<h3>Challenge's parameters :</h3>
 				<form novalidate>

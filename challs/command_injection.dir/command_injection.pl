@@ -8,7 +8,7 @@ if (@ARGV == 0 || !$ARGV[0]) {
 	exit 0;
 }
 my $server = $ARGV[0];
-if ($server =~ /!;&|'"`\${}></){
+if ($server =~ /[!;&\|'"`\${}><]/){
     print "Error, server param not valid.\n";
     exit 0;
 }
