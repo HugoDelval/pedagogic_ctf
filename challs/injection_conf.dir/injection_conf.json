@@ -1,1 +1,22 @@
-{"name":"Test","points":50,"description":"This is a test","parameters":[{"name": "directory", "placeholder": "sdfsdfds"}],"languages":[{"name": "PYTHON", "extension": ".py"},{"name": "PERL", "extension": ".pl"}],"resolved_conclusion":"This vulnerability is common when dealing with \"As a service product\". Indeed the configuration of the product is given to the user through some wrappers. If the user inputs of these wrappers are not well sanitized, it is possible to inject configuration and possibly execute commands.\nAs always, be carefull with user inputs !"}
+{
+	"name":"This vulnerability is a configuration injection.\nIn \"As a service product\" the user have the ability to configure his product through an API. Here you can choose the directory in which you want to install your product, your goal is to alter the configuration file so that you can execute commands on the server.\n",
+	"points":50,
+	"description":"This is a test",
+	"parameters":[
+		{
+			"name": "directory",
+			"placeholder": "sdfsdfds"
+		}
+	],
+	"languages":[
+		{
+			"name": "PYTHON", 
+			"extension": ".py"
+		},
+		{
+			"name": "PERL",
+			"extension": ".pl"
+		}
+	],
+	"resolved_conclusion":"This vulnerability is common when dealing with \"As a service product\". Indeed the configuration of the product is given to the user through some wrappers. If the user inputs of these wrappers are not well sanitized, it is possible to inject configuration and possibly execute commands.\nAs always, be carefull with user inputs !"
+}
