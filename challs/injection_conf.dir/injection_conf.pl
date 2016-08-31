@@ -8,7 +8,7 @@ if (@ARGV == 0 || !$ARGV[0]) {
 	exit 0;
 }
 my $directory = $ARGV[0];
-if ($directory !~ /[a-zA-Z0-9_\/-]+/){
+if ($directory !~ /(\/tmp\/|\/srv\/writable\/)[a-zA-Z0-9_-]+/){
     print "Error, directory param not valid.\n";
     exit 0;
 }
@@ -20,21 +20,21 @@ if (-e $directory){
 
 ## write configuration file
 my @chars = ("A".."Z", "a".."z", "0".."9");
-my $fileName = "/srv/writable/";
-$fileName .= $chars[rand @chars] for 1..30;
-$fileName .= "_config.sh";
-open(my $fh, '>', $fileName) or die "Could not open file '$fileName' $!";
+my $configurationFileName = "/srv/writable/";
+$configurationFileName .= $chars[rand @chars] for 1..30;
+$configurationFileName .= "_config.sh";
+open(my $fh, '>', $configurationFileName) or die "Could not open file '$configurationFileName' $!";
 print $fh "DATE=`date`\n";
 print $fh "DIRECTORY=$directory\n";
 close $fh;
 ## end write configuration file
 
-## call configuration
-my $command = ". $fileName && ";
+## launch application based on the config file
+my $command = ". $configurationFileName && ";
 $command .= 'mkdir "${DIRECTORY}" && ';
 $command .= 'echo ${DATE} > "${DIRECTORY}/folder_configured"';
 system($command);
-## end call configuration
+## end launch application based on the config file
 
 if (-e $directory){
     print "Directory configured.\n";
