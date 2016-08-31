@@ -98,7 +98,13 @@ def create_users(arguments):
 				print({"error": "A user cannot be added : " + user + "\n Here is the error : " + str(streamdata)})
 				exit_fail()
 			else:
-				users_added.append(user)
+				streamdata, return_code = run_cmd(['adduser', user, "challenge_group"])
+				if return_code != 0:
+					delete_users(users_added)
+					print({"error": "A user cannot be added to challenge_group : " + user + "\n Here is the error : " + str(streamdata)})
+					exit_fail()
+				else:
+					users_added.append(user)
 	except Exception as e:
 		delete_users(users_added)
 		print({"error": "An error occured while creating users : " + str(e)})

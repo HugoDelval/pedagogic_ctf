@@ -1,6 +1,7 @@
 #!/bin/bash
 
 useradd ctf_interne
+groupadd challenge_group
 mkdir /home/ctf_interne && chown ctf_interne:ctf_interne /home/ctf_interne -R
 chattr -i -R /srv/ctf_go/challs/
 rm -rf /srv/ctf_go && mkdir /srv/ctf_go
