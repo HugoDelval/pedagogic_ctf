@@ -20,7 +20,7 @@ chown ctf_interne /srv/ctf_go -R
 chmod o-rwx /srv/ctf_go -R
 chmod o+rx /srv/ctf_go/
 chmod o+rx /srv/ctf_go/challs/
-
+chown :www-data /srv/ctf_go/frontend_angular/app -R
 
 # Init challenges
 userdel injection_conf
