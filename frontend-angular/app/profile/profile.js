@@ -64,7 +64,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 								    }
 								})(userIterator, users[userIterator].ID, validatedChalls[challIt])).error(function(error){
                                     $.snackbar({
-                                        content: "An error occured while processing request : " + data.message,
+                                        content: "An error occured while processing request : " + error.message,
                                         timeout: 3000 + error.message.length * 25
                                     });
 								});
@@ -75,14 +75,14 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 						}
 					})(userIt)).error(function(error){
                         $.snackbar({
-                            content: "An error occured while processing request : " + data.message,
+                            content: "An error occured while processing request : " + error.message,
                             timeout: 3000 + error.message.length * 25
                         });
 					});
 				}
 			}).error(function(error){
                 $.snackbar({
-                    content: "An error occured while processing request : " + data.message,
+                    content: "An error occured while processing request : " + error.message,
                     timeout: 3000 + error.message.length * 25
                 });
 			});
@@ -106,7 +106,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 			}
 		}).error(function(error){
             $.snackbar({
-                content: "An error occured while processing request : " + data.message,
+                content: "An error occured while processing request : " + error.message,
                 timeout: 3000 + error.message.length * 25
             });
 		});
@@ -124,9 +124,9 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 		}else{
 			$http.put('/v1.0/user/me/changePassword', $scope.request).success(function(data){
 				$scope.response = data;
-			}).error(function(data){
+			}).error(function(error){
                 $.snackbar({
-                    content: "An error occured while processing request : " + data.message,
+                    content: "An error occured while processing request : " + error.message,
                     timeout: 3000 + error.message.length * 25
                 });
 			});
@@ -143,7 +143,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
 				$location.path("/");
 			}).error(function(error){
                 $.snackbar({
-                    content: "An error occured while processing request : " + data.message,
+                    content: "An error occured while processing request : " + error.message,
                     timeout: 3000 + error.message.length * 25
                 });
 			});

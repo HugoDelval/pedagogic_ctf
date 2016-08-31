@@ -25,7 +25,7 @@ angular.module('myApp.index', ['ngRoute'])
 		$(".search-details-form").hide()
 	}).error(function(error){
 		$.snackbar({
-			content: "An error occured while processing request : " + data.message,
+			content: "An error occured while processing request : " + error.message,
 			timeout: 3000 + error.message.length * 25
 		});
 	});
@@ -46,7 +46,7 @@ angular.module('myApp.index', ['ngRoute'])
 			}).error(function(error){
                 $.snackbar({
                     content: "An error occured while processing request : " + error.message,
-                    timeout: 3000 + data.message.length * 25
+                    timeout: 3000 + error.message.length * 25
                 });
 			})
 		}else{
@@ -68,7 +68,7 @@ angular.module('myApp.index', ['ngRoute'])
 			$http.post('/v1.0/challenge/' + challengeId + path, $scope.request_validate[challengeId]).success( function ( data ) {
 				alert(data.message); // modal
 			}).error( function (error) {
-				alert(data.message);
+				alert(error.message);
 			});
 		}
 	};
