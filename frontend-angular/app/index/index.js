@@ -17,6 +17,13 @@ angular.module('myApp.index', ['ngRoute'])
 	$scope.request_validate = {};
 	$http.get('/v1.0').success( function ( data ) {
 		$scope.challenges = data;
+		for(var challIt=0 ; challIt<$scope.challenges.length ; ++challIt){
+			for(var paramIt=0 ; paramIt<$scope.challenges[paramIt].parameters.length ; ++paramIt){
+				var param = $scope.challenges[paramIt].parameters[paramIt];
+				$("#" + param.name).attr('placeholder', 'test')
+			}
+		}
+		$(".search-details-form").hide()
 	}).error(function(error){
 		$.snackbar({
 			content: "An error occured while processing request : " + data.message,
