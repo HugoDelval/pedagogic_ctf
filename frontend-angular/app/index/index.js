@@ -62,7 +62,7 @@ angular.module('myApp.index', ['ngRoute'])
 			$http.post('/v1.0/challenge/' + challengeId + path, $scope.request_validate[challengeId]).success( function ( data ) {
 				alert(data.message); // modal
 			}).error( function (error) {
-                // modal here too !!
+				alert(data.message);
 			});
 		}
 	};
