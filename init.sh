@@ -15,6 +15,7 @@ rm -rf /srv/writable && mkdir /srv/writable && chmod 733 /srv/writable
 chmod 733 /tmp
 cp /srv/ctf_go/src/ctf/utils/config.json.example /srv/ctf_go/src/ctf/utils/config.json
 touch /srv/ctf_go/database.db
+touch /srv/ctf_go/main
 chown ctf_interne /srv/ctf_go -R
 chmod o-rwx /srv/ctf_go -R
 chmod o+rx /srv/ctf_go/
