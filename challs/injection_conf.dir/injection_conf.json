@@ -1,7 +1,7 @@
 {
 	"name": "Configuration Injection",
 	"points": 50,
-	"description": "This vulnerability is a configuration injection.\nIn \"As a service product\" the user have the ability to configure his product through an API. Here you can choose the directory in which you want to install your product, your goal is to alter the configuration file so that you can execute commands on the server.\n",
+	"description": "This vulnerability is a configuration injection.\nIn \"As a service product\" the user have the ability to configure his product through an API.\nHere you can choose the directory in which you want to install your product,\nyour goal is to alter the configuration file so that you can execute commands on the server.\n",
 	"parameters": [
 		{
 			"name": "directory",
