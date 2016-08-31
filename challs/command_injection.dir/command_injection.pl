@@ -8,7 +8,7 @@ if (@ARGV == 0 || !$ARGV[0]) {
 	exit 0;
 }
 my $server = $ARGV[0];
-if ($server =~ /!;&|'"`${}></){
+if ($server =~ /!;&|'"`\${}></){
     print "Error, server param not valid.\n";
     exit 0;
 }
@@ -18,6 +18,6 @@ if ($server =~ /!;&|'"`${}></){
 my $resultDig = `/usr/bin/dig $server`;
 ## end launch dig
 
-print "$resultDig\n"
+print "$resultDig\n";
 
 1;
