@@ -11,7 +11,8 @@ echo "Fetching golang requirements.."
 go get ctf/main
 
 cp . -R /srv/ctf_go
-rm -rf /srv/writable && mkdir /srv/writable && chmod 733 /srv/writable -R
+rm -rf /srv/writable && mkdir /srv/writable && chmod 733 /srv/writable
+chmod 733 /tmp
 cp /srv/ctf_go/src/ctf/utils/config.json.example /srv/ctf_go/src/ctf/utils/config.json
 touch /srv/ctf_go/database.db
 chown ctf_interne /srv/ctf_go -R
