@@ -12,6 +12,7 @@ export GOPATH=`pwd`
 export PATH=$PATH:${GOROOT}/bin:${GOPATH}/bin
 echo "Building.."
 go build ctf/main
+chmod o-rwx ./main
 echo "Built"
 echo "Launching app!"
 ./main
