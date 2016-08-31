@@ -40,9 +40,7 @@ angular.module('myApp.index', ['ngRoute'])
 	$scope.showChallenge = function(challengeId, extension, challIndex){
 		if(! $scope.challenges[challIndex].languages[0].file_content){
 			$http.get('/v1.0/challenge/' + challengeId).success( function ( data ) {
-				for(var languageIt = 0 ; languageIt<data.length ; ++languageIt){
-					$scope.challenges[challIndex].languages[languageIt] = data.languages[languageIt];
-				}
+				$scope.challenges[challIndex].languages = data.languages;
 			    $scope.isShownHash[challengeId + extension] = !$scope.isShownHash[challengeId + extension];
 			    $scope.execute(challengeId, '/execute');
 			}).error(function(error){
