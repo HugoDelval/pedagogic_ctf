@@ -1,7 +1,7 @@
 {
 	"name": "Configuration Injection",
-	"points": 50,
-	"description": "This vulnerability is a configuration injection.\nIn \"As a service product\" the user have the ability to configure his product through an API.\nHere you can choose the directory in which you want to install your product,\nyour goal is to alter the configuration file so that you can execute commands on the server.\n",
+	"points": 100,
+	"description": "In \"As a service\" product the user can configure his product through APIs.\nHere you can choose the directory in which you want to install your \"product\".\n\nYour goal is to alter the configuration file of you \"product\" in order to execute commands on the server.\nYou will find the secret in the file named \"secret\"",
 	"parameters": [
 		{
 			"name": "directory",
@@ -22,5 +22,5 @@
 			"extension": ".go"
 		}
 	],
-	"resolved_conclusion":"\n\nThis vulnerability is common when dealing with \"As a service product\". The configuration of the product is given to the user through APIs. If the user inputs are not well sanitized, it is possible to inject configuration and possibly execute commands.\nAs always, be carefull with user inputs !\nWhen using regex don't forget to match the begining (^) and end ($) of line."
+	"resolved_conclusion":"\n\nThis vulnerability is common when dealing with \"As a service product\". The configuration of the product is given to the user through APIs. If the user inputs are not well sanitized, it is possible to inject configuration and possibly execute commands.\nAs always, be carefull with user inputs !\n\nWhen using regex don't forget to match the begining (^) and end ($) of line!"
 }

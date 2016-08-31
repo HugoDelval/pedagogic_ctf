@@ -1,0 +1,26 @@
+{
+	"name": "Command Injection",
+	"points": 50,
+	"description": "This application lets the user `dig` a server.\nYour goal is to execute commands on the server and find the file \"secret\".\nDon't forget: it's all a matter of user input validation !",
+	"parameters": [
+		{
+			"name": "server",
+			"placeholder": "ex: 127.0.0.1 or www.ovh.com"
+		}
+	],
+	"languages": [
+		{
+			"name": "PYTHON", 
+			"extension": ".py"
+		},
+		{
+			"name": "PERL",
+			"extension": ".pl"
+		},
+		{
+			"name": "GO",
+			"extension": ".go"
+		}
+	],
+	"resolved_conclusion":"\n\nThis vulnerability is common when dealing online software services.\n.\nAs always, be carefull with user inputs !\n\nWhen validating user input, use a whitelist as much as possible, not a blacklist ! It's way more secure.\nAlso consider passing arguments directly to the executable and not through a shell (do not use sh -c 'cmd')."
+}
