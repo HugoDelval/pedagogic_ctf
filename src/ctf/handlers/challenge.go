@@ -15,6 +15,7 @@ import (
 	"time"
 	"errors"
 	"regexp"
+	"path/filepath"
 )
 
 // exists returns whether the given file or directory exists or not
@@ -23,6 +24,21 @@ func exists(path string) (bool, error) {
     if err == nil { return true, nil }
     if os.IsNotExist(err) { return false, nil }
     return true, err
+}
+
+
+func customCommand(name string, dir string, arg ...string) *exec.Cmd {
+	cmd := &exec.Cmd{
+				Path: name,
+				Args: append([]string{name}, arg...),
+				Dir: dir,
+	}
+	if filepath.Base(name) == name {
+		if lp, err := exec.LookPath(name); err == nil {
+			cmd.Path = lp
+		}
+	}
+	return cmd
 }
 
 
@@ -191,7 +207,7 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cmd := challengeFolderPath + "wrapper"
-	out, err := exec.Command(cmd, args...).CombinedOutput()
+	out, err := customCommand(cmd, challengeFolderPath, args...).CombinedOutput()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		encouragingMessage := fmt.Sprintf("Mmmh.. Looks like your request failed.. You might be on the good track. Here is your error : \"%v : %s\"", err, string(out[:]))

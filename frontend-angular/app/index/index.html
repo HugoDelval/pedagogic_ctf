@@ -19,7 +19,7 @@
 					<div class="params" ng-repeat="parameter in challenge.parameters">
 						<div class="form-group">
 							<label for="{{ parameter.name }}">{{ parameter.name }}</label>
-							<input class="form-control" id="{{ parameter.name }}" ng-model="request_execute[challenge.challenge_id][parameter.name]">
+							<input class="form-control" id="{{ parameter.name }}" ng-model="request_execute[challenge.challenge_id][parameter.name]" placeholder="{{ parameter.placeholder}}">
 						</div>
 					</div>
 					<input class="btn btn-raised btn-info" type="submit" ng-click="execute(challenge.challenge_id, '/execute')" value="Execute">

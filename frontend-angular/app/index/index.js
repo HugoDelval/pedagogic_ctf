@@ -18,9 +18,8 @@ angular.module('myApp.index', ['ngRoute'])
 	$http.get('/v1.0').success( function ( data ) {
 		$scope.challenges = data;
 		for(var challIt=0 ; challIt<$scope.challenges.length ; ++challIt){
-			for(var paramIt=0 ; paramIt<$scope.challenges[paramIt].parameters.length ; ++paramIt){
-				var param = $scope.challenges[paramIt].parameters[paramIt];
-				$("#" + param.name).attr('placeholder', 'test')
+			for(var paramIt=0 ; paramIt<$scope.challenges[challIt].parameters.length ; ++paramIt){
+				var param = $scope.challenges[challIt].parameters[paramIt];
 			}
 		}
 		$(".search-details-form").hide()

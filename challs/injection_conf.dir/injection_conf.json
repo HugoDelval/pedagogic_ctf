@@ -5,7 +5,7 @@
 	"parameters": [
 		{
 			"name": "directory",
-			"placeholder": "ex: /writable/thedir"
+			"placeholder": "ex: /tmp/thedir"
 		}
 	],
 	"languages": [
@@ -18,5 +18,5 @@
 			"extension": ".pl"
 		}
 	],
-	"resolved_conclusion":"This vulnerability is common when dealing with \"As a service product\". Indeed the configuration of the product is given to the user through some wrappers. If the user inputs of these wrappers are not well sanitized, it is possible to inject configuration and possibly execute commands.\nAs always, be carefull with user inputs !\nWhen using regex don't forget to match the begining (^) and end ($) of line."
+	"resolved_conclusion":"\n\nThis vulnerability is common when dealing with \"As a service product\". The configuration of the product is given to the user through APIs. If the user inputs are not well sanitized, it is possible to inject configuration and possibly execute commands.\nAs always, be carefull with user inputs !\nWhen using regex don't forget to match the begining (^) and end ($) of line."
 }
