@@ -38,6 +38,7 @@ def get_user_id():
 def do_register():
 	cur.execute("INSERT INTO users(login, password) VALUES(?, ?)", [login, hashed_passwd])
 	user_id = get_user_id()
+	time.sleep(1) # simulate more db access / calculus
 	elapsed = time.time() - start_time
 	print("It's been " + str(elapsed) +"s since you started register.\n")
 	cur.execute("INSERT INTO forbidden_ids(user_id) VALUES(?)", [user_id])
