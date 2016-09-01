@@ -6,6 +6,8 @@ import bcrypt, time
 # ex : ./race_condition.py register admin password123
 # ex : ./race_condition.py login admin password123
 
+start_time = time.time()
+
 ## check params
 if len(sys.argv) != 4 or not sys.argv[1] or not sys.argv[2] or not sys.argv[3]:
     print("Please send me an 'action' (register or login) with your credentials (login, then password)")
@@ -36,6 +38,8 @@ def get_user_id():
 def do_register():
 	cur.execute("INSERT INTO users(login, password) VALUES(?, ?)", [login, hashed_passwd])
 	user_id = get_user_id()
+	elapsed = time.time() - start_time
+	print("It's been " + elapsed +"s since you started register.\n")
 	cur.execute("INSERT INTO forbidden_ids(user_id) VALUES(?)", [user_id])
 
 
@@ -43,6 +47,8 @@ def do_login():
 	user_id = get_user_id()
 	if user_id < 0:
 		return "We failed to log you in :/"
+	elapsed = time.time() - start_time
+	print("It's been " + elapsed +"s since you started log in.\n")
 	cur.execute("SELECT count(*) FROM forbidden_ids WHERE user_id=?", [user_id])
 	if cur.fetchone()[0] > 0:
 		return "You are logged in. But sorry you are not allowed to see the secret."

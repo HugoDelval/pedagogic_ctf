@@ -49,7 +49,7 @@ sub doRegister{
 	$sth->bind_param(2, $hashedPasswd->as_crypt);
 	$sth->execute or exit;
 	my $elapsed = time - $startTime;
-	print("It's been $elapsed s since you started register.\n");
+	print("It's been " . $elapsed . "s since you started register.\n");
 	$sth = $dbh->prepare("INSERT INTO forbidden_ids(user_id) VALUES(?)");
 	$sth->execute(getUserId()) or exit;
 }
@@ -62,7 +62,7 @@ sub doLogin{
 	}
 	my $sth = $dbh->prepare("SELECT count(*) FROM forbidden_ids WHERE user_id=?");
 	my $elapsed = time - $startTime;
-	print("It's been $elapsed s since you started login.\n");
+	print("It's been " . $elapsed ."s since you started log in.\n");
 	$sth->execute($userId) or exit;
 	$sth->bind_columns(\my($count));
 	$sth->fetchrow_array;
