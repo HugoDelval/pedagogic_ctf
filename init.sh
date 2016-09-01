@@ -29,6 +29,9 @@ printf "thesecret" > /srv/ctf_go/challs/injection_conf.dir/secret
 userdel command_injection
 printf "thesecret" > /srv/ctf_go/challs/command_injection.dir/secret
 (cd /srv/ctf_go/ && ./load_challenges.py command_injection)
+userdel race_condition
+printf "thesecret" > /srv/ctf_go/challs/race_condition.dir/secret
+(cd /srv/ctf_go/ && ./load_challenges.py race_condition)
 
 chown ctf_interne /srv/ctf_go/challenges.json
 

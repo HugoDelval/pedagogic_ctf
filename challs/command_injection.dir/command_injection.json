@@ -22,5 +22,5 @@
 			"extension": ".go"
 		}
 	],
-	"resolved_conclusion":"\n\nThis vulnerability is common when dealing online software services.\n.\nAs always, be carefull with user inputs !\n\nWhen validating user input, use a whitelist as much as possible, not a blacklist ! It's way more secure.\nAlso consider passing arguments directly to the executable and not through a shell (do not use sh -c 'cmd')."
+	"resolved_conclusion":"\n\nThis vulnerability is common when dealing online software services.\nAs always, be carefull with user inputs !\n\nWhen validating user input, use a whitelist as much as possible, not a blacklist ! It's way more secure.\nAlso consider passing arguments directly to the executable and not through a shell (do not use sh -c 'cmd')."
 }

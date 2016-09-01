@@ -1,0 +1,30 @@
+{
+	"name": "Race Condition",
+	"points": 250,
+	"description": "This application lets the user register and login.\nThere is a table in the DB that lists all the users who are forbidden to access the secret.\nWhen you register this entry is inserted in the table but if you are quick enough you can login just before this entry is inserted.\n\nThis attack is called a 'race condition' and is really common in API-like application. You should always use transaction when your database can be in a instable state.",
+	"parameters": [
+		{
+			"name": "action",
+			"placeholder": "login or register"
+		},
+		{
+			"name": "login",
+			"placeholder": "myNick"
+		},
+		{
+			"name": "password",
+			"placeholder": "my (not-real-one-because-this-is-http-app) password"
+		}
+	],
+	"languages": [
+		{
+			"name": "PYTHON", 
+			"extension": ".py"
+		},
+		{
+			"name": "PERL",
+			"extension": ".pl"
+		}
+	],
+	"resolved_conclusion":"\n\nThis vulnerability is common when dealing with APIs.\nIt's quite hard to detect as a developper, so be carefull ! Ask you the good questions.\n\nTo avoid this vulnerability you could use db transactions."
+}
