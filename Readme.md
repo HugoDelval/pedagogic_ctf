@@ -33,6 +33,10 @@ Finally run :
 first, be sure that you have go installed :
 
     sudo apt-get install golang
+some modules :
+
+    apt-get install libauthen-passphrase-perl
+    apt-get install libdbi-perl
 
 Then run the script *init.sh* :
 

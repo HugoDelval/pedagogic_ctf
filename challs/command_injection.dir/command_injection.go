@@ -7,6 +7,11 @@ import (
     "os/exec"
 )
 
+// Usage :
+// go run ./command_injection.go <server_address>
+// ex: go run ./command_injection.go www.ovh.com
+// do a dig on this server
+
 func main() {
     // check params
     args := os.Args[1:]

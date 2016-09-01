@@ -3,6 +3,12 @@ import sys, os
 import re
 import random, string
 
+## Usage :
+# ./injection_conf.py <directory_path>
+# ex: ./injection_conf.py /tmp/test
+# create a config file (configuration_file_name) containing a variable which value is set to <directory_path>
+# then create a project based on this configuration file
+
 ## check params
 if len(sys.argv) != 2 or not sys.argv[1]:
     print("Please send me a directory path so I can launch my configuration script !")
@@ -27,12 +33,12 @@ with open(configuration_file_name, "w") as fh:
     fh.write("DIRECTORY=" + directory + "\n")
 ## end write configuration file
 
-## launch application based on the config file
+## create project based on the config file
 command = ". " + configuration_file_name + " && "
 command += 'mkdir "${DIRECTORY}" && '
 command += 'echo ${DATE} > "${DIRECTORY}/folder_configured"'
 os.system(command)
-## end launch application based on the config file
+## end create project based on the config file
 
 if os.path.isdir(directory):
     print("Directory configured.")

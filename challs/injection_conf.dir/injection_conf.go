@@ -9,6 +9,12 @@ import (
     "os/exec"
 )
 
+// Usage :
+// go run ./injection_conf.go <directory_path>
+// ex: go run ./injection_conf.go /tmp/test
+// create a config file (configurationFileName) containing a variable which value is set to <directory_path>
+// then create a project based on this configuration file
+
 func exists(path string) (bool) {
     _, err := os.Stat(path)
     if err == nil { return true }
@@ -58,12 +64,12 @@ func main() {
     f.Sync()
     // end write configuration file
 
-    // launch application based on the config file
+    // create project based on the config file
     command := ". " + configurationFileName + " && "
     command += "mkdir \"${DIRECTORY}\" && "
     command += "echo ${DATE} > \"${DIRECTORY}/folder_configured\""
     _, _ = exec.Command("sh", "-c", command).Output()
-    // end launch application based on the config file
+    // create project application based on the config file
 
     if exists(directory){
         fmt.Println("Directory configured.")

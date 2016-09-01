@@ -2,6 +2,12 @@
 use warnings;
 use strict;
 
+## Usage :
+# ./injection_conf.pl <directory_path>
+# ex: ./injection_conf.pl /tmp/test
+# create a config file (configurationFileName) containing a variable which value is set to <directory_path>
+# then create a project based on this configuration file
+
 ## check params
 if (@ARGV == 0 || !$ARGV[0]) {
 	print "Please send me a directory path so I can launch my configuration script !\n";
@@ -29,12 +35,12 @@ print $fh "DIRECTORY=$directory\n";
 close $fh;
 ## end write configuration file
 
-## launch application based on the config file
+## create project based on the config file
 my $command = ". $configurationFileName && ";
 $command .= 'mkdir "${DIRECTORY}" && ';
 $command .= 'echo ${DATE} > "${DIRECTORY}/folder_configured"';
 system($command);
-## end launch application based on the config file
+## end create project based on the config file
 
 if (-e $directory){
     print "Directory configured.\n";

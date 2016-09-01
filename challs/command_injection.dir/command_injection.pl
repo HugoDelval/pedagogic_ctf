@@ -2,6 +2,11 @@
 use warnings;
 use strict;
 
+## Usage :
+# ./command_injection.pl <server_address>
+# ex: ./command_injection.pl www.ovh.com
+# do a dig on this server
+
 ## check params
 if (@ARGV == 0 || !$ARGV[0]) {
 	print "Please send me a server address so I can dig it ! (ex: 127.0.0.1 or www.ovh.com)\n";
