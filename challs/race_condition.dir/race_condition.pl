@@ -43,7 +43,7 @@ sub getUserId{
 
 
 sub doRegister{
-	my $hashedPasswd = Authen::Passphrase::BlowfishCrypt->new( cost=> 12, salt_random => 1, passphrase => $passwd);
+	my $hashedPasswd = Authen::Passphrase::BlowfishCrypt->new( cost=> 10, salt_random => 1, passphrase => $passwd);
 	my $sth = $dbh->prepare("INSERT INTO users(login, password) VALUES(?, ?)");
 	$sth->bind_param(1, $login);
 	$sth->bind_param(2, $hashedPasswd->as_crypt);
@@ -65,6 +65,8 @@ sub doLogin{
 	$sth->bind_columns(\my($count));
 	$sth->fetchrow_array;
 	if($count > 0){
+		my $elapsed = time - $startTime;
+		print("It's been $elapsed s since you started login.\n");
 		return "You are logged in. But sorry you are not allowed to see the secret.\n";
 	}
 	open my $fh, '<', 'secret' or die "error opening secret file";
