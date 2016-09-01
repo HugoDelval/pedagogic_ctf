@@ -38,6 +38,7 @@ some modules :
     apt-get install libauthen-passphrase-perl
     apt-get install libdbi-perl
     apt-get install libdbd-sqlite3-perl
+    apt-get install python3-bcrypt
 
 Then run the script *init.sh* :
 

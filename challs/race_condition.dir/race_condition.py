@@ -39,7 +39,7 @@ def do_register():
 	cur.execute("INSERT INTO users(login, password) VALUES(?, ?)", [login, hashed_passwd])
 	user_id = get_user_id()
 	elapsed = time.time() - start_time
-	print("It's been " + elapsed +"s since you started register.\n")
+	print("It's been " + str(elapsed) +"s since you started register.\n")
 	cur.execute("INSERT INTO forbidden_ids(user_id) VALUES(?)", [user_id])
 
 
@@ -48,7 +48,7 @@ def do_login():
 	if user_id < 0:
 		return "We failed to log you in :/"
 	elapsed = time.time() - start_time
-	print("It's been " + elapsed +"s since you started log in.\n")
+	print("It's been " + str(elapsed) +"s since you started log in.\n")
 	cur.execute("SELECT count(*) FROM forbidden_ids WHERE user_id=?", [user_id])
 	if cur.fetchone()[0] > 0:
 		return "You are logged in. But sorry you are not allowed to see the secret."
