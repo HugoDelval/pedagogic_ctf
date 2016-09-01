@@ -43,7 +43,7 @@ sub getUserId{
 
 
 sub doRegister{
-	my $hashedPasswd = Authen::Passphrase::BlowfishCrypt->new( cost=> 10, salt_random => 1, passphrase => $passwd);
+	my $hashedPasswd = Authen::Passphrase::BlowfishCrypt->new( cost=> 8, salt_random => 1, passphrase => $passwd);
 	my $sth = $dbh->prepare("INSERT INTO users(login, password) VALUES(?, ?)");
 	$sth->bind_param(1, $login);
 	$sth->bind_param(2, $hashedPasswd->as_crypt);

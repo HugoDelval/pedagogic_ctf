@@ -15,7 +15,7 @@ if len(sys.argv) != 4 or not sys.argv[1] or not sys.argv[2] or not sys.argv[3]:
 action = sys.argv[1]
 login = sys.argv[2]
 passwd = sys.argv[3]
-hashed_passwd = str(bcrypt.hashpw(sys.argv[3], bcrypt.gensalt(10)))
+hashed_passwd = str(bcrypt.hashpw(sys.argv[3], bcrypt.gensalt(8)))
 ## end check params
 
 try:
