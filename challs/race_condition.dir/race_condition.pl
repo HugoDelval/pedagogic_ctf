@@ -61,12 +61,12 @@ sub doLogin{
 		return "We failed to log you in :/\n";
 	}
 	my $sth = $dbh->prepare("SELECT count(*) FROM forbidden_ids WHERE user_id=?");
+	my $elapsed = time - $startTime;
+	print("It's been $elapsed s since you started login.\n");
 	$sth->execute($userId) or exit;
 	$sth->bind_columns(\my($count));
 	$sth->fetchrow_array;
 	if($count > 0){
-		my $elapsed = time - $startTime;
-		print("It's been $elapsed s since you started login.\n");
 		return "You are logged in. But sorry you are not allowed to see the secret.\n";
 	}
 	open my $fh, '<', 'secret' or die "error opening secret file";
