@@ -37,6 +37,7 @@ some modules :
 
     apt-get install libauthen-passphrase-perl
     apt-get install libdbi-perl
+    apt-get install libdbd-sqlite3-perl
 
 Then run the script *init.sh* :
 

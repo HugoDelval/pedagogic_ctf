@@ -22,7 +22,7 @@ my $passwd = $ARGV[2];
 ## end check params
 
 my $driver = "SQLite";
-my $dsn = "DBI:$driver:dbname=race_condition.db";
+my $dsn = "DBI:$driver:dbname=/tmp/race_condition.db";
 my $dbh = DBI->connect($dsn, undef, undef, { sqlite_see_if_its_a_number => 1, AutoCommit => 1 }) or exit;
 
 

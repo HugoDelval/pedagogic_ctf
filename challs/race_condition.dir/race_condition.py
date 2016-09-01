@@ -17,7 +17,7 @@ hashed_passwd = str(bcrypt.hashpw(sys.argv[3], bcrypt.gensalt(10)))
 ## end check params
 
 try:
-	conn = sqlite3.connect('race_condition.db', isolation_level=None)
+	conn = sqlite3.connect('/tmp/race_condition.db', isolation_level=None)
 	cur = conn.cursor()
 except:
 	print('Error connecting to db.')
