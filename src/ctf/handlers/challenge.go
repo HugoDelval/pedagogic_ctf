@@ -220,6 +220,73 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 	utils.SendResponseJSON(w, utils.Message{string(out[:])})
 }
 
+
+
+func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
+	challengeName, challengeFolderPath, _, err := getChallengeInfos(w, r)
+	if err != nil{
+		return
+	}
+
+    var correctedScript model.CorrectedScript
+	var correctedScriptRaw []byte
+	err = utils.LoadJSONFromRequest(w, r, &correctedScriptRaw)
+	if err != nil{return}
+	err = json.Unmarshal(correctedScriptRaw, &correctedScript)
+	if err != nil{
+		utils.SendResponseJSON(w, utils.BadRequestMessage)
+		log.Println(err)
+		return
+	}
+
+	regexLanguageExtension := regexp.MustCompile(`^\.[a-z0-9]{2,5}$`)
+	if !regexLanguageExtension.MatchString(correctedScript.LanguageExtension){
+	    w.WriteHeader(http.StatusBadRequest)
+	    utils.SendResponseJSON(w, utils.BadRequestMessage)
+	    return
+	}
+
+	// mkdir random folder + create script file based on user input
+	correctedScriptPath := "/srv/writable/" + challengeName + "_" + utils.RandString(30) + "/"
+	if err = os.Mkdir(correctedScriptPath, 0750); err != nil{
+	    w.WriteHeader(http.StatusInternalServerError)
+		utils.SendResponseJSON(w, utils.InternalErrorMessage)
+		log.Println(err)
+		return
+	}
+	scriptFile, err := os.Create(correctedScriptPath + challengeName + correctedScript.LanguageExtension)
+	if err != nil{
+	    w.WriteHeader(http.StatusInternalServerError)
+		utils.SendResponseJSON(w, utils.InternalErrorMessage)
+		log.Println(err)
+		return
+	}
+	defer scriptFile.Close()
+	_, err = scriptFile.WriteString(correctedScript.ContentScript)
+	if err != nil{
+	    w.WriteHeader(http.StatusInternalServerError)
+		utils.SendResponseJSON(w, utils.InternalErrorMessage)
+		log.Println(err)
+		return
+	}
+	scriptFile.Sync()
+
+	cmd := utils.BasePath + "check_challenge_corrected"
+	out, err := customCommand(cmd, challengeFolderPath, correctedScriptPath, challengeName, correctedScript.LanguageExtension).CombinedOutput()
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		encouragingMessage := fmt.Sprintf("Mmmh.. Looks like your script is not perfect yet.. Here is your error : \"%v : %s\"", err, string(out[:]))
+		utils.SendResponseJSON(w, utils.Message{encouragingMessage})
+		log.Printf("%v : %s\n", err, string(out[:]))
+		return
+	}
+
+	// TODO : say to the user that the script is correct + add points
+
+	w.WriteHeader(http.StatusOK)
+	utils.SendResponseJSON(w, utils.Message{"Congratz. That's a pretty source code (from what a bot can see ;) )."})
+}
+
 func ChallengeShowAll(w http.ResponseWriter, r *http.Request) {
 	challengesPath := utils.BasePath + "challenges.json"
 	

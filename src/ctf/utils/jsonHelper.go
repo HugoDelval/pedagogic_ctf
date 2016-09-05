@@ -22,7 +22,7 @@ func SendResponseJSON(w http.ResponseWriter, object interface{}){
 
 func LoadJSONFromRequest(w http.ResponseWriter, r *http.Request, body *[]byte) (err error) {
 	response := BadRequestMessage
-	(*body), err = ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	(*body), err = ioutil.ReadAll(io.LimitReader(r.Body, 200000))
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)

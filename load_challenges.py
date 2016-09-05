@@ -21,7 +21,7 @@ if not WRAPPER:
 
 def check_args():
 	if len(sys.argv) < 2:
-		print({"error": "Error: excepting at least 1 argument :\n" + __file__ + " test.pl [test.py [test.go [..]]]"})
+		print({"error": "Error: excepting at least 1 argument :\n" + __file__ + " chall_id1 [chall_id2 [chall_id3 [..]]]"})
 		sys.exit(1)
 
 	arguments = sys.argv[1:]
@@ -36,7 +36,7 @@ def check_args():
 		# is folder exists ?
 		folder = os.path.join(CHALLS_DIR, arg + ".dir")
 		if not os.path.isdir(folder):
-			print({"error": "Can't find a folder with the name :" + new_folder })
+			print({"error": "Can't find a folder with the name :" + folder })
 			sys.exit(1)
 
 		chall_path = os.path.join(folder, arg)
@@ -92,7 +92,10 @@ def create_wrapper_and_change_perms(arguments):
 			folder_path = os.path.join(CHALLS_DIR, folder_name)
 			
 			# create wrapper.c
-			current_wrapper = WRAPPER.replace("CHALLENGE", os.path.join(folder_name, user + '.pl')) # we assume that there will always be a perl challenge, and base the wrapper on this file
+			current_wrapper = WRAPPER.replace("CHALLENGE",
+				os.path.join(os.path.sep, "srv", "ctf_go", "challs", folder_name, user + '.pl')
+			)
+			# we assume that there will always be a perl challenge, and base the wrapper on this file
 			current_wrapper = current_wrapper.replace("THE_USER", user)
 			current_wrapper_path = os.path.join(folder_path, "wrapper.c")
 			with open(current_wrapper_path, "w") as wrapper_handler:

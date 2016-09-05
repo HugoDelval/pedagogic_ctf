@@ -22,6 +22,13 @@ chmod o+rx /srv/ctf_go/
 chmod o+rx /srv/ctf_go/challs/
 chown :www-data /srv/ctf_go/frontend-angular/ -R
 
+# Build app that check if user has well corrected the script
+gcc /srv/ctf_go/check_challenge_corrected.c -o /srv/ctf_go/check_challenge_corrected
+chown root:ctf_interne /srv/ctf_go/check_challenge_corrected
+chmod 4750 /srv/ctf_go/check_challenge_corrected
+chown root:root /srv/ctf_go/check_challenge_corrected.py
+chmod 500 /srv/ctf_go/check_challenge_corrected.py
+
 # Init challenges
 userdel injection_conf
 printf "thesecret" > /srv/ctf_go/challs/injection_conf.dir/secret

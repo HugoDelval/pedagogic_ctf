@@ -5,23 +5,21 @@
 #include <string.h>
 
 int main (int argc, char *argv[]) {
-    char *final_path = "CHALLENGE";
+    const char* COMMAND_PATH = "/srv/ctf_go/check_challenge_corrected.py";
+    char* COMMAND_NAME = "check_challenge_corrected.py";
     // have to do this to keep the suid
     setregid(getegid(), getegid());
     setreuid(geteuid(), geteuid());
-    int arrayLength = (4 + argc - 1);
-    char** arguments = (char**)malloc( sizeof(char*) * arrayLength);
-    char* user = "--user=THE_USER";
+    int arrayLength = argc+1;
+    char** arguments = (char**)malloc( sizeof(char*) * (arrayLength));
     char* null = (char*)0;
     int i;
-    arguments[0] = "sudo";
-    arguments[1] = user;
-    arguments[2] = final_path;
-    for(i=3 ; i<arrayLength-1 ; ++i){
-        arguments[i] = argv[i-2];
+    arguments[0] = COMMAND_NAME;
+    for(i=1 ; i<arrayLength-1 ; ++i){
+        arguments[i] = argv[i];
     }
     arguments[arrayLength-1] = null;
-    int ret = execv("/usr/bin/sudo", arguments);
+    int ret = execv(COMMAND_PATH, arguments);
     free(arguments);
     if(ret != 0){
         fprintf(stderr, "%s\n", strerror(errno));
