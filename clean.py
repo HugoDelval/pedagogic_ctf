@@ -2,6 +2,7 @@
 
 import sqlite3, os
 import random, string
+import importlib.machinery
 
 
 def random_string(size):

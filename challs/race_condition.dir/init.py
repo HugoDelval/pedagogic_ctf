@@ -24,5 +24,7 @@ def init(path, randomize, file_challenge_name=None):
 	conn.commit()
 	cur.execute("INSERT INTO users(login, password) VALUES(?, ?)", [randomize, randomize])
 	conn.close()
+	os.system('chown race_condition:race_condition ' + db_race_cond)
+	os.system('chmod 640 ' + db_race_cond)
 	with open(os.path.join(path, 'secret'), "w") as secret:
 		secret.write(randomize)
