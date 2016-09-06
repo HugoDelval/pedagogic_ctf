@@ -1,4 +1,5 @@
 import os
+import sqlite3
 
 def init(path, randomize, file_challenge_name=None):
 	db_race_cond = os.path.join(os.path.sep, "tmp", "race_condition.db")
