@@ -96,7 +96,7 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
 			$http.post('/v1.0/challenge/' + challengeId + path, $scope.requestCorrect[challengeId][extension]).success( function ( data ) {
 				alert(data.message); // modal
 			}).error( function (error) {
-				$scope.challengeResults[challengeId] = error.message;
+				alert(error.message);
 			});
 		}
 	};
