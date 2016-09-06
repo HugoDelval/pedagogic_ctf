@@ -1,18 +1,20 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import sys, os, subprocess
 import re
 import shutil
 import pwd
 import random, string
+import importlib.machinery
 
-SUPPORTED_EXTENSIONS = ['.py', '.go', '.pl']
+
+SUPPORTED_EXTENSIONS = ['.py', '.go', '.pl', '.php', '.java']
 
 
 def run_cmd(cmd_list):
 	child = subprocess.Popen(cmd_list, stdout=subprocess.PIPE)
 	streamdata = child.communicate()[0]
 	ret = child.returncode
-	return streamdata, ret
+	return streamdata.decode(), ret
 
 
 def random_string(size):
@@ -58,6 +60,11 @@ def check_args(corrected_script_dir, challenge_name, language_extension):
 
 
 def launch_init_challenge(language_extension, challenge_name, corrected_script_dir):
+	# launch init script challenge (for custom init)
+	init = importlib.machinery.SourceFileLoader('init', os.path.join(corrected_script_dir, "init.py")).load_module()
+	randomized = random_string(30)
+	init.init(corrected_script_dir, randomized, challenge_name+language_extension)
+
 	# create unique user
 	unique_user = get_unique_user(challenge_name)
 	streamdata, return_code = run_cmd(['useradd', unique_user])
@@ -86,19 +93,13 @@ def launch_init_challenge(language_extension, challenge_name, corrected_script_d
 	wrapper = wrapper.replace('CHALLENGE', script_path_compiled)
 	wrapper = wrapper.replace('THE_USER', unique_user)
 	with open(wrapper_path, "w") as wrapper_handler:
-		wrapper = wrapper_handler.write(wrapper)
+		wrapper_handler.write(wrapper)
 	# compile wrapper
 	wrapper_bin_path = os.path.join(corrected_script_dir, 'wrapper')
 	streamdata, return_code = run_cmd(['/usr/bin/gcc', "-o", wrapper_bin_path, wrapper_path])
 	if return_code != 0:
 		print("An error occured while compiling wrapper : " + str(streamdata))
 		sys.exit(1)
-
-	# init challenge
-	sys.path.append(corrected_script_dir)
-	randomized = random_string(30)
-	import init
-	init.init(corrected_script_dir, randomized)
 
 	# chown / chmod
 	streamdata, return_code = run_cmd(['/bin/chown', unique_user + ":" + unique_user, corrected_script_dir, '-R'])
@@ -109,6 +110,10 @@ def launch_init_challenge(language_extension, challenge_name, corrected_script_d
 	if return_code != 0:
 		print("An error occured while chowning : " + str(streamdata))
 		sys.exit(1)
+	streamdata, return_code = run_cmd(['/bin/chmod', "500", script_path_compiled])
+	if return_code != 0:
+		print("An error occured while chattring : " + str(streamdata))
+		sys.exit(1)
 	streamdata, return_code = run_cmd(['/bin/chmod', "4750", wrapper_bin_path])
 	if return_code != 0:
 		print("An error occured while chattring : " + str(streamdata))
@@ -117,14 +122,16 @@ def launch_init_challenge(language_extension, challenge_name, corrected_script_d
 	return unique_user, randomized
 
 
-def launch_exploit_challenge(binary):
-	import exploit
-	return exploit.exploit(binary)
+def launch_exploit_challenge(corrected_script_dir, randomized):
+	binary = os.path.join(corrected_script_dir, "wrapper")
+	exploit = importlib.machinery.SourceFileLoader('exploit', os.path.join(corrected_script_dir, "exploit.py")).load_module()
+	return exploit.exploit(binary, randomized)
 
 
-def launch_check_challenge_valid(randomized, binary):
-	import check
-	return check.check(randomized, binary)
+def launch_check_challenge_valid(corrected_script_dir, randomized):
+	binary = os.path.join(corrected_script_dir, "wrapper")
+	check = importlib.machinery.SourceFileLoader('check', os.path.join(corrected_script_dir, "check.py")).load_module()
+	return check.check(binary, randomized)
 
 
 def cp_files(corrected_script_dir, challenge_name, language_extension):
@@ -155,8 +162,8 @@ if __name__ == "__main__":
 	check_args(corrected_script_dir, challenge_name, language_extension)
 	cp_files(corrected_script_dir, challenge_name, language_extension)
 	user, randomized = launch_init_challenge(language_extension, challenge_name, corrected_script_dir)
-	can_exploit = launch_exploit_challenge(os.path.join(corrected_script_dir, "wrapper"))
-	can_use = launch_check_challenge_valid(randomized, os.path.join(corrected_script_dir, "wrapper"))
+	can_exploit = launch_exploit_challenge(corrected_script_dir, randomized)
+	can_use = launch_check_challenge_valid(corrected_script_dir, randomized)
 	delete_everything(user, corrected_script_dir)
 	if can_exploit:
 		print("I can still exploit your code ;). If you need hints, don't hesitate to ask !")

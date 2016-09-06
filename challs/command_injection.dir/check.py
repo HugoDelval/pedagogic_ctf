@@ -5,7 +5,7 @@ def run_cmd(cmd_list):
 	child = subprocess.Popen(cmd_list, stdout=subprocess.PIPE)
 	streamdata = child.communicate()[0]
 	ret = child.returncode
-	return streamdata, ret
+	return streamdata.decode(), ret
 
 
 def clean_output(string_from_dig):
@@ -19,7 +19,7 @@ def clean_output(string_from_dig):
 
 # return true if the challenge is usable
 # AKA if the tests passes
-def check(randomize, binary):
+def check(binary, randomize):
 	streamdata_ref, ret_ref = run_cmd(["/usr/bin/dig", "www.ovh.com"])
 	streamdata_bin, ret_bin = run_cmd([binary, "www.ovh.com"])
 	# should output the same thing
@@ -31,7 +31,7 @@ def check(randomize, binary):
 	streamdata_bin_set = clean_output(streamdata_bin)
 	if streamdata_ref_set != streamdata_bin_set:
 		print("Output of `./youcode_compiled www.ovh.com` different from `/usr/bin/dig www.ovh.com`")
-		print("\n\nYour code outputs : \n" + streamdata_bin + "\n\nAnd `dig` outputs : \n" + streamdata_bin)
+		print("\n\nYour code outputs : \n" + streamdata_bin + "\n\nAnd `dig` outputs : \n" + streamdata_ref)
 		return False
 
 
@@ -46,7 +46,7 @@ def check(randomize, binary):
 	streamdata_bin_set = clean_output(streamdata_bin)
 	if streamdata_ref_set != streamdata_bin_set:
 		print("Output of `./youcode_compiled 8.8.8.8` different from `/usr/bin/dig 8.8.8.8`")
-		print("\n\nYour code outputs : \n" + streamdata_bin + "\n\nAnd `dig` outputs : \n" + streamdata_bin)
+		print("\n\nYour code outputs : \n" + streamdata_bin + "\n\nAnd `dig` outputs : \n" + streamdata_ref)
 		return False
 
 	streamdata, ret = run_cmd([binary, "test with w!erds charac|eres"])

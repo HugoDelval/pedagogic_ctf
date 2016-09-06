@@ -1,12 +1,5 @@
 import os
-import random, string
 
-def init(path, randomize):
+def init(path, randomize, file_challenge_name):
 	with open(os.path.join(path, 'secret'), "w") as secret:
-		secret.write(''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30)))
-
-if __name__ == "__main__":
-	try:
-		init("/srv/ctf_go/challs/injection_conf.dir/")
-	except Exception as e:
-		print(e)
+		secret.write(randomize)
