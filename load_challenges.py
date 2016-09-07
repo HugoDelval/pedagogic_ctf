@@ -10,6 +10,7 @@ import re
 import subprocess
 import json
 import importlib.machinery
+import random, string
 
 CHALLS_DIR = "challs"
 WEB_USER = "ctf_interne"
