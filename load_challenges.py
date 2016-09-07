@@ -9,6 +9,7 @@ import sys, os
 import re
 import subprocess
 import json
+import importlib.machinery
 
 CHALLS_DIR = "challs"
 WEB_USER = "ctf_interne"
@@ -105,6 +106,10 @@ def create_wrapper_and_change_perms(arguments):
 			if return_code != 0:
 				print({"error": "An error occured while compiling wrapper : " + str(streamdata)})
 				sys.exit(1)
+			# custom init of challenges
+			absolute_path = os.path.join(os.sep, "srv", "ctf_go", folder_path)
+			init = importlib.machinery.SourceFileLoader('init', os.path.join(absolute_path, "init.py")).load_module()
+			init.init(absolute_path, "not_so_much_random")
 
 			# ch(mod/own/attr) challs/chall.dir/
 			streamdata, return_code = run_cmd(['chown', user+":"+WEB_USER, folder_path, "-R"])
