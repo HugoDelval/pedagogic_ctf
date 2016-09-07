@@ -42,5 +42,10 @@ printf "thesecret" > /srv/ctf_go/challs/race_condition.dir/secret
 
 chown ctf_interne /srv/ctf_go/challenges.json
 
+# configure nginx
+cp /srv/ctf_go/nginx.conf /etc/nginx/sites-availabled/pedagogictf
+ln -s /etc/nginx/sites-available/pedagogictf /etc/nginx/sites-enabled/
+service nginx reload
+
 echo
 echo "Check src/ctf/utils/config.json !"

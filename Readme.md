@@ -39,6 +39,8 @@ some modules :
     apt-get install libdbi-perl
     apt-get install libdbd-sqlite3-perl
     apt-get install python3-bcrypt
+    apt-get install sudo
+    apt-get install nginx
 
 Then run the script *init.sh* :
 
