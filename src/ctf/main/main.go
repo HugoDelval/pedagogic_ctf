@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"ctf/router"
+	"ctf/utils"
 	"ctf/model"
 )
 
@@ -12,6 +13,9 @@ func main() {
 	router := router.NewRouter()
 
 	model.Migrate()
-
-	log.Fatal(http.ListenAndServe("127.0.0.1:8080", router))
+	if utils.GetConfig().IsProduction{
+		log.Fatal(http.ListenAndServe("127.0.0.1:8080", router))
+	}else{
+		log.Fatal(http.ListenAndServe("0.0.0.0:8080", router))
+	}
 }
