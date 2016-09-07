@@ -48,7 +48,7 @@ sub doRegister{
 	$sth->bind_param(1, $login);
 	$sth->bind_param(2, $hashedPasswd->as_crypt);
 	$sth->execute or exit;
-	sleep(1); # simulate more db access / calculus
+	select(undef, undef, undef, 0.5); # simulate more db access / calculus
 	my $elapsed = time - $startTime;
 	print("It's been " . $elapsed . "s since you started register.\n");
 	$sth = $dbh->prepare("INSERT INTO forbidden_ids(user_id) VALUES(?)");
