@@ -62,6 +62,10 @@ def delete_users(users):
 			print({"error": "A user cannot be deleted : " + user + "\n Here is the error : " + streamdata})
 
 
+def random_string(size):
+	return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(size))
+
+
 def create_users(arguments):
 	users_added = []
 	try:
@@ -109,7 +113,7 @@ def create_wrapper_and_change_perms(arguments):
 			# custom init of challenges
 			absolute_path = os.path.join(os.sep, "srv", "ctf_go", folder_path)
 			init = importlib.machinery.SourceFileLoader('init', os.path.join(absolute_path, "init.py")).load_module()
-			init.init(absolute_path, "not_so_much_random")
+			init.init(absolute_path, random_string(20))
 
 			# ch(mod/own/attr) challs/chall.dir/
 			streamdata, return_code = run_cmd(['chown', user+":"+WEB_USER, folder_path, "-R"])
