@@ -51,7 +51,7 @@ def run_cmd(cmd_list):
 	child = subprocess.Popen(cmd_list, stdout=subprocess.PIPE)
 	streamdata = child.communicate()[0]
 	ret = child.returncode
-	return streamdata, ret
+	return streamdata.decode(), ret
 
 
 def delete_users(users):

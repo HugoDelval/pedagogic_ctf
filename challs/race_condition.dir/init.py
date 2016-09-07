@@ -1,8 +1,15 @@
 import os
-import random, string
+import sqlite3
 
-def init(path, randomize):
-	db_race_cond = os.path.join(path, "race_condition.db")
+def init(path, randomize, file_challenge_name=None):
+	db_race_cond = os.path.join(os.path.sep, "tmp", "race_condition.db")
+	if file_challenge_name:
+		db_race_cond = os.path.join(path, "race_condition.db")
+		file_challenge_path = os.path.join(path, file_challenge_name)
+		with open(file_challenge_path, "r+") as chall:
+			file_chall_content = chall.read()
+			new_file_chall_content = file_chall_content.replace("/tmp/race_condition.db", db_race_cond)
+			chall.write(new_file_chall_content)
 	conn = sqlite3.connect(db_race_cond)
 	cur = conn.cursor()
 	cur.execute("DROP TABLE IF EXISTS users")
@@ -18,11 +25,7 @@ def init(path, randomize):
 	conn.commit()
 	cur.execute("INSERT INTO users(login, password) VALUES(?, ?)", [randomize, randomize])
 	conn.close()
+	os.system('chown race_condition:race_condition ' + db_race_cond)
+	os.system('chmod 640 ' + db_race_cond)
 	with open(os.path.join(path, 'secret'), "w") as secret:
-		secret.write(''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30)))
-
-if __name__ == "__main__":
-	try:
-		init("/srv/ctf_go/challs/race_condition.dir/")
-	except Exception as e:
-		print(e)
+		secret.write(randomize)

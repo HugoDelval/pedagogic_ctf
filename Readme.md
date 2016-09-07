@@ -54,3 +54,14 @@ Then run the script *init.sh* :
 You are now good to go(lang :p) !
 
     sudo -u ctf_interne ./run.sh
+
+
+
+# TODO
+
+docker
+--allow-root
+nginx
+add challenges
+fichiers statiques en relatifs
+lancer init avec le load_challenges.py

@@ -15,6 +15,7 @@
     "angular-aria": ">=1.5.8",
     "angular-messages": ">=1.5.8",
     "highlightjs": ">=9.6.0",
-    "bootstrap-material-design": "0.5.10"
+    "bootstrap-material-design": "0.5.10",
+    "angular-ui-ace": ">=0.2.3"
   }
 }

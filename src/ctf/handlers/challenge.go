@@ -261,7 +261,6 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	defer scriptFile.Close()
 	_, err = scriptFile.WriteString(correctedScript.ContentScript)
 	if err != nil{
 	    w.WriteHeader(http.StatusInternalServerError)
@@ -270,7 +269,8 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	scriptFile.Sync()
-
+	scriptFile.Close()
+	
 	cmd := utils.BasePath + "check_challenge_corrected"
 	out, err := customCommand(cmd, challengeFolderPath, correctedScriptPath, challengeName, correctedScript.LanguageExtension).CombinedOutput()
 	if err != nil {
