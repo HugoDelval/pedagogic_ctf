@@ -22,12 +22,18 @@ Consider doing a :
 Now you should be able to launch :
 
     npm -v
-If not, please refer to the official documentation : https://docs.npmjs.com/getting-started/installing-node .
-Finally run :
+If not, please refer to the official documentation : https://docs.npmjs.com/getting-started/installing-node.
 
+Finally run :
+    
+    
     npm install -g bower
-    cd frontend_angular
+    cd ctf_pedagogique/frontend-angular
     bower install
+
+if this fail with error "/usr/bin/env: node: No such file or directory", you should try:
+
+  ln -s /usr/bin/nodejs /usr/bin/node
     
 ## Installation :
 first, be sure that you have go installed :
