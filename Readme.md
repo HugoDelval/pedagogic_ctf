@@ -31,10 +31,6 @@ Finally run :
     cd ctf_pedagogique/frontend-angular
     bower install
 
-if this fail with error "/usr/bin/env: node: No such file or directory", you should try:
-
-  ln -s /usr/bin/nodejs /usr/bin/node
-    
 ## Installation :
 first, be sure that you have go installed :
 
