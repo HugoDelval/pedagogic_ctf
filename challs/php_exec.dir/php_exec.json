@@ -1,0 +1,18 @@
+{
+	"name": "RCE",
+	"points": 250,
+	"description": "This website return a signed text file to ease the use of iphone mail configuration.\n\nThe Signing procedure use Openssl, the well known linux cypto tools.\n\nWhat wrong could append ?",
+	"parameters": [
+		{
+			"name": "user",
+			"placeholder": "a username"
+		}
+	],
+	"languages": [
+		{
+			"name": "PHP", 
+			"extension": ".php"
+		}
+	],
+	"resolved_conclusion":"\n\nThis vulnerability is present when you use system calls.\nAs a developper, always double check you input against escaping characters !\n\nTo avoid this vulnerability you could use escapeshellcmd($variable) on PHP."
+}
