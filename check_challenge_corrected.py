@@ -163,8 +163,12 @@ if __name__ == "__main__":
 	cp_files(corrected_script_dir, challenge_name, language_extension)
 	user, randomized = launch_init_challenge(language_extension, challenge_name, corrected_script_dir)
 	os.chdir(corrected_script_dir)
-	can_exploit = launch_exploit_challenge(corrected_script_dir, randomized)
-	can_use = launch_check_challenge_valid(corrected_script_dir, randomized)
+	try:
+        can_exploit = launch_exploit_challenge(corrected_script_dir, randomized)
+        can_use = launch_check_challenge_valid(corrected_script_dir, randomized)
+	except Exception as e:
+	    # error already printed
+	    pass
 	delete_everything(user, corrected_script_dir)
 	if can_exploit:
 		print("I can still exploit your code ;). If you need hints, don't hesitate to ask !")

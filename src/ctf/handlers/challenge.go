@@ -152,28 +152,43 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in.\n" + challenge.ResolvedConclusion})
 	}else{
-		newValidatedChall := model.ValidatedChallenge{
-			ChallengeID: challengeName,
-			UserID: strconv.Itoa(int(user.ID)),
-			DateValidated: time.Now(),
-		}
 		db, err := model.GetDB(w)
 		if err != nil {return}
 
 		var alreadyValidated model.ValidatedChallenge
 		notFound := db.Where(&model.ValidatedChallenge{ChallengeID: challengeName, UserID: strconv.Itoa(int(user.ID))}).First(&alreadyValidated).RecordNotFound()
-		if !notFound{
+		if !notFound && alreadyValidated.IsExploited{
 			w.WriteHeader(http.StatusNotAcceptable)
-			utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) But you already validated this challenge, so no points this time.\n" + challenge.ResolvedConclusion})
+			utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) But you already exploited this challenge, so no points this time.\n" + challenge.ResolvedConclusion})
 			return
 		}
 
-		if err := db.Create(&newValidatedChall).Error; err != nil{
-			w.WriteHeader(http.StatusInternalServerError)
-			utils.SendResponseJSON(w, utils.InternalErrorMessage)
-			log.Printf("%v\n", err)
-			return
+		if !notFound{
+			// we found the validatedChallenge object but it wasn't exploited (the user just corrected the challenge, and now he exploits it)
+			alreadyValidated.IsExploited = true
+			if err := db.Update(&alreadyValidated).Error; err != nil{
+				w.WriteHeader(http.StatusInternalServerError)
+				utils.SendResponseJSON(w, utils.InternalErrorMessage)
+				log.Printf("%v\n", err)
+				return
+			}
+		}else{
+			newValidatedChall := model.ValidatedChallenge{
+				ChallengeID: challengeName,
+				UserID: strconv.Itoa(int(user.ID)),
+				IsExploited: true,
+				IsCorrected: false,
+				DateValidated: time.Now(),
+			}
+			// this is a new validatedChallenge
+			if err := db.Create(&newValidatedChall).Error; err != nil{
+				w.WriteHeader(http.StatusInternalServerError)
+				utils.SendResponseJSON(w, utils.InternalErrorMessage)
+				log.Printf("%v\n", err)
+				return
+			}
 		}
+
 
 		w.WriteHeader(http.StatusOK)
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You earned " + strconv.Itoa(int(challenge.Points)) + "pts for that.\n" + challenge.ResolvedConclusion})
@@ -223,7 +238,7 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 
 
 func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
-	challengeName, challengeFolderPath, _, err := getChallengeInfos(w, r)
+	challengeName, challengeFolderPath, challenge, err := getChallengeInfos(w, r)
 	if err != nil{
 		return
 	}
@@ -282,6 +297,54 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO : say to the user that the script is correct + add points
+	registeredUser, user, err := IsUserAuthenticated(w, r)
+	if err != nil {
+		return
+	}else if !registeredUser{
+		w.WriteHeader(http.StatusOK)
+		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in.\n" + challenge.ResolvedConclusion})
+	}else{
+		db, err := model.GetDB(w)
+		if err != nil {return}
+
+		var alreadyValidated model.ValidatedChallenge
+		notFound := db.Where(&model.ValidatedChallenge{ChallengeID: challengeName, UserID: strconv.Itoa(int(user.ID))}).First(&alreadyValidated).RecordNotFound()
+		if !notFound && alreadyValidated.IsCorrected{
+			w.WriteHeader(http.StatusNotAcceptable)
+			utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) But you already corrected this challenge, so no points this time.\n" + challenge.ResolvedConclusion})
+			return
+		}
+
+		if !notFound{
+			// we found the validatedChallenge object but it wasn't corrected (the user just exploited the challenge, and now he corrects it)
+			alreadyValidated.IsCorrected = true
+			if err := db.Update(&alreadyValidated).Error; err != nil{
+				w.WriteHeader(http.StatusInternalServerError)
+				utils.SendResponseJSON(w, utils.InternalErrorMessage)
+				log.Printf("%v\n", err)
+				return
+			}
+		}else{
+			newValidatedChall := model.ValidatedChallenge{
+				ChallengeID: challengeName,
+				UserID: strconv.Itoa(int(user.ID)),
+				IsExploited: false,
+				IsCorrected: true,
+				DateValidated: time.Now(),
+			}
+			// this is a new validatedChallenge
+			if err := db.Create(&newValidatedChall).Error; err != nil{
+				w.WriteHeader(http.StatusInternalServerError)
+				utils.SendResponseJSON(w, utils.InternalErrorMessage)
+				log.Printf("%v\n", err)
+				return
+			}
+		}
+
+		w.WriteHeader(http.StatusOK)
+		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You earned " + strconv.Itoa(int(challenge.Points)) + "pts for that.\n" + challenge.ResolvedConclusion})
+	}
+
 
 	w.WriteHeader(http.StatusOK)
 	utils.SendResponseJSON(w, utils.Message{"Congratz. That's a pretty source code (from what a bot can see ;) )."})

@@ -1,6 +1,7 @@
 # CTF Pédagogique
 
 Ce repo permettra à ceux qui souhaitent apprendre la sécurité informatique de se lancer facilement.
+Note : every command is executed with root rights.
 
 First things first :
 
@@ -27,7 +28,7 @@ Finally run :
 
     npm install -g bower
     cd frontend_angular
-    bower install
+    bower install --allow-root
     
 ## Installation :
 first, be sure that you have go installed :
@@ -41,15 +42,16 @@ some modules :
     apt-get install python3-bcrypt
     apt-get install sudo
     apt-get install nginx
+    apt-get install dnsutils
 
 Then run the script *init.sh* :
 
     cd ctf_pedagogique
-    sudo ./init.sh
+    ./init.sh
     
 You are now good to go(lang :p) !
 
-    sudo -u ctf_interne ./run.sh
+    (cd /srv/ctf_go && sudo -u ctf_interne ./run.sh)
 
 
 
