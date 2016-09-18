@@ -5,7 +5,7 @@ Note : every command is executed with root rights.
 
 First things first :
 
-    git clone https://github.com/HugoDelval/ctf_pedagogique
+    git clone https://github.com/HugoDelval/pedagogic_ctf
 
 ## Configure Bower :
 
@@ -29,7 +29,7 @@ Finally run :
     npm install -g bower
     cd frontend_angular
     bower install --allow-root
-    
+   
 ## Installation :
 first, be sure that you have go installed :
 
@@ -46,7 +46,7 @@ some modules :
 
 Then run the script *init.sh* :
 
-    cd ctf_pedagogique
+    cd pedagogic_ctf
     ./init.sh
     
 You are now good to go(lang :p) !
