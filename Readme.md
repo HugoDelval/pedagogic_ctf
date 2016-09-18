@@ -1,9 +1,10 @@
 # CTF Pédagogique
 
-Ce repo permettra à ceux qui souhaitent apprendre la sécurité informatique de se lancer facilement.
-Note : every command is executed with root rights.
+This project is meant to ease the learning of software security.
 
-First things first :
+Note : every command in this tuto is executed with root privileges.
+
+First thing first :
 
     git clone https://github.com/HugoDelval/pedagogic_ctf
 
