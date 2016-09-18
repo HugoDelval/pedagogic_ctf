@@ -1,7 +1,8 @@
 #!/bin/bash
 
+userdel ctf_interne
+groupdel ctf_interne
 useradd ctf_interne
-groupadd challenge_group
 mkdir /home/ctf_interne && chown ctf_interne:ctf_interne /home/ctf_interne -R
 rm -rf /srv/ctf_go && mkdir /srv/ctf_go
 
