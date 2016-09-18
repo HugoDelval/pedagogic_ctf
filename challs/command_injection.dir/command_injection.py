@@ -14,7 +14,7 @@ if len(sys.argv) != 2 or not sys.argv[1]:
 server = sys.argv[1]
 server_regex = r"[!;&\|'\"`\${}><]"
 server_regex_compiled = re.compile(server_regex)
-if not server or server_regex_compiled.match(server):
+if not server or server_regex_compiled.search(server):
     print("Error, server param not valid.")
     sys.exit(0)
 ## end check params

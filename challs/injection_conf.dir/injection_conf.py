@@ -16,7 +16,7 @@ if len(sys.argv) != 2 or not sys.argv[1]:
 directory = sys.argv[1]
 regex_dir = r"(/tmp/|/srv/writable/)[a-zA-Z0-9_-]+"
 regex_dir_compiled = re.compile(regex_dir)
-if not directory or not regex_dir_compiled.match(directory):
+if not directory or not regex_dir_compiled.search(directory):
     print("Error, directory param not valid.")
     sys.exit(0)
 if os.path.isdir(directory):
