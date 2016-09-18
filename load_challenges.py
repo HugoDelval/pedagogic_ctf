@@ -74,7 +74,7 @@ def create_users(arguments):
         for user in arguments:
             streamdata1, return_code1 = run_cmd(['useradd', user])
             streamdata2, return_code2 = run_cmd(['adduser', user, "challenge_group"])
-            streamdata3, return_code3 = run_cmd(['adduser', user, WEB_USER])
+            streamdata3, return_code3 = run_cmd(['adduser', WEB_USER, user])
             if return_code1 != 0 or return_code1 != 0 or return_code1 != 0:
                 delete_users(users_added)
                 print({"error": "A user cannot be added : " + user + "\n Here is the error : " + str(streamdata1) + str(streamdata2) + str(streamdata3)})
