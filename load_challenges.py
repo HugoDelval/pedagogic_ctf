@@ -72,21 +72,15 @@ def create_users(arguments):
     users_added = []
     try:
         for user in arguments:
-            streamdata, return_code = run_cmd(['useradd', user])
-            if return_code != 0:
+            streamdata1, return_code1 = run_cmd(['useradd', user])
+            streamdata2, return_code2 = run_cmd(['adduser', user, "challenge_group"])
+            streamdata3, return_code3 = run_cmd(['adduser', user, WEB_USER])
+            if return_code1 != 0 or return_code1 != 0 or return_code1 != 0:
                 delete_users(users_added)
-                print({"error": "A user cannot be added : " + user + "\n Here is the error : " + str(streamdata)})
+                print({"error": "A user cannot be added : " + user + "\n Here is the error : " + str(streamdata1) + str(streamdata2) + str(streamdata3)})
                 sys.exit(1)
             else:
-                streamdata, return_code = run_cmd(['adduser', user, "challenge_group"])
-                if return_code != 0:
-                    delete_users(users_added)
-                    print({
-                              "error": "A user cannot be added to challenge_group : " + user + "\n Here is the error : " + str(
-                                  streamdata)})
-                    sys.exit(1)
-                else:
-                    users_added.append(user)
+                users_added.append(user)
     except Exception as e:
         delete_users(users_added)
         print({"error": "An error occured while creating users : " + str(e)})
@@ -137,10 +131,7 @@ def create_wrapper_and_change_perms(arguments):
             if return_code != 0:
                 print({"error": "An error occured while chmoding : " + str(streamdata)})
                 sys.exit(1)
-            streamdata, return_code = run_cmd(['chmod', "o+rx", folder_path])
-            if return_code != 0:
-                print({"error": "An error occured while chmoding : " + str(streamdata)})
-                sys.exit(1)
+
 
             # add JSON description to global description
             try:
