@@ -54,13 +54,3 @@ You are now good to go(lang :p) !
 
     (cd /srv/ctf_go && sudo -u ctf_interne ./run.sh)
 
-
-
-# TODO
-
---allow-root
-nginx
-add challenges
-fichiers statiques en relatifs
-lancer init avec le load_challenges.py
-docker -> bdd

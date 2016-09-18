@@ -115,7 +115,7 @@ func NewRouter() *mux.Router {
 			Handler(handler)
 	}
 	if !utils.GetConfig().IsProduction{
-		router.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend-angular/app/")))
+		router.PathPrefix("/").Handler(http.FileServer(http.Dir("/srv/ctf_go/frontend-angular/app/")))
 		http.Handle("/", router)
 	}
 
