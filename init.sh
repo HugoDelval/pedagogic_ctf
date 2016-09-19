@@ -1,9 +1,9 @@
 #!/bin/bash
 
+userdel ctf_interne
+groupdel ctf_interne
 useradd ctf_interne
-groupadd challenge_group
 mkdir /home/ctf_interne && chown ctf_interne:ctf_interne /home/ctf_interne -R
-chattr -i -R /srv/ctf_go/challs/
 rm -rf /srv/ctf_go && mkdir /srv/ctf_go
 
 export GOPATH=`pwd`
@@ -31,16 +31,25 @@ chmod 500 /srv/ctf_go/check_challenge_corrected.py
 
 # Init challenges
 userdel injection_conf
+groupdel injection_conf
 printf "thesecret" > /srv/ctf_go/challs/injection_conf.dir/secret
 (cd /srv/ctf_go/ && ./load_challenges.py injection_conf)
 userdel command_injection
+groupdel command_injection
 printf "thesecret" > /srv/ctf_go/challs/command_injection.dir/secret
 (cd /srv/ctf_go/ && ./load_challenges.py command_injection)
 userdel race_condition
+groupdel race_condition
 printf "thesecret" > /srv/ctf_go/challs/race_condition.dir/secret
 (cd /srv/ctf_go/ && ./load_challenges.py race_condition)
 
 chown ctf_interne /srv/ctf_go/challenges.json
+
+# configure nginx
+cp /srv/ctf_go/nginx.conf /etc/nginx/sites-available/pedagogictf
+ln -s /etc/nginx/sites-available/pedagogictf /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+service nginx reload
 
 echo
 echo "Check src/ctf/utils/config.json !"
