@@ -49,7 +49,7 @@ chown ctf_interne /srv/ctf_go/challenges.json
 cp /srv/ctf_go/nginx.conf /etc/nginx/sites-available/pedagogictf
 ln -s /etc/nginx/sites-available/pedagogictf /etc/nginx/sites-enabled/
 rm /etc/nginx/sites-enabled/default
-service nginx reload
+service nginx restart
 
 echo
 echo "Check src/ctf/utils/config.json !"

@@ -11,4 +11,5 @@ RUN cd pedagogic_ctf/frontend-angular && \
 RUN cd pedagogic_ctf && \
     ./init.sh 
 
-CMD sudo -u ctf_interne pedagogic_ctf/run.sh 
+CMD service nginx restart && \
+    sudo -u ctf_interne pedagogic_ctf/run.sh 
