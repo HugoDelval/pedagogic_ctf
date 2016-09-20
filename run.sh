@@ -15,5 +15,5 @@ go build ctf/main
 chmod o-rwx ./main
 echo "Built"
 echo "Launching app!"
-service nginx restart
+service nginx start
 ./main
