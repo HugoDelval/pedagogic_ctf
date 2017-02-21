@@ -37,5 +37,5 @@ curl $ENDPOINT/challenge/injection_conf/validate -d '{"secret":"thesecret"}' -H 
 
 # curl $ENDPOINT/challenge/injection_conf/validate -d '{"secret":"TheSup3rS3cr37P@550RDThatn0OneknowsAbout"}' -H "X-CTF-AUTH: $token3"
 
-######### lALIDATE CHALLENGES ##########
+######### VALIDATE CHALLENGES ##########
 

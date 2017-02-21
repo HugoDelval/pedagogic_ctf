@@ -11,7 +11,7 @@ int main (int argc, char *argv[]) {
     setregid(getegid(), getegid());
     setreuid(geteuid(), geteuid());
     int arrayLength = argc+1;
-    char** arguments = (char**)malloc( sizeof(char*) * (arrayLength));
+    char** arguments = (char**) malloc( sizeof(char*) * (arrayLength));
     char* null = (char*)0;
     int i;
     arguments[0] = COMMAND_NAME;

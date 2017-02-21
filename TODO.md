@@ -1,8 +1,4 @@
 # TODO
 
-* readme add challenges
-* lancer init avec le load_challenges.py
-* docker
-* bdd : 
-    * remove sqlite for external bdd
-    * challenges bdd (not json)
+* reorganize inits scripts (init.sh / load_challenges.py ...)
+* use real bdd (not json)

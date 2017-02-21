@@ -296,7 +296,6 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO : say to the user that the script is correct + add points
 	registeredUser, user, err := IsUserAuthenticated(w, r)
 	if err != nil {
 		return

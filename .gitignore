@@ -3,6 +3,7 @@ database.db
 pkg/
 bin/
 ctf_go.iml
+.DS_Store
 challenges.json
 challs/*.dir/wrapper*
 challs/*.dir/secret

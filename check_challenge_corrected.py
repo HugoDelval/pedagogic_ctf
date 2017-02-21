@@ -49,7 +49,7 @@ def check_args(corrected_script_dir, challenge_name, language_extension):
     if not os.path.exists(corrected_script_path):
         print("File does not exists : " + corrected_script_path)
         sys.exit(1)
-    if not language_extension in SUPPORTED_EXTENSIONS:
+    if language_extension not in SUPPORTED_EXTENSIONS:
         print("Extension not supported : " + language_extension)
         sys.exit(1)
     challenge_path = os.path.join(os.path.sep, 'srv', 'ctf_go', 'challs', challenge_name + '.dir')
@@ -167,6 +167,8 @@ if __name__ == "__main__":
         can_exploit = launch_exploit_challenge(corrected_script_dir, randomized)
         can_use = launch_check_challenge_valid(corrected_script_dir, randomized)
     except Exception as e:
+        can_exploit = True
+        can_use = False
         print(e)
     delete_everything(user, corrected_script_dir)
     if can_exploit:
@@ -174,5 +176,6 @@ if __name__ == "__main__":
         sys.exit(1)
     if not can_use:
         print(
-            "I can't use your code :/\nYou broke a functionnality in the code ! So your fix is not accepted.\nIf you needs hint don't hesitate to ask !")
+            "I can't use your code :/\nYou broke a functionnality in the code ! So your fix is not accepted.\nIf you "
+            "needs hint don't hesitate to ask !")
         sys.exit(1)
