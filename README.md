@@ -22,8 +22,36 @@ Easy :)
 
 Then open your browser here: http://localhost:8081
 
+If you need to make changes, help yourself, then launch:
+
+	docker build . -t hugodelval/pedagogic-ctf
+
 To kill the running app press Ctrl-C then :
 	
 	docker ps
 	docker kill <CONTAINER ID>
 
+## How does it work?
+
+The user can do 2 things :
+
+- exploit programs (and learn the vulnerability)
+- correct challenges (learn how to fix the vulnerability)
+
+### Exploit
+
+The server launch the program with the user input as *stdin*. The user goal is to find the **secret** of the program (something that should not be visible if there are no vulnerabilities).
+
+If the user finds the secret, he can submit it to the server, which will check the secret validity and add points to the user.
+
+### Correct
+
+The user can then correct the program:
+
+1. the user send the corrected code
+2. the server copies the code in a new temporary directory and create a temporary user (+chmod / chown...)
+4. the server executes (with the new temp user's permissions) the init script of the program (init.py) this initialise the program, create secrets, databases and so on...
+5. the server executes the user code (with the new temp user's permissions) using several tests that check if the program still works (challs/*/check.py)
+6. the server executes the user code (with the new temp user's permissions) using several tests that check if the program is no more exploitable (challs/*/exploit.py)
+7. the server delete the temporary folder and user
+8. the server gives points to the users if the program still works and is no more exploitable

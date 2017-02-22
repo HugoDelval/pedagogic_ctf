@@ -6,14 +6,15 @@
 Go to the git cloned repo :
 
     cd ~/ctf_pedagogique/challs
-you can use environnement variable to ease directory creation  that must end up with .dir:
+you can use environment variable to ease directory creation  that must end up with .dir:
 
     export NEW_CHALL_NAME=php_exec
     mkdir $NEW_CHALL_NAME.dir
-Now you must create the json file that will describ your challenge
-parametter is use to pass arg to you script in a ordened manear :
+Now you must create the json file that will describe your challenge
+parameter is use to pass arg to you script in a ordered way :
 
-   {
+```json
+{
   "name": "name of your challenge",
   "points": 100,
   "description": " your challenge description ",
@@ -30,7 +31,8 @@ parametter is use to pass arg to you script in a ordened manear :
     }
   ],
   "resolved_conclusion":"your challenge conclusion note."
-  }
+}
+```
 
 add your challenge named after $NEW_CHALL_NAME.pl, this could be any script , don't be fooled by the extention.
 Create a check() funtion in  check.py that will return 1 if you challenge is still usable

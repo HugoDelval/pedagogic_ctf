@@ -9,7 +9,6 @@ challs/*.dir/wrapper*
 challs/*.dir/secret
 src/github.com/
 src/golang.org/
-src/ctf/utils/config.json
 main
 frontend-angular/app/bower_components/
 frontend-angular/logs/*

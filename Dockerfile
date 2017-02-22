@@ -1,15 +1,20 @@
-FROM debian:stable
+FROM ubuntu:latest
 
-RUN apt-get update
-RUN apt-get install --fix-missing
-RUN apt-get install -y git nodejs golang libauthen-passphrase-perl libdbi-perl libdbd-sqlite3-perl python3-bcrypt sudo npm nginx
+RUN apt-get update -y && \
+    apt-get install --fix-missing -y git && \
+    apt-get install --fix-missing -y nodejs && \
+    apt-get install --fix-missing -y golang && \
+    apt-get install --fix-missing -y libauthen-passphrase-perl && \
+    apt-get install --fix-missing -y libdbi-perl && \
+    apt-get install --fix-missing -y libdbd-sqlite3-perl && \
+    apt-get install --fix-missing -y python3-bcrypt && \
+    apt-get install --fix-missing -y sudo && \
+    apt-get install --fix-missing -y npm && \
+    apt-get install --fix-missing -y nginx
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 RUN npm install -g bower
-RUN git clone https://github.com/HugoDelval/pedagogic_ctf
-RUN cd pedagogic_ctf/frontend-angular && \
-    bower install --allow-root 
-RUN cd pedagogic_ctf && \
-    ./init.sh 
+ADD . /pedagogic_ctf
+RUN cd /pedagogic_ctf/frontend-angular && bower install --allow-root
+RUN cd /pedagogic_ctf && ./init.sh
 
-CMD service nginx restart && \
-    sudo -u ctf_interne pedagogic_ctf/run.sh 
+CMD service nginx restart && sudo -u ctf_interne /pedagogic_ctf/run.sh

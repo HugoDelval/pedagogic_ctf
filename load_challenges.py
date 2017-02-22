@@ -132,7 +132,6 @@ def create_wrapper_and_change_perms(arguments):
                 print({"error": "An error occured while chmoding : " + str(streamdata)})
                 sys.exit(1)
 
-
             # add JSON description to global description
             try:
                 with open("challenges.json") as challs_json_handler:
