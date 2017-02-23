@@ -9,7 +9,7 @@ use strict;
 
 ## check params
 if (@ARGV == 0 || !$ARGV[0]) {
-	print "Please send me a server address so I can dig it ! (ex: 127.0.0.1 or www.ovh.com)\n";
+	print "Please send me a server address so I can dig it ! (ex: google.com or www.ovh.com)\n";
 	exit 0;
 }
 my $server = $ARGV[0];
@@ -20,7 +20,7 @@ if ($server =~ /[!;&\|'"`\${}><]/){
 ## end check params
 
 ## launch dig
-my $resultDig = `/usr/bin/dig $server`;
+my $resultDig = `/usr/bin/dig +short $server`;
 ## end launch dig
 
 print "$resultDig\n";

@@ -9,7 +9,7 @@ import re
 
 ## check params
 if len(sys.argv) != 2 or not sys.argv[1]:
-    print("Please send me a server address so I can dig it ! (ex: 127.0.0.1 or www.ovh.com)")
+    print("Please send me a server address so I can dig it ! (ex: google.com or www.ovh.com)")
     sys.exit(0)
 server = sys.argv[1]
 server_regex = r"[!;&\|'\"`\${}><]"
@@ -20,7 +20,7 @@ if not server or server_regex_compiled.search(server):
 ## end check params
 
 ## launch dig
-result_dig = os.popen("/usr/bin/dig " + server).read()
+result_dig = os.popen("/usr/bin/dig +short " + server).read()
 ## end launch dig
 
 print(result_dig)

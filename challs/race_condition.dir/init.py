@@ -26,7 +26,7 @@ def init(path, randomize, file_challenge_name=None):
     cur.execute("""CREATE TABLE forbidden_ids (
 		user_id INTEGER NOT NULL UNIQUE)""")
     conn.commit()
-    hashed_randomize = bcrypt.hashpw(randomize.encode("utf-8"), bcrypt.gensalt(8))
+    hashed_randomize = bcrypt.hashpw(randomize.encode("utf-8"), bcrypt.gensalt(8)).decode('utf-8')
     cur.execute("INSERT INTO users(login, password) VALUES(?, ?)", [randomize, hashed_randomize])
     conn.commit()
     conn.close()

@@ -24,7 +24,7 @@ if not WRAPPER:
 def check_args():
     if len(sys.argv) < 2:
         print({
-                  "error": "Error: excepting at least 1 argument :\n" + __file__ + " chall_id1 [chall_id2 [chall_id3 [..]]]"})
+            "error": "Error: excepting at least 1 argument :\n" + __file__ + " chall_id1 [chall_id2 [chall_id3 [..]]]"})
         sys.exit(1)
 
     arguments = sys.argv[1:]
@@ -77,7 +77,8 @@ def create_users(arguments):
             streamdata3, return_code3 = run_cmd(['adduser', WEB_USER, user])
             if return_code1 != 0 or return_code1 != 0 or return_code1 != 0:
                 delete_users(users_added)
-                print({"error": "A user cannot be added : " + user + "\n Here is the error : " + str(streamdata1) + str(streamdata2) + str(streamdata3)})
+                print({"error": "A user cannot be added : " + user + "\n Here is the error : " + str(streamdata1) + str(
+                    streamdata2) + str(streamdata3)})
                 sys.exit(1)
             else:
                 users_added.append(user)
@@ -93,6 +94,17 @@ def create_wrapper_and_change_perms(arguments):
             # challs/chall.dir
             folder_name = user + ".dir"
             folder_path = os.path.join(CHALLS_DIR, folder_name)
+
+            # load chall json
+            chall_json_path = os.path.join(folder_path, user + '.json')
+            try:
+                with open(chall_json_path) as chall_json_handler:
+                    chall_json = json.loads(chall_json_handler.read())
+            except:
+                chall_json = None
+            if not chall_json:
+                print({"error": "An error occured while loading challenge's JSON description"})
+                sys.exit(1)
 
             # create wrapper.c
             current_wrapper = WRAPPER.replace("CHALLENGE",
@@ -115,14 +127,23 @@ def create_wrapper_and_change_perms(arguments):
             init.init(absolute_path, random_string(20))
 
             # ch(mod/own) challs/chall.dir/
-            streamdata, return_code = run_cmd(['chown', "root:" + user, folder_path, "-R"])
+            streamdata, return_code = run_cmd(['chown', "root:" + WEB_USER, folder_path, "-R"])
             if return_code != 0:
                 print({"error": "An error occured while chowning : " + str(streamdata)})
                 sys.exit(1)
-            streamdata, return_code = run_cmd(['chown', "root:" + WEB_USER, current_wrapper_bin_path])
+            streamdata, return_code = run_cmd(['chown', "root:" + user, folder_path])
             if return_code != 0:
                 print({"error": "An error occured while chowning : " + str(streamdata)})
                 sys.exit(1)
+            streamdata, return_code = run_cmd(['chown', "root:" + user, os.path.join(folder_path, "secret")])
+            if return_code != 0:
+                print({"error": "An error occured while chowning : " + str(streamdata)})
+                sys.exit(1)
+            for extension in [lang["extension"] for lang in chall_json["languages"]]:
+                streamdata, return_code = run_cmd(['chown', "root:" + user, os.path.join(folder_path, user + extension)])
+                if return_code != 0:
+                    print({"error": "An error occured while chowning : " + str(streamdata)})
+                    sys.exit(1)
             streamdata, return_code = run_cmd(['chmod', "g+x,u+xs", current_wrapper_bin_path])
             if return_code != 0:
                 print({"error": "An error occured while chmoding : " + str(streamdata)})
@@ -138,15 +159,6 @@ def create_wrapper_and_change_perms(arguments):
                     challs_json = json.loads(challs_json_handler.read())
             except:
                 challs_json = []
-            chall_json_path = os.path.join(folder_path, user + '.json')
-            try:
-                with open(chall_json_path) as chall_json_handler:
-                    chall_json = json.loads(chall_json_handler.read())
-            except:
-                chall_json = None
-            if not chall_json:
-                print({"error": "An error occured while loading challenge's JSON description"})
-                sys.exit(1)
             chall_json['challenge_id'] = user
             challs_json.append(chall_json)
             with open("challenges.json", "w") as challs_json_handler:

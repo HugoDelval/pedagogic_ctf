@@ -15,7 +15,7 @@ if len(sys.argv) != 4 or not sys.argv[1] or not sys.argv[2] or not sys.argv[3]:
 action = sys.argv[1]
 login = sys.argv[2]
 passwd = sys.argv[3]
-hashed_passwd = str(bcrypt.hashpw(passwd, bcrypt.gensalt(8)))
+hashed_passwd = bcrypt.hashpw(passwd.encode("utf-8"), bcrypt.gensalt(8)).decode('utf-8')
 ## end check params
 
 try:
@@ -30,7 +30,7 @@ def get_user_id():
     cur.execute("SELECT id, password FROM users WHERE login=?", [login])
     user = cur.fetchone()
     if user:
-        if bcrypt.hashpw(passwd, user[1]) == user[1]:
+        if bcrypt.hashpw(passwd.encode("utf-8"), user[1].encode('utf-8')) == user[1].encode('utf-8'):
             return user[0]
     return -1
 

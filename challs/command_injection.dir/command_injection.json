@@ -5,7 +5,7 @@
 	"parameters": [
 		{
 			"name": "server",
-			"placeholder": "ex: 127.0.0.1 or www.ovh.com"
+			"placeholder": "ex: google.com or www.ovh.com"
 		}
 	],
 	"languages": [
