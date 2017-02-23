@@ -10,8 +10,8 @@ you can use environment variable to ease directory creation  that must end up wi
 
     export NEW_CHALL_NAME=php_exec
     mkdir $NEW_CHALL_NAME.dir
-Now you must create the json file that will describe your challenge
-parameter is use to pass arg to you script in a ordered way :
+Now you must create the json file that will describe your challenge,
+"parameters" is used to pass arguments to you script in a ordered way :
 
 ```json
 {
@@ -20,14 +20,14 @@ parameter is use to pass arg to you script in a ordered way :
   "description": " your challenge description ",
   "parameters": [
     {
-      "name": "name of the input displayed to the user. As this is the first parametter, this will be pass as first argv to your challenge script",
-      "placeholder": "simple exemple display to the user"
+      "name": "name of the input displayed to the user. As this is the first parameter, this will be passed as first argv to your challenge script",
+      "placeholder": "simple example display to the user"
     }
   ],
   "languages": [
     {
-      "name": "name the language",
-      "extension": "extension of the language (exemple: .py)"
+      "name": "name the language (example: PYTHON)",
+      "extension": "extension of the language (example: .py)"
     }
   ],
   "resolved_conclusion":"your challenge conclusion note."

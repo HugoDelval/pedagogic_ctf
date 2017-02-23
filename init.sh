@@ -42,6 +42,10 @@ userdel race_condition
 groupdel race_condition
 printf "thesecret" > /srv/ctf_go/challs/race_condition.dir/secret
 (cd /srv/ctf_go/ && ./load_challenges.py race_condition)
+userdel php_exec
+groupdel php_exec
+printf "thesecret" > /srv/ctf_go/challs/php_exec.dir/secret
+(cd /srv/ctf_go/ && ./load_challenges.py php_exec)
 
 chown ctf_interne /srv/ctf_go/challenges.json
 

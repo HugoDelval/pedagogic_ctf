@@ -19,56 +19,56 @@ hashed_passwd = str(bcrypt.hashpw(passwd, bcrypt.gensalt(8)))
 ## end check params
 
 try:
-	conn = sqlite3.connect('/tmp/race_condition.db', isolation_level=None)
-	cur = conn.cursor()
+    conn = sqlite3.connect('/tmp/race_condition.db', isolation_level=None)
+    cur = conn.cursor()
 except:
-	print('Error connecting to db.')
-	sys.exit(0)
+    print('Error connecting to db.')
+    sys.exit(0)
 
 
 def get_user_id():
-	cur.execute("SELECT id, password FROM users WHERE login=?", [login])
-	user = cur.fetchone()
-	if user:
-		if bcrypt.hashpw(passwd, user[1]) == user[1]:
-			return user[0]
-	return -1
+    cur.execute("SELECT id, password FROM users WHERE login=?", [login])
+    user = cur.fetchone()
+    if user:
+        if bcrypt.hashpw(passwd, user[1]) == user[1]:
+            return user[0]
+    return -1
 
 
 def do_register():
-	cur.execute("INSERT INTO users(login, password) VALUES(?, ?)", [login, hashed_passwd])
-	user_id = get_user_id()
-	time.sleep(0.5) # simulate more db access / calculus
-	elapsed = time.time() - start_time
-	print("It's been " + str(elapsed) +"s since you started register.\n")
-	cur.execute("INSERT INTO forbidden_ids(user_id) VALUES(?)", [user_id])
+    cur.execute("INSERT INTO users(login, password) VALUES(?, ?)", [login, hashed_passwd])
+    user_id = get_user_id()
+    time.sleep(0.5)  # simulate more db access / calculus
+    elapsed = time.time() - start_time
+    print("It's been " + str(elapsed) + "s since you started register.\n")
+    cur.execute("INSERT INTO forbidden_ids(user_id) VALUES(?)", [user_id])
 
 
 def do_login():
-	user_id = get_user_id()
-	if user_id < 0:
-		return "We failed to log you in :/"
-	elapsed = time.time() - start_time
-	print("It's been " + str(elapsed) +"s since you started log in.\n")
-	cur.execute("SELECT count(*) FROM forbidden_ids WHERE user_id=?", [user_id])
-	if cur.fetchone()[0] > 0:
-		return "You are logged in. But sorry you are not allowed to see the secret."
-	with open('secret') as s:
-		return "You are logged in. And congratz ! Here is the secret : " + s.read()
+    user_id = get_user_id()
+    if user_id < 0:
+        return "We failed to log you in :/"
+    elapsed = time.time() - start_time
+    print("It's been " + str(elapsed) + "s since you started log in.\n")
+    cur.execute("SELECT count(*) FROM forbidden_ids WHERE user_id=?", [user_id])
+    if cur.fetchone()[0] > 0:
+        return "You are logged in. But sorry you are not allowed to see the secret."
+    with open('secret') as s:
+        return "You are logged in. And congratz ! Here is the secret : " + s.read()
 
 
 if action == 'register':
-	try:
-		do_register()
-		print("You are registered !")
-	except Exception as e:
-		print("An error occurred : " + str(e))
+    try:
+        do_register()
+        print("You are registered !")
+    except Exception as e:
+        print("An error occurred : " + str(e))
 elif action == 'login':
-	try:
-		print(do_login())
-	except Exception as e:
-		print("An error occurred : " + str(e))
+    try:
+        print(do_login())
+    except Exception as e:
+        print("An error occurred : " + str(e))
 else:
-	print("Error, action param not valid.")
+    print("Error, action param not valid.")
 
 conn.close()

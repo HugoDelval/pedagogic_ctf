@@ -1,16 +1,17 @@
 FROM ubuntu:latest
 
-RUN apt-get update -y && \
-    apt-get install --fix-missing -y git && \
-    apt-get install --fix-missing -y nodejs && \
-    apt-get install --fix-missing -y golang && \
-    apt-get install --fix-missing -y libauthen-passphrase-perl && \
-    apt-get install --fix-missing -y libdbi-perl && \
-    apt-get install --fix-missing -y libdbd-sqlite3-perl && \
-    apt-get install --fix-missing -y python3-bcrypt && \
-    apt-get install --fix-missing -y sudo && \
-    apt-get install --fix-missing -y npm && \
-    apt-get install --fix-missing -y nginx
+RUN apt-get update -y
+RUN apt-get install --fix-missing -y nginx
+RUN apt-get install --fix-missing -y git
+RUN apt-get install --fix-missing -y nodejs
+RUN apt-get install --fix-missing -y golang
+RUN apt-get install --fix-missing -y libauthen-passphrase-perl
+RUN apt-get install --fix-missing -y libdbi-perl
+RUN apt-get install --fix-missing -y libdbd-sqlite3-perl
+RUN apt-get install --fix-missing -y python3-bcrypt
+RUN apt-get install --fix-missing -y sudo
+RUN apt-get install --fix-missing -y npm
+RUN apt-get install --fix-missing -y php
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 RUN npm install -g bower
 ADD . /pedagogic_ctf
