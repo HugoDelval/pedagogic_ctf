@@ -1,0 +1,47 @@
+.menu {
+    overflow: scroll;
+    padding: 0;
+    height: 94vh;
+    background-color: #e7e7e7;
+}
+
+.menu, .menu * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.menu ul {
+    padding: 0;
+    margin: 7px 0;
+}
+
+.menu ul li {
+    list-style: none;
+    padding: 20px 0 20px 40px;
+    font-size: 15px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.menu ul li.active {
+    background-color: #cccccc;
+    position: relative;
+}
+
+.menu ul li a {
+    color: rgb(51, 51, 51);
+    text-decoration: none;
+}
+
+.languages{
+    background-color: blue;
+    margin: 0 0 0 -45px;
+    list-style-type: none;
+}
+
+li.language{
+    margin-right: 10px;
+    display: inline;
+    float: left;
+}

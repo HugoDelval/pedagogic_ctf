@@ -1,4 +1,5 @@
 # TODO
 
-* reorganize inits scripts (init.sh / load_challenges.py ...)
-* use real bdd (not json)
+* UX challenges
+* admin panel
+* execute challenges in a more isolated environment

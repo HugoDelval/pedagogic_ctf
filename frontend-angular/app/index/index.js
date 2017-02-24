@@ -17,12 +17,15 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
         $scope.requestValidate = {};
         $scope.challengeResults = {};
         $scope.requestCorrect = {};
+        $scope.challenge = {};
+        $scope.language = {};
         $http.get('/v1.0').then(function (response) {
             var challenges = response.data;
             $scope.challenges = challenges;
             for (var challIt = 0; challIt < $scope.challenges.length; ++challIt) {
                 $scope.requestCorrect[$scope.challenges[challIt].challenge_id] = {};
             }
+            $scope.showChallenge($scope.challenges[0].challenge_id, 0);
             $(".search-details-form").hide();
         }, function (response) {
             var error = response.data;
@@ -39,43 +42,38 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
 
 
         /* ------ BEGIN SERVER INTERACTION ------ */
-        $scope.showChallenge = function (challengeId, extension, challIndex) {
-            if (!$scope.challenges[challIndex].languages[0].file_content) {
-                $scope.aceLoaded = {};
-                $scope.editors = {};
-                $http.get('/v1.0/challenge/' + challengeId).then(function (response) {
-                    var challenge = response.data;
-                    $scope.challenges[challIndex].languages = challenge.languages;
-                    $scope.isShownHash[challengeId + extension] = !$scope.isShownHash[challengeId + extension];
-                    $scope.aceLoaded[challengeId] = {};
-                    $scope.editors[challengeId] = {};
-                    for (var languageIt = 0; languageIt < challenge.languages.length; ++languageIt) {
-                        var language = challenge.languages[languageIt];
-                        $scope.requestCorrect[challengeId][language.extension] = {
-                            "content_script": language.file_content
+        $scope.showChallenge = function (challengeId, challIndex) {
+            $scope.isShownHash = {};
+            $scope.aceLoaded = {};
+            $scope.editors = {};
+            $http.get('/v1.0/challenge/' + challengeId).then(function (response) {
+                $scope.challenge = response.data;
+                $scope.challenge.challenge_id = challengeId;
+                var challenge = $scope.challenge;
+                $scope.challenges[challIndex].languages = challenge.languages;
+                $scope.aceLoaded[challengeId] = {};
+                $scope.editors[challengeId] = {};
+                for (var languageIt = 0; languageIt < challenge.languages.length; ++languageIt) {
+                    var language = challenge.languages[languageIt];
+                    $scope.requestCorrect[challengeId][language.extension] = {
+                        "content_script": language.file_content
+                    };
+                    $scope.aceLoaded[challengeId][language.extension] = (function (challId, ext) {
+                        return function (_editor) {
+                            $scope.editors[challId][ext] = _editor;
+                            $scope.editors[challId][ext].renderer.updateFull();
                         };
-                        $scope.aceLoaded[challengeId][language.extension] = (function (challId, ext) {
-                            return function (_editor) {
-                                $scope.editors[challId][ext] = _editor;
-                                if (ext == extension) {
-                                    $scope.editors[challId][ext].renderer.updateFull();
-                                }
-                            };
-                        })(challengeId, language.extension);
-                    }
-                    $scope.execute(challengeId, '/execute');
-                }, function (response) {
-                    var error = response.data;
-                    $.snackbar({
-                        content: "An error occured while processing request : " + error.message,
-                        timeout: 3000 + error.message.length * 25
-                    });
+                    })(challengeId, language.extension);
+                }
+                $scope.language = challenge.languages[0];
+                $scope.execute(challengeId, '/execute');
+            }, function (response) {
+                var error = response.data;
+                $.snackbar({
+                    content: "An error occured while processing request : " + error.message,
+                    timeout: 3000 + error.message.length * 25
                 });
-            } else {
-                $scope.isShownHash[challengeId + extension] = !$scope.isShownHash[challengeId + extension];
-                $scope.editors[challengeId][extension].renderer.updateFull();
-            }
-
+            });
         };
         $scope.execute = function (challengeId, path, extension) {
             $http.defaults.headers.common['X-CTF-AUTH'] = $scope.user.token;
@@ -119,15 +117,18 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
 
 
         /* ------ BEGIN UTILS ------ */
-        $scope.isShown = function (challengeId, extension) {
-            return $scope.isShownHash[challengeId + extension];
-        };
-        $scope.buttonText = function (challengeId, extension, languageName) {
-            if ($scope.isShown(challengeId, extension))
-                return "Hide " + languageName;
-            else
-                return "Show " + languageName;
-        };
+        $scope.isChallengeSelected = function (challenge) {
+            return challenge.challenge_id == $scope.challenge.challenge_id;
+        }
+        $scope.isLanguageSelected = function (language) {
+            return language == $scope.language;
+        }
+        $scope.areLanguageAndChallengeSelected = function (language, challenge) {
+            return $scope.isChallengeSelected(challenge) && $scope.isLanguageSelected(language);
+        }
+        $scope.selectLanguage = function (language) {
+            $scope.language = language;
+        }
         /* ------ END UTILS ------ */
 
     }]);
