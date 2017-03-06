@@ -4,5 +4,3 @@ type ChangePassword struct {
 	Password            string                `json:"password"`
 	PasswordConfirm     string                `json:"passwordConfirm"`
 }
-
-type Users []User
