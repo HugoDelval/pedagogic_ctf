@@ -130,7 +130,11 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
                 });
             } else {
                 $http.put('/v1.0/user/me/changePassword', $scope.request).then(function (response) {
-                    $scope.response = response.data;
+                    $location.path("/user/login");
+                    $.snackbar({
+                        content: response.data,
+                        timeout: 3000 + response.data.length * 25
+                    });
                 }, function (response) {
                     var error = response.data;
                     $.snackbar({

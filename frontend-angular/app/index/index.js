@@ -9,9 +9,17 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
         });
     }])
 
-    .controller('IndexCtrl', ['$cookies', '$sce', '$scope', '$http', function ($cookies, $sce, $scope, $http) {
+    .controller('IndexCtrl', ['$cookies', '$sce', '$scope', '$http', '$location', '$anchorScroll', function ($cookies, $sce, $scope, $http, $location, $anchorScroll) {
 
         /* ------ BEGIN INIT ------ */
+        $.fn.extend({
+            qcss: function (css) {
+                return $(this).queue(function (next) {
+                    $(this).css(css);
+                    next();
+                });
+            }
+        });
         $scope.isShownHash = {};
         $scope.requestExecute = {};
         $scope.requestValidate = {};
@@ -66,7 +74,6 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
                     })(challengeId, language.extension);
                 }
                 $scope.language = challenge.languages[0];
-                $scope.execute(challengeId, '/execute');
             }, function (response) {
                 var error = response.data;
                 $.snackbar({
@@ -82,9 +89,13 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
                 $http.post('/v1.0/challenge/' + challengeId + path, $scope.requestExecute[challengeId]).then(function (response) {
                     var challOutput = response.data;
                     $scope.challengeResults[challengeId] = challOutput;
+                    $anchorScroll("output_" + challengeId);
+                    $("#output_" + challengeId).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' });
                 }, function (response) {
                     var error = response.data;
                     $scope.challengeResults[challengeId].message = "An error occured while processing request : " + error.message;
+                    $anchorScroll("output_" + challengeId);
+                    $("#output_" + challengeId).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' });
                 });
             }
             else if (path.indexOf("validate") !== -1) {

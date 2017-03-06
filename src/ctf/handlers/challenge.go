@@ -170,7 +170,7 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 		if !notFound {
 			// we found the validatedChallenge object but it wasn't exploited (the user just corrected the challenge, and now he exploits it)
 			alreadyValidated.IsExploited = true
-			if err := db.Update(&alreadyValidated).Error; err != nil {
+			if err := db.Save(&alreadyValidated).Error; err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				utils.SendResponseJSON(w, utils.InternalErrorMessage)
 				log.Printf("%v\n", err)
@@ -322,7 +322,7 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 		if !notFound {
 			// we found the validatedChallenge object but it wasn't corrected (the user just exploited the challenge, and now he corrects it)
 			alreadyValidated.IsCorrected = true
-			if err := db.Update(&alreadyValidated).Error; err != nil {
+			if err := db.Save(&alreadyValidated).Error; err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				utils.SendResponseJSON(w, utils.InternalErrorMessage)
 				log.Printf("%v\n", err)

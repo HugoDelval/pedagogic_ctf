@@ -230,7 +230,7 @@ func UserChangePassword(w http.ResponseWriter, r *http.Request){
 		utils.SendResponseJSON(w, utils.Message{"Password too short."})
 		return
 	}
-	
+
 	db, err := model.GetDB(w)
 	if err != nil{
 		return
@@ -247,7 +247,7 @@ func UserChangePassword(w http.ResponseWriter, r *http.Request){
 	user.Token = ""
 	user.TimeAuthenticated, _ = time.Parse(time.RFC3339, "1970-01-01T00:00:00+00:00")
 
-	db.Update(&user)
+	db.Save(&user)
 
 	w.WriteHeader(http.StatusAccepted)
 	utils.SendResponseJSON(w, utils.Message{"Password successfully changed. Please login again."})
@@ -270,7 +270,7 @@ func UserDelete(w http.ResponseWriter, r *http.Request){
 
 	user.Token = ""
 	user.TimeAuthenticated, _ = time.Parse(time.RFC3339, "1970-01-01T00:00:00+00:00")
-	db.Update(&user)
+	db.Save(&user)
 	db.Delete(&user)
 
 	w.WriteHeader(http.StatusAccepted)
@@ -293,7 +293,7 @@ func UserLogout(w http.ResponseWriter, r *http.Request){
 	}
 
 	user.Token = ""
-	db.Update(&user)
+	db.Save(&user)
 
 	w.WriteHeader(http.StatusAccepted)
 	utils.SendResponseJSON(w, utils.Message{"User logged out. Bye !"})
