@@ -90,12 +90,12 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
                     var challOutput = response.data;
                     $scope.challengeResults[challengeId] = challOutput;
                     $anchorScroll("output_" + challengeId);
-                    $("#output_" + challengeId).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' });
+                    $("#output_" + challengeId).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' });
                 }, function (response) {
                     var error = response.data;
                     $scope.challengeResults[challengeId].message = "An error occured while processing request : " + error.message;
                     $anchorScroll("output_" + challengeId);
-                    $("#output_" + challengeId).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' });
+                    $("#output_" + challengeId).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' });
                 });
             }
             else if (path.indexOf("validate") !== -1) {

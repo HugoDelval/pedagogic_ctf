@@ -22,6 +22,7 @@ angular.module('myApp.scoreboard', ['ngRoute'])
                 $http.get('/v1.0/user/' + currId + '/validatedChallenges').then((function (userIterator) {
                     return function (response) {
                         var validatedChalls = response.data;
+                        $scope.users[userIterator].nb_validated = validatedChalls.length;
                         for (var challIt = 0; challIt < validatedChalls.length; ++challIt) {
                             $http.get('/v1.0/challenge/' + validatedChalls[challIt].ChallengeID).then((function (userIter) {
                                 return function (response) {
