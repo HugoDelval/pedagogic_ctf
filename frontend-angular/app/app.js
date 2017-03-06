@@ -20,7 +20,7 @@ angular.module('myApp', [
     .factory('UserService', function () {
         return {
             isLoggedIn: false,
-            nick: "anonymous",
+            email: "anonymous",
             token: ""
         };
     });

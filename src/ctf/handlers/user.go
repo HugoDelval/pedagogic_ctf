@@ -10,6 +10,7 @@ import (
 	"ctf/model"
 	"errors"
 	"encoding/json"
+	"strings"
 )
 
 func getUserFromJSON(w http.ResponseWriter, r *http.Request) (user model.User, err error){
@@ -25,16 +26,35 @@ func getUserFromJSON(w http.ResponseWriter, r *http.Request) (user model.User, e
 	return
 }
 
+func getChangePasswordFromJSON(w http.ResponseWriter, r *http.Request) (chgPasswd model.ChangePassword, err error){
+	var userRaw []byte
+	err = utils.LoadJSONFromRequest(w, r, &userRaw)
+	if err != nil{return}
+	err = json.Unmarshal(userRaw, &chgPasswd)
+	if err != nil{
+		utils.SendResponseJSON(w, utils.BadRequestMessage)
+		log.Println(err)
+		return
+	}
+	return
+}
+
 func UserRegister(w http.ResponseWriter, r *http.Request) {
 	userRegister, err := getUserFromJSON(w, r)
 	if err != nil{return}
 
-	nick := userRegister.Nick
+	email := userRegister.Email
 	password := userRegister.Password
 
-	if len(nick) < 1 || len(password) < 1{
+	if len(email) < 1 || len(password) < 1{
 		w.WriteHeader(http.StatusNotAcceptable)
-		utils.SendResponseJSON(w, utils.Message{"Nickname and/or password too short."})
+		utils.SendResponseJSON(w, utils.Message{"Email and/or password too short."})
+		return
+	}
+
+	if !strings.Contains(email, "@"){
+		w.WriteHeader(http.StatusNotAcceptable)
+		utils.SendResponseJSON(w, utils.Message{"Wrong email address."})
 		return
 	}
 
@@ -42,15 +62,14 @@ func UserRegister(w http.ResponseWriter, r *http.Request) {
 	if err != nil{return}
 
 	var user model.User
-	notFound := db.Where(&model.User{Nick: nick}).First(&user).RecordNotFound()
+	notFound := db.Where(&model.User{Email: email}).First(&user).RecordNotFound()
 	if !notFound {
 		w.WriteHeader(http.StatusConflict)
-		utils.SendResponseJSON(w, utils.Message{"A user with this nick already exists."})
+		utils.SendResponseJSON(w, utils.Message{"A user with this email already exists."})
 		return
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
-	//err = bcrypt.CompareHashAndPassword(hashedPassword, password)
 	if err != nil{
 		w.WriteHeader(http.StatusInternalServerError)
 		utils.SendResponseJSON(w, utils.InternalErrorMessage)
@@ -58,7 +77,7 @@ func UserRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user = model.User{
-		Nick: nick,
+		Email: email,
 		Password: string(hashedPassword),
 		IsAdmin: false,
 	}
@@ -73,7 +92,7 @@ func UserAuthenticate(w http.ResponseWriter, r *http.Request){
 	userAuth, err := getUserFromJSON(w, r)
 	if err != nil {return}
 
-	nick := userAuth.Nick
+	email := userAuth.Email
 	password := userAuth.Password
 
 	db, err := model.GetDB(w)
@@ -82,7 +101,7 @@ func UserAuthenticate(w http.ResponseWriter, r *http.Request){
 	}
 
 	var user model.User
-	notFound := db.Where(&model.User{Nick: nick}).First(&user).RecordNotFound()
+	notFound := db.Where(&model.User{Email: email}).First(&user).RecordNotFound()
 	if notFound{
 		w.WriteHeader(http.StatusUnauthorized)
 		utils.SendResponseJSON(w, utils.Message{"Can't login with those credentials."})
@@ -202,9 +221,9 @@ func UserChangePassword(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	userChangePassword, err := getUserFromJSON(w, r)
+	changePasswd, err := getChangePasswordFromJSON(w, r)
 	if err != nil{return}
-	password := userChangePassword.Password
+	password := changePasswd.Password
 
 	if len(password) < 1{
 		w.WriteHeader(http.StatusNotAcceptable)

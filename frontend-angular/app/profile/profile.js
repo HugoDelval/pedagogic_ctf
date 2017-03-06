@@ -17,7 +17,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
         $scope.totalScoreChallenges = 0;
         $scope.nbUsers = 0;
         $scope.user = $cookies.getObject('user') || {};
-        if (!$scope.user.nick) {
+        if (!$scope.user.email) {
             $scope.user = {}
         }
         if (!$scope.user || !$scope.user.isLoggedIn) {
@@ -96,7 +96,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngCookies'])
             }, function () {
                 $scope.user.token = "";
                 $scope.user.isLoggedIn = false;
-                $scope.user.nick = "anonymous";
+                $scope.user.email = "anonymous";
                 $cookies.putObject('user', $scope.user);
                 $.snackbar({
                     content: "You must login to access this page.",

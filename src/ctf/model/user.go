@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	gorm.Model
-	Nick                string                `json:"nick" sql:"size:255;unique;index"`
+	Email               string                `json:"email" sql:"size:255;unique;index"`
 	Password            string                `sql:"size:255" json:"password,omitempty"`
 	IsAdmin             bool                  `json:"-"`
 	TimeAuthenticated   time.Time             `json:"-"`

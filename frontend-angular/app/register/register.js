@@ -14,7 +14,7 @@ angular.module('myApp.register', ['ngRoute', 'ngCookies'])
         /* ------ BEGIN INIT ------ */
         $scope.request = {};
         $scope.user = $cookies.getObject('user') || {};
-        if (!$scope.user.nick) {
+        if (!$scope.user.email) {
             $scope.user = {}
         }
         if ($scope.user && $scope.user.isLoggedIn) {

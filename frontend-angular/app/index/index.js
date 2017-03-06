@@ -35,7 +35,7 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
             });
         });
         $scope.user = $cookies.getObject('user') || {};
-        if (!$scope.user.nick) {
+        if (!$scope.user.email) {
             $scope.user = {}
         }
         /* ------ END INIT ------ */

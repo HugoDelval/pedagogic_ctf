@@ -11,7 +11,7 @@ angular.module('myApp.logout', ['ngRoute', 'ngCookies'])
 
     .controller('LogoutCtrl', ['$location', '$scope', '$http', '$cookies', function ($location, $scope, $http, $cookies) {
         $scope.user = $cookies.getObject('user') || {};
-        if (!$scope.user.nick) {
+        if (!$scope.user.email) {
             $scope.user = {}
         }
         if (!$scope.user || !$scope.user.isLoggedIn) {
@@ -27,7 +27,7 @@ angular.module('myApp.logout', ['ngRoute', 'ngCookies'])
                 $scope.response = data;
                 $scope.user.isLoggedIn = false;
                 $scope.user.token = "";
-                $scope.user.nick = "anonymous";
+                $scope.user.email = "anonymous";
                 $cookies.putObject('user', $scope.user);
                 $.snackbar({
                     content: data.message,

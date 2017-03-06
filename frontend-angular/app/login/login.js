@@ -14,7 +14,7 @@ angular.module('myApp.login', ['ngRoute', 'ngCookies'])
         /* ------ BEGIN INIT ------ */
         $scope.request = {};
         $scope.user = $cookies.getObject('user') || {};
-        if (!$scope.user.nick) {
+        if (!$scope.user.email) {
             $scope.user = {}
         }
         if ($scope.user && $scope.user.isLoggedIn) {
@@ -33,7 +33,7 @@ angular.module('myApp.login', ['ngRoute', 'ngCookies'])
                 var data = response.data;
                 $scope.user.token = data;
                 $scope.user.isLoggedIn = true;
-                $scope.user.nick = $scope.request.nick;
+                $scope.user.email = $scope.request.email;
                 $cookies.putObject('user', $scope.user);
                 $location.path('/user/me');
             }, function (response) {
