@@ -88,8 +88,10 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace'])
             if (path.indexOf("execute") !== -1) {
                 $http.post('/v1.0/challenge/' + challengeId + path, $scope.requestExecute[challengeId]).then(function (response) {
                     var challOutput = response.data;
-                    $scope.challengeResults[challengeId] = challOutput;
                     $anchorScroll("output_" + challengeId);
+                    $("#output_" + challengeId, function() {
+                        $("#output_" + challengeId).html(challOutput.message); // To generate XSS !!
+                    })
                     $("#output_" + challengeId).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750);
                 }, function (response) {
                     var error = response.data;
