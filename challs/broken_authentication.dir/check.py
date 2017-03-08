@@ -29,6 +29,11 @@ def check(binary, randomize):
             'message': 'Calling invalid endpoint does not return "not found". Your code output \n\n{}',
         },
         {
+            'params': ['debug-e9bc7d25d163', 'e9bc7d25d16348f9c5f6b9251c270c0da39aff8b', '/me'],
+            'response': 'debug-e9bc7d25d163',
+            'message': 'Calling /me does not return my user. Your code output \n\n{}',
+        },
+        {
             'params': ['debug-e9bc7d25d163', 'e9bc7d25d16348f9c5f6b9251c270c0da39aff8b', '/get-secret'],
             'response': 'you are not allowed to request',
             'message': '/get-secret endpoint seems unavailable or broken. Your code output \n\n{}',
