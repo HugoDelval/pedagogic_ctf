@@ -6,8 +6,11 @@ RUN apt-get install --fix-missing -y git
 RUN apt-get install --fix-missing -y nodejs
 RUN apt-get install --fix-missing -y golang
 RUN apt-get install --fix-missing -y libauthen-passphrase-perl
+RUN apt-get install --fix-missing -y libmojolicious-perl
+RUN apt-get install --fix-missing -y libdigest-sha-perl
 RUN apt-get install --fix-missing -y libdbi-perl
 RUN apt-get install --fix-missing -y libdbd-sqlite3-perl
+RUN apt-get install --fix-missing -y python3-pip
 RUN apt-get install --fix-missing -y python3-bcrypt
 RUN apt-get install --fix-missing -y sudo
 RUN apt-get install --fix-missing -y npm
