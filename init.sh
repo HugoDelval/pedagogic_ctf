@@ -33,30 +33,13 @@ chown root:root /srv/ctf_go/check_challenge_corrected.py
 chmod 500 /srv/ctf_go/check_challenge_corrected.py
 
 # Init challenges
-userdel broken_authentication
-groupdel broken_authentication
-printf "thesecret" > /srv/ctf_go/challs/broken_authentication.dir/secret
-(cd /srv/ctf_go/ && ./load_challenges.py broken_authentication)
-
-userdel injection_conf
-groupdel injection_conf
-printf "thesecret" > /srv/ctf_go/challs/injection_conf.dir/secret
-(cd /srv/ctf_go/ && ./load_challenges.py injection_conf)
-
-userdel command_injection
-groupdel command_injection
-printf "thesecret" > /srv/ctf_go/challs/command_injection.dir/secret
-(cd /srv/ctf_go/ && ./load_challenges.py command_injection)
-
-userdel race_condition
-groupdel race_condition
-printf "thesecret" > /srv/ctf_go/challs/race_condition.dir/secret
-(cd /srv/ctf_go/ && ./load_challenges.py race_condition)
-
-#userdel php_exec
-#groupdel php_exec
-#printf "thesecret" > /srv/ctf_go/challs/php_exec.dir/secret
-#(cd /srv/ctf_go/ && ./load_challenges.py php_exec)
+for chall_name in `ls challs|grep dir|sed "s/.dir$//"`
+do
+    userdel $chall_name
+    groupdel $chall_name
+    printf "thesecret" > /srv/ctf_go/challs/${chall_name}.dir/secret
+    (cd /srv/ctf_go/ && ./load_challenges.py $chall_name)
+done
 
 chown ctf_interne /srv/ctf_go/challenges.json
 

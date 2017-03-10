@@ -133,5 +133,6 @@ if __name__ == '__main__':
         headers={'X-API-TOKEN': token},
     )
 
+    conn.commit()
     conn.close()
     print(response.get_data().decode('unicode_escape'))
