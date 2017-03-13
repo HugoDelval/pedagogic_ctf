@@ -8,6 +8,10 @@
 			"placeholder": "ex: marius"
 		},
 		{
+			"name": "token",
+			"placeholder": "ex: a4a5z45e46ae..."
+		},
+		{
 			"name": "endpoint",
 			"placeholder": "ex: /accounts/new"
 		}

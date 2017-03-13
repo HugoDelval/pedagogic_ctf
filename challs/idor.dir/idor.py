@@ -1,10 +1,20 @@
 #!/usr/bin/python3
 
+import random
 import sqlite3
+import string
 import sys
 
-from flask import Flask, g
-from werkzeug.exceptions import NotFound
+from flask import Flask, g, request
+from werkzeug.exceptions import (BadRequest,
+                                 NotFound, Unauthorized)
+
+
+def generate_token():
+    """
+        Generate a pseudo-random token
+    """
+    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(64))
 
 
 def get_user_account_details(account_id):
@@ -29,15 +39,37 @@ def create_app():
     """
     app = Flask(__name__)
 
+    @app.before_request
+    def verify_token():
+        """
+            Get token from HTTP header
+        """
+        if request.path == '/accounts/new':
+            return
+
+        try:
+            token = request.environ['HTTP_X_API_TOKEN']
+        except (KeyError, IndexError, TypeError):
+            raise BadRequest('Missing or invalid token')
+
+        g.cursor.execute(
+            "SELECT username FROM accounts WHERE token=? and username=?",
+            (token, g.username)
+        )
+        user = g.cursor.fetchone()
+        if not user:
+            raise Unauthorized("Invalid X-Api-Token")
+
     @app.route('/accounts/new')
     def create_account():
         """
             Get or create an account for user
         """
+        token = generate_token()
         default_balance = 100
         g.cursor.execute(
-            "INSERT OR REPLACE INTO accounts(username, balance) VALUES(?,?)",
-            (g.username, default_balance)
+            "INSERT OR REPLACE INTO accounts(username, token, balance) VALUES(?,?,?)",
+            (g.username, token, default_balance)
         )
         account_id = g.cursor.execute(
             "SELECT id from accounts WHERE username=?",
@@ -45,14 +77,18 @@ def create_app():
         )
         account_id = g.cursor.fetchone()[0]
 
-        response = "Your account {} has been successfully created.\nYou can view details here /accounts/{}/details"
-        return response.format(account_id, account_id)
+        response = """Your account {} has been successfully created.
+        Your associated token is {}
+        You can view account details here /accounts/{}/details"""
+        return response.format(account_id, token, account_id)
 
     @app.route('/accounts/<account_id>/details')
     def get_account_details(account_id):
         """
             Return user account details
         """
+        # Username and token already verified in function verify_token
+
         account_details = get_user_account_details(
             account_id=account_id,
         )
@@ -71,12 +107,13 @@ APP.config['TESTING'] = True
 if __name__ == '__main__':
 
     # Parse params
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print("Missing parameters")
         sys.exit(0)
 
     username = sys.argv[1]
-    endpoint = sys.argv[2]
+    token = sys.argv[2]
+    endpoint = sys.argv[3]
 
     if not username:
         print("Missing username")
@@ -101,6 +138,7 @@ if __name__ == '__main__':
     # Make request
     response = tester.get(
         endpoint,
+        headers={'X-API-TOKEN': token},
     )
 
     conn.commit()

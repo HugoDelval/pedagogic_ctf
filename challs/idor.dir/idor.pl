@@ -7,6 +7,7 @@ use Mojolicious;
 use Mojo::Log;
 use Mojo::URL;
 use Mojo::UserAgent;
+use String::Random qw(random_regex);
 
 my $driver = "SQLite";
 my $dsn = "DBI:$driver:dbname=/tmp/idor.db";
@@ -15,6 +16,14 @@ my $dbh = DBI->connect($dsn, undef, undef, { AutoCommit => 1 }) or exit;
 my $username = "";
 my $app = Mojolicious->new;
 $app = $app->log(Mojo::Log->new(path => '/dev/null'));
+
+
+sub generateToken {
+    #
+    #    Generate a pseudo-random token
+    #
+    return random_regex("[0-9a-zA-Z]{64}");
+}
 
 
 sub getUserAccountDetails {
@@ -36,16 +45,47 @@ sub getUserAccountDetails {
 
 }
 
+######################   API   ##############################
+
+$app->hook(before_dispatch => sub {
+    #
+    #    Get token from HTTP header
+    #
+    my $c = shift;
+    my $endpoint = $c->req->url->path;
+   
+    if ($endpoint eq '/accounts/new'){
+        return;
+    }
+    
+    my $token = $c->req->headers->header('X-API-TOKEN');
+    my $sth = $dbh->prepare("SELECT username FROM accounts WHERE token=? and username=?");
+    $sth->bind_param(1, $token);
+    $sth->bind_param(2, $username);
+    $sth->execute;
+    my $user = $sth->fetchrow_array;
+    
+    if (!$user) {
+        return $c->render(
+            status => 401,
+            template => 'unauthorized',
+            content => 'Invalid X-Api-Token'
+         );
+    }
+});
+
 $app->routes->get('/accounts/new' => sub {
     #
     #    Get account details for user
     #
     my $c = shift;
+    my $token = generateToken();
     my $defaultBalance = 100;
     
-    my $sth = $dbh->prepare("INSERT OR REPLACE INTO accounts(username, balance) VALUES(?,?)");
+    my $sth = $dbh->prepare("INSERT OR REPLACE INTO accounts(username, token, balance) VALUES(?,?,?)");
     $sth->bind_param(1, $username);
-    $sth->bind_param(2, $defaultBalance);
+    $sth->bind_param(2, $token);
+    $sth->bind_param(3, $defaultBalance);
     $sth->execute;
 
     $sth = $dbh->prepare("SELECT id from accounts WHERE username=?");
@@ -53,7 +93,10 @@ $app->routes->get('/accounts/new' => sub {
     $sth->execute;
     my $accountId = $sth->fetchrow;
 
-    my $response = "Your account $accountId has been successfully created.\nYou can view details here /accounts/$accountId/details";
+    my $response = "Your account $accountId has been successfully created.
+    Your associated token is $token
+    You can view account details here /accounts/$accountId/details
+    ";
 
     return $c->render(
         status => 200,
@@ -64,6 +107,8 @@ $app->routes->get('/accounts/new' => sub {
 $app->routes->get('/accounts/(:id)/details' => sub {
     #
     #    Return secret page
+    #
+    # Username and token already verified in function verify_token
     #
     my $c = shift;
     my $accountId = $c->param('id');
@@ -88,7 +133,8 @@ $app->routes->get('/accounts/(:id)/details' => sub {
 sub main {
 
     $username = $ARGV[0];
-    my $endpoint = $ARGV[1];
+    my $token = $ARGV[1];
+    my $endpoint = $ARGV[2];
 
     if (!$username) {
         print "Missing username";
@@ -102,7 +148,7 @@ sub main {
     my $url = Mojo::URL->new($endpoint);
     my $ua = Mojo::UserAgent->new();
     $ua->server->app($app);
-    my $response = $ua->get($url);
+    my $response = $ua->get($url => {'X-API-TOKEN' => $token});
     print $response->res->content->asset->{'content'};
     $dbh->disconnect();
 }

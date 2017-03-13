@@ -30,13 +30,15 @@ def init_db(path, file_challenge_name, randomize):
     cur.execute("""CREATE TABLE accounts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL UNIQUE,
+                token TEXT NOT NULL UNIQUE,
                 balance INT NOT NULL DEFAULT 100,
                 description TEXT NOT NULL DEFAULT '')""")
     conn.commit()
 
+    token = 'JqcY6oUYCiVtvyfyN7r6z461hjhG!r7SzfnndZDYvuzicSmAyaVvr6RFlZZhEorS'
     cur.execute(
-        "INSERT INTO accounts(username, balance, description) VALUES(?, ?, ?)",
-        ('586b652384404', 1337, 'The secret is {}'.format(randomize))
+        "INSERT INTO accounts(username, token, balance, description) VALUES(?, ?, ?, ?)",
+        ('586b652384404', token, 1337, 'The secret is {}'.format(randomize))
     )
     conn.commit()
     conn.close()
