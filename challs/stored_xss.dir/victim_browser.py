@@ -14,8 +14,8 @@ selenium_queue = Queue(
     name='selenium'
 )
 
-HOST = '127.0.0.1'
-PORT = 12345
+HOST = 'my-site.com'
+PORT = 8888
 DB_REQUEST_PATH = '/internal/debug/get-comments'
 
 
@@ -51,6 +51,7 @@ if __name__ == '__main__':
         server_logs = log.readlines()
 
     server_logs = '<br>'.join([l.strip() for l in server_logs if rand in l or '* Running' in l])
+    server_logs = server_logs.replace('http://{}'.format(HOST), 'http://evil.com')
 
     response = "<h2>Victim browser's screenshot</h2><br>{}<h2>Server logs</h2><pre>{}</pre>"
     response = response.format(victim_soup.prettify(), server_logs)

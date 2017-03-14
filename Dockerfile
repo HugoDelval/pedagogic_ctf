@@ -28,4 +28,4 @@ ADD . /pedagogic_ctf
 RUN cd /pedagogic_ctf/frontend-angular && bower install --allow-root
 RUN cd /pedagogic_ctf && ./init.sh
 
-CMD service nginx restart && service redis-server restart && sudo -u ctf_interne /pedagogic_ctf/run.sh
+CMD service nginx restart && service redis-server restart && /pedagogic_ctf/selenium.sh && sudo -u ctf_interne /pedagogic_ctf/run.sh

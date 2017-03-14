@@ -8,8 +8,8 @@ import sqlite3
 
 from flask import Flask, request
 
-HOST = '127.0.0.1'
-PORT = 12345
+HOST = 'my-site.com'
+PORT = 8888
 NOT_LOGGED_PATH = (
     '/favicon.ico',
     '/internal/debug/get-comments',
@@ -47,10 +47,10 @@ def create_app():
 
         if request.path not in NOT_LOGGED_PATH:
 
-            msg = "{} {} with cookies: {}".format(
+            msg = "{} - {} {}".format(
+                request.headers['Referer'].split('?')[1],
                 request.method,
                 request.path,
-                request.cookies
             )
             app.logger.warning(msg)
 

@@ -13,15 +13,16 @@ def get_screenshot(host=None, port=None, path=None, client=None, secret=None):
     """
     Browser.get('http://{}:{}/favicon.ico'.format(host, port))
 
-    for cookie in ('secret', 'client'):
-        Browser.add_cookie({
-            'name': cookie,
-            'value': locals()[cookie],
-            'domain': '{}:{}'.format(host, port),
-            'path': '/'
-        })
-    Browser.get('http://{}:{}{}'.format(host, port, path))
+    Browser.add_cookie({
+        'name': 'secret',
+        'value': secret,
+        'domain': '{}:{}'.format(host, port),
+        'path': '/'
+    })
+
+    Browser.get('http://{}:{}{}?{}'.format(host, port, path, client))
     img = Browser.get_screenshot_as_base64()
+
     return '<img alt="Embedded Image" src="data:image/png;base64,{}"/>'.format(img)
 
 

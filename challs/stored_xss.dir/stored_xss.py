@@ -57,6 +57,10 @@ if __name__ == '__main__':
     email = sys.argv[1]
     comment = sys.argv[2]
 
+    if not comment:
+        print('Missing comment')
+        sys.exit(0)
+
     # Post comment
     conn = sqlite3.connect('/tmp/stored_xss.db', isolation_level=None)
     cursor = conn.cursor()
