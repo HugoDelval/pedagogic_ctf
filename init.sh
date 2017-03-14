@@ -41,6 +41,19 @@ do
     (cd /srv/ctf_go/ && ./load_challenges.py $chall_name)
 done
 
+# Selenium based challs specific
+# TODO: add to init challenges
+cd /usr/local/bin
+wget "https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-linux64.tar.gz"
+tar xvzf geckodriver-v0.15.0-linux64.tar.gz
+chmod +x geckodriver
+
+chown root:stored_xss /srv/ctf_go/challs/stored_xss.dir/victim_browser.py
+chmod +x /srv/ctf_go/challs/stored_xss.dir/victim_browser.py
+touch /tmp/api.log
+chmod 666 /tmp/api.log
+
+
 chown ctf_interne /srv/ctf_go/challenges.json
 
 # configure nginx

@@ -1,21 +1,21 @@
 package handlers
 
 import (
-	"net/http"
-	"encoding/json"
-	"ctf/utils"
 	"ctf/model"
-	"io/ioutil"
-	"log"
+	"ctf/utils"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gorilla/mux"
-	"strconv"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 	"os/exec"
-	"time"
-	"errors"
-	"regexp"
 	"path/filepath"
+	"regexp"
+	"strconv"
+	"time"
 )
 
 // exists returns whether the given file or directory exists or not
@@ -34,7 +34,7 @@ func customCommand(name string, dir string, arg ...string) *exec.Cmd {
 	cmd := &exec.Cmd{
 		Path: name,
 		Args: append([]string{name}, arg...),
-		Dir: dir,
+		Dir:  dir,
 	}
 	if filepath.Base(name) == name {
 		if lp, err := exec.LookPath(name); err == nil {
@@ -130,8 +130,8 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	secret := ""
-	secretJSONVal, ok := secretJSON["secret"];
-	if (ok) {
+	secretJSONVal, ok := secretJSON["secret"]
+	if ok {
 		if err := json.Unmarshal(*secretJSONVal, &secret); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			utils.SendResponseJSON(w, utils.BadRequestMessage)
@@ -178,10 +178,10 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			newValidatedChall := model.ValidatedChallenge{
-				ChallengeID: challengeName,
-				UserID: strconv.Itoa(int(user.ID)),
-				IsExploited: true,
-				IsCorrected: false,
+				ChallengeID:   challengeName,
+				UserID:        strconv.Itoa(int(user.ID)),
+				IsExploited:   true,
+				IsCorrected:   false,
 				DateValidated: time.Now(),
 			}
 			// this is a new validatedChallenge
@@ -199,8 +199,20 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 }
 
 func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
-	_, challengeFolderPath, challenge, err := getChallengeInfos(w, r)
+	challengeName, challengeFolderPath, challenge, err := getChallengeInfos(w, r)
 	if err != nil {
+		return
+	}
+
+	// TODO: change Challenge Model
+	authenticatedCahllenges := map[string]bool{
+		"stored_xss": true,
+	}
+
+	registeredUser, user, _ := IsUserAuthenticated(w, r)
+	if !registeredUser && authenticatedCahllenges[challengeName] {
+		w.WriteHeader(http.StatusForbidden)
+		utils.SendResponseJSON(w, utils.Message{"You need to be logged in to execute this challenge"})
 		return
 	}
 
@@ -211,9 +223,10 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 	}
 	_ = json.Unmarshal(paramsRaw, &paramsJSON)
 
-	args := make([]string, len(challenge.Parameters))
+	args := make([]string, len(challenge.Parameters), len(challenge.Parameters)+1)
+
 	for index, arg := range challenge.Parameters {
-		paramJSONVal, ok := paramsJSON[arg.Name];
+		paramJSONVal, ok := paramsJSON[arg.Name]
 		if !ok {
 			args[index] = ""
 			continue
@@ -221,6 +234,10 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 		if err := json.Unmarshal(*paramJSONVal, &(args[index])); err != nil {
 			args[index] = ""
 		}
+	}
+
+	if authenticatedCahllenges[challengeName] { // Inject User email
+		args = append([]string{user.Email}, args...)
 	}
 
 	cmd := challengeFolderPath + "wrapper"
@@ -330,10 +347,10 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			newValidatedChall := model.ValidatedChallenge{
-				ChallengeID: challengeName,
-				UserID: strconv.Itoa(int(user.ID)),
-				IsExploited: false,
-				IsCorrected: true,
+				ChallengeID:   challengeName,
+				UserID:        strconv.Itoa(int(user.ID)),
+				IsExploited:   false,
+				IsCorrected:   true,
 				DateValidated: time.Now(),
 			}
 			// this is a new validatedChallenge
