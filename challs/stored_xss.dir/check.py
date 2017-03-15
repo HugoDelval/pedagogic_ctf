@@ -1,4 +1,9 @@
+
+import os
+import requests
 import subprocess
+
+from shutil import copyfile
 
 
 def run_cmd(cmd_list):
@@ -12,40 +17,32 @@ def check(binary, randomize):
     """
         Check if the corrected source code is still usable
     """
-    checks = [
-        {
-            'params': ['test', '', ''],
-            'response': 'your api token',
-            'message': 'Token creation seems broken. Your code output \n\n{}',
-        },
-        {
-            'params': ['test', 'test', '/get-secret'],
-            'response': 'invalid x-api-token',
-            'message': 'Token check seems broken. Your code output \n\n{}',
-        },
-        {
-            'params': ['debug-e9bc7d25d163', 'e9bc7d25d16348f9c5f6b9251c270c0da39aff8b', '/aze'],
-            'response': 'not found',
-            'message': 'Calling invalid endpoint does not return "not found". Your code output \n\n{}',
-        },
-        {
-            'params': ['debug-e9bc7d25d163', 'e9bc7d25d16348f9c5f6b9251c270c0da39aff8b', '/me'],
-            'response': 'debug-e9bc7d25d163',
-            'message': 'Calling /me does not return my user. Your code output \n\n{}',
-        },
-        {
-            'params': ['debug-e9bc7d25d163', 'e9bc7d25d16348f9c5f6b9251c270c0da39aff8b', '/get-secret'],
-            'response': 'you are not allowed to request',
-            'message': '/get-secret endpoint seems unavailable or broken. Your code output \n\n{}',
-        },
-    ]
+    # Copy victim_browser script to correction context
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    victim_browser_file = '{}/victim_browser.py'.format(current_path)
+    copyfile('/srv/ctf_go/challs/stored_xss.dir/victim_browser.py', victim_browser_file)
 
-    for _check in checks:
+    user = 'debug'
 
-        _check['params'].insert(0, binary)
-        streamdata, return_code = run_cmd(_check['params'])
-        if return_code != 0 or _check['response'] not in streamdata.lower():
-            print(_check['message'].format(streamdata))
-            return False
+    out, return_code = run_cmd((binary, user, 'test'))
+    if return_code != 0:
+        print("Invalid execution : {}".format(out))
+        return False
+
+    if not all(k in out.lower() for k in ('running', 'base64', 'img', '8888')):
+        print("Unable to parse victim_browser.py output {}".format(out))
+        return False
+
+    temp_db = os.path.join(current_path, "stored_xss.db")  # Specify the dedicated correction db
+    path = "http://my-site.com:8888/internal/debug/get-comments?client={}&db={}".format(
+        user,
+        temp_db
+    )
+
+    response = requests.get(path).text
+
+    if '<tr><td>{}</td><td>test</td></tr>'.format(user) not in response:
+        print("POST comments seems broken, unable to find 'test' in {}".format(response))
+        return False
 
     return True

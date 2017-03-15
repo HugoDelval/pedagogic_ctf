@@ -1,6 +1,9 @@
+bleach
 bs4
 flask
+lxml
 mock
 pyvirtualdisplay
+requests
 rq
 selenium

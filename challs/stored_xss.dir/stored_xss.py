@@ -1,10 +1,13 @@
 #!/usr/bin/python3
 
+import bleach
+import lxml
 import sqlite3
 import subprocess
 import sys
 
-from flask import Flask, g
+from flask import Flask, g, request
+from werkzeug.exceptions import BadRequest
 
 
 def create_app():
@@ -13,18 +16,22 @@ def create_app():
     """
     app = Flask(__name__)
 
-    @app.route('/post')
+    @app.route('/comments', methods=['POST'])
     def post_comment():
         """
             Post a new comment
         """
+        comment = request.form.get('comment')
+        if not comment:
+            raise BadRequest('Missing comment param')
+
         g.cursor.execute(
             "INSERT INTO comments(author, comment) VALUES(?,?)",
-            (g.email, g.comment)
+            (g.email, comment)
         )
         return "Your comment has been inserted"
 
-    @app.route('/get')
+    @app.route('/comments', methods=['GET'])
     def get_comment():
         """
             Get forum's comments
@@ -69,15 +76,14 @@ if __name__ == '__main__':
     ctx.push()
     g.cursor = cursor
     g.email = email
-    g.comment = comment
 
-    response = tester.get(
-        '/post',
+    tester.post(
+        '/comments',
+        data=dict(comment=comment)
     )
-
     conn.close()
 
     # Render
-    process = subprocess.Popen(('python3', 'victim_browser.py'), stdout=subprocess.PIPE)
+    process = subprocess.Popen(('python3', 'victim_browser.py', email), stdout=subprocess.PIPE)
     output = process.communicate()[0]
     print(output.decode())

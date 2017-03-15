@@ -47,19 +47,31 @@ def create_app():
 
         if request.path not in NOT_LOGGED_PATH:
 
-            msg = "{} - {} {}".format(
-                request.headers['Referer'].split('?')[1],
+            msg = "{} - {} {} ".format(
+                request.headers['Referer'].split('=')[1],
                 request.method,
-                request.path,
+                request.url,
             )
             app.logger.warning(msg)
 
     @app.route('/internal/debug/get-comments')
     def get_comments():
 
-        conn = sqlite3.connect('/tmp/stored_xss.db', isolation_level=None)
+        # To filter only comments for current user (because the db is shared)
+        author = request.args['client']
+
+        # Because correction context has a dedicated db
+        db_path = request.args.get('db')
+
+        if not db_path or db_path == 'None':
+            db_path = '/tmp/stored_xss.db'
+
+        conn = sqlite3.connect(db_path, isolation_level=None)
         cursor = conn.cursor()
-        comments = cursor.execute("SELECT author, comment from comments")
+        comments = cursor.execute(
+            "SELECT author, comment from comments WHERE author IN (?, ?)",
+            ('admin', author)
+        )
         comments = cursor.fetchall()
         conn.close()
 

@@ -1,79 +1,96 @@
-#!/usr/bin/python3
+#! /usr/bin/env perl
 
-import sqlite3
-import subprocess
-import sys
+use strict;
+use warnings;
+use DBI;
+use Digest::SHA  qw(sha1_hex);
+use HTML::Defang;
+use HTML::Scrubber;
+use MIME::Base64;
+use Mojolicious;
+use Mojo::Log;
+use Mojo::URL;
+use Mojo::UserAgent;
 
-from flask import Flask, g
+my $driver = "SQLite";
+my $dsn = "DBI:$driver:dbname=/tmp/stored_xss.db";
+my $dbh = DBI->connect($dsn, undef, undef, { sqlite_see_if_its_a_number => 1, AutoCommit => 1 }) or exit;
 
-
-def create_app():
-    """
-        Initialize Flask application
-    """
-    app = Flask(__name__)
-
-    @app.route('/post')
-    def post_comment():
-        """
-            Post a new comment
-        """
-        g.cursor.execute(
-            "INSERT INTO comments(author, comment) VALUES(?,?)",
-            (g.email, g.comment)
-        )
-        return "Your comment has been inserted"
-
-    @app.route('/get')
-    def get_comment():
-        """
-            Get forum's comments
-        """
-        comments = g.cursor.execute("SELECT author, comment from comments")
-        comments = g.cursor.fetchall()
-
-        rows = ''
-        response = "<table><tr><th>Author</th><th>comment</th></tr>{}"
-        for entry in comments:
-            rows += '<tr><td>{}</td><td>{}</td></tr>'.format(
-                entry[0],
-                entry[1],
-            )
-
-        response = response.format(rows)
-        response = response + "</table>"
-        return response
-
-    return app
+my $email = "";
+my $app = Mojolicious->new;
+$app = $app->log(Mojo::Log->new(path => '/dev/null'));
 
 
-APP = create_app()
-APP.config['DEBUG'] = True
-APP.config['TESTING'] = True
+$app->routes->post('/comments' => sub {
+    #
+    #    Create or update token for current user
+    #
+    my $c = shift;
+    my $comment = $c->param('comment');
+    my $sth = $dbh->prepare("INSERT INTO comments(author, comment) VALUES(?,?)");
+    $sth->bind_param(1, $email);
+    $sth->bind_param(2, $comment);
+    $sth->execute;
+    
+    return $c->render(
+        status => 200,
+        text => "Your comment has been inserted"
+    );
+});
 
+$app->routes->get('/comments' => sub {
+    #
+    #    Return secret page
+    #
+    my $c = shift;
+    my $sth = $dbh->prepare("SELECT author, comment from comments");
+    $sth->execute();
+        
+    my $response = "<table><tr><th>Author</th><th>comment</th></tr>";
 
-if __name__ == '__main__':
+    while(my @row = $sth->fetchrow_array()) {
+        $response = $response . "<tr><td>$row[0]</td><td>$row[1]</td></tr>";
+    }
 
-    email = sys.argv[1]
-    comment = sys.argv[2]
+    $response = $response . "</table>";
+    return $c->render(
+        status => 200, 
+        text => $response
+    );
+});
 
-    # Post comment
-    conn = sqlite3.connect('/tmp/stored_xss.db', isolation_level=None)
-    cursor = conn.cursor()
-    tester = APP.test_client()
-    ctx = APP.test_request_context()
-    ctx.push()
-    g.cursor = cursor
-    g.email = email
-    g.comment = comment
+####################     Main   #############################
 
-    response = tester.get(
-        '/post',
-    )
+sub main {
 
-    conn.close()
+    $email = $ARGV[0];
+    my $comment = $ARGV[1];
 
-    # Render
-    process = subprocess.Popen(('python3', 'victim_browser.py'), stdout=subprocess.PIPE)
-    output = process.communicate()[0]
-    print(output.decode())
+    if (!$comment) {
+        print "Missing comment";
+        exit 0;
+    }
+    
+    my $url = Mojo::URL->new("/comments");
+    my $ua = Mojo::UserAgent->new();
+    $ua->server->app($app);
+    $ua->post($url => form => {comment => $comment});
+    my $output = `python3 victim_browser.py $email`;
+    print $output;
+}
+
+main();
+1;
+
+__DATA__
+
+@@ not_found.html.ep
+% layout 'default';
+<h1>Not found</h1>
+
+@@ layouts/default.html.ep
+<!DOCTYPE html>
+<html>
+  <head><title>MyApp</title></head>
+  <body><%= content %></body>
+</html>

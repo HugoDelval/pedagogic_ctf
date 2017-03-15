@@ -14,7 +14,7 @@ def init_db(path, file_challenge_name):
 
     db = os.path.join(os.path.sep, "tmp", "stored_xss.db")
 
-    if file_challenge_name:
+    if file_challenge_name:  # Means correction context
         db = os.path.join(path, "stored_xss.db")
         file_challenge_path = os.path.join(path, file_challenge_name)
         with open(file_challenge_path, "r") as chall:

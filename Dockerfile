@@ -11,6 +11,8 @@ RUN apt-get install --fix-missing -y libmojolicious-perl
 RUN apt-get install --fix-missing -y libdigest-sha-perl
 RUN apt-get install --fix-missing -y libdbi-perl
 RUN apt-get install --fix-missing -y libdbd-sqlite3-perl
+RUN apt-get install --fix-missing -y libhtml-scrubber-perl
+RUN apt-get install --fix-missing -y libhtml-defang-perl
 RUN apt-get install --fix-missing -y libstring-random-perl
 RUN apt-get install --fix-missing -y python3-pip
 RUN apt-get install --fix-missing -y python3-bcrypt
@@ -24,8 +26,14 @@ RUN apt-get install --fix-missing -y wget
 RUN apt-get install --fix-missing -y unzip
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 RUN npm install -g bower
-ADD . /pedagogic_ctf
+COPY frontend-angular /pedagogic_ctf/frontend-angular
 RUN cd /pedagogic_ctf/frontend-angular && bower install --allow-root
+COPY requirements.txt /pedagogic_ctf/
+RUN pip3 install -r /pedagogic_ctf/requirements.txt
+COPY check_challenge_corrected.c check_challenge_corrected.py clean.py load_challenges.py nginx.conf /pedagogic_ctf/
+COPY src /pedagogic_ctf/src
+COPY challs /pedagogic_ctf/challs
+COPY init.sh run.sh selenium.sh /pedagogic_ctf/
 RUN cd /pedagogic_ctf && ./init.sh
 
 CMD service nginx restart && service redis-server restart && /pedagogic_ctf/selenium.sh && sudo -u ctf_interne /pedagogic_ctf/run.sh

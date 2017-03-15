@@ -11,7 +11,7 @@ def selenium_init(mock_lock):
         Init selenium instance
     """
     mock_lock.return_value = []
-    display = Display(visible=0, size=(640, 480))
+    display = Display(visible=0, size=(800, 1024))
     display.start()
 
     browser = webdriver.Firefox()

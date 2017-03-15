@@ -273,6 +273,7 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: Security, match available challenge extensions (avoid .sh injection for example)
 	regexLanguageExtension := regexp.MustCompile(`^\.[a-z0-9]{2,5}$`)
 	if !regexLanguageExtension.MatchString(correctedScript.LanguageExtension) {
 		w.WriteHeader(http.StatusBadRequest)

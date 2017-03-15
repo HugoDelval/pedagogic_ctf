@@ -11,9 +11,6 @@ export PATH=$PATH:${GOROOT}/bin:${GOPATH}/bin
 echo "Fetching golang requirements.."
 go get ctf/main
 
-echo "Fetching python requirements.."
-pip3 install -r requirements.txt
-
 cp . -R /srv/ctf_go
 rm -rf /srv/writable && mkdir /srv/writable && chmod 733 /srv/writable
 chmod 733 /tmp
