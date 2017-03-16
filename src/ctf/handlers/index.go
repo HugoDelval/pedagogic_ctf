@@ -12,15 +12,7 @@ type ChallengeResult struct {
 	Corrected bool `gorm:"column:is_corrected"`
 }
 
-type UserResult struct {
-	Id        int    `json:"id"`
-	Email     string `json:"email"`
-	Exploited int    `json:"exploited"`
-	Corrected int    `json:"corrected"`
-	Points    int    `json:points"`
-}
-
-type Scoreboard []UserResult
+type Scoreboard []model.UserCTFResult
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	// show all challenges
@@ -85,7 +77,7 @@ func GetScoreboard(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		result := UserResult{
+		result := model.UserCTFResult{
 			Id:        int(user.ID),
 			Email:     user.Email,
 			Exploited: totalExploited,
