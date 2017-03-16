@@ -371,23 +371,30 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 	utils.SendResponseJSON(w, utils.Message{"Congratz. That's a pretty source code (from what a bot can see ;) )."})
 }
 
-func ChallengeShowAll(w http.ResponseWriter, r *http.Request) {
+func GetChallenges() (challenges model.Challenges, err error) {
+
 	challengesPath := utils.BasePath + "challenges.json"
 
 	challengesRaw, err := ioutil.ReadFile(challengesPath)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		utils.SendResponseJSON(w, utils.InternalErrorMessage)
 		log.Printf("File error: %v\n", err)
 		return
 	}
 
-	var challenges model.Challenges
 	err = json.Unmarshal(challengesRaw, &challenges)
+	if err != nil {
+		log.Printf("File error: %v\n", err)
+		return
+	}
+	return challenges, err
+}
+
+func ChallengeShowAll(w http.ResponseWriter, r *http.Request) {
+
+	challenges, err := GetChallenges()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		utils.SendResponseJSON(w, utils.InternalErrorMessage)
-		log.Printf("File error: %v\n", err)
 		return
 	}
 

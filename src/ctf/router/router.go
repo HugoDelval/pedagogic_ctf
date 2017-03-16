@@ -1,10 +1,10 @@
 package router
 
-import(
-	"github.com/gorilla/mux"
-	"ctf/utils"
+import (
 	"ctf/handlers"
 	"ctf/model"
+	"ctf/utils"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -14,6 +14,12 @@ var routes = model.Routes{
 		"GET",
 		"/v1.0",
 		handlers.Index,
+	},
+	model.Route{
+		"Scoreboard",
+		"GET",
+		"/v1.0/scoreboard",
+		handlers.GetScoreboard,
 	},
 	model.Route{
 		"ChallengeShowAll",
@@ -101,7 +107,6 @@ var routes = model.Routes{
 	},
 }
 
-
 func NewRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)
@@ -109,12 +114,12 @@ func NewRouter() *mux.Router {
 		handler := utils.Logger(route.HandlerFunc, route.Name)
 
 		router.
-		Methods(route.Method).
+			Methods(route.Method).
 			Path(route.Pattern).
 			Name(route.Name).
 			Handler(handler)
 	}
-	if !utils.GetConfig().IsProduction{
+	if !utils.GetConfig().IsProduction {
 		router.PathPrefix("/").Handler(http.FileServer(http.Dir("/srv/ctf_go/frontend-angular/app/")))
 		http.Handle("/", router)
 	}
