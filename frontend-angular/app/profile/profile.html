@@ -18,11 +18,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="challenge in user.validatedChallenges | orderBy: 'points'">
+                <tr ng-repeat="challenge in user.validatedChallenges | orderBy: '-points'">
                     <td>{{challenge.points}}</td>
                     <td>{{challenge.name}}</td>
-                    <td>{{challenge.is_exploited}}</td>
-                    <td>{{challenge.is_corrected}}</td>
+	            <td ng-show="challenge.is_exploited"><span class="material-icons">done</span></td>
+	            <td ng-show="!challenge.is_exploited"><span class="material-icons">clear</span></td>
+	            <td ng-show="challenge.is_corrected"><span class="material-icons">done</span></td>
+	            <td ng-show="!challenge.is_corrected"><span class="material-icons">clear</span></td>
                     <td>{{challenge.date_validated | date:'MM/dd/yyyy @ h:mma'}}</td>
                     <!-- End chall -->
                 </tr>
@@ -31,7 +33,7 @@
             </table>
         </div>
 
-        <div class="col-xs-12">
+        <div ng-if="currentUser" class="col-xs-12">
             <h3 style="margin-top:40px">Change password</h3>
             <form novalidate>
                 <div class="form-group">
@@ -49,7 +51,7 @@
         </div>
         <hr>
 
-        <div class="col-xs-12">
+        <div ng-if="currentUser" class="col-xs-12">
             <h4 style="margin-top:40px">You can also delete you account.. If you really want to</h4>
             <button ng-click="deleteAccount()" class="btn btn-raised btn-danger">Delete account</button>
         </div>

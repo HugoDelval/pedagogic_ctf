@@ -322,7 +322,6 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 	} else if !registeredUser {
 		w.WriteHeader(http.StatusOK)
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in.\n" + challenge.ResolvedConclusion})
-		return
 	} else {
 		db, err := model.GetDB(w)
 		if err != nil {
@@ -362,13 +361,9 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-
 		w.WriteHeader(http.StatusOK)
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You earned " + strconv.Itoa(int(challenge.Points)) + "pts for that.\n" + challenge.ResolvedConclusion})
 	}
-
-	w.WriteHeader(http.StatusOK)
-	utils.SendResponseJSON(w, utils.Message{"Congratz. That's a pretty source code (from what a bot can see ;) )."})
 }
 
 func GetChallenges() (challenges model.Challenges, err error) {

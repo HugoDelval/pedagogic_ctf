@@ -236,7 +236,7 @@ func UserShowValidatedChallenges(w http.ResponseWriter, r *http.Request) {
 
 	challengesDetails := make(map[string][]string)
 	for _, challenge := range challenges {
-		challengesDetails[challenge.ChallengeId] = []string{challenge.Name, string(challenge.Points)}
+		challengesDetails[challenge.ChallengeId] = []string{challenge.Name, strconv.Itoa(int(challenge.Points))}
 	}
 
 	var validatedChallenges model.ValidatedChallenges
