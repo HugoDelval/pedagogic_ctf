@@ -49,8 +49,12 @@
                                            placeholder="{{ parameter.placeholder}}">
                                 </div>
                             </div>
-                            <input class="btn btn-raised btn-info" type="submit"
-                                   ng-click="execute(challenge.challenge_id, '/execute')" value="Execute">
+                            <button class="btn btn-raised btn-info" ng-click="execute(challenge.challenge_id, '/execute')">
+				<span ng-show="executeButtonText == 'Processing'">
+					<i class="material-icons spinning">autorenew</i>
+				</span>
+            			{{ executeButtonText }}
+				</button>
                             <button class="btn btn-raised" ng-click="reset(challenge.challenge_id)">Reset</button>
                         </form>
                         <br>
@@ -74,10 +78,11 @@
 					onLoad: aceLoaded[challenge.challenge_id][language.extension],
 					mode: language.name.toLowerCase()
 				}" style="height:500px;"></div>
-                        <button class="btn btn-raised btn-info"
-                                ng-click="execute(challenge.challenge_id, '/correct', language.extension)">Check if your
-                            code is
-                            better than mine !
+                        <button class="btn btn-raised btn-info" ng-click="execute(challenge.challenge_id, '/correct', language.extension)">
+				<span ng-show="correctButtonText == 'Checking'">
+					<i class="material-icons spinning">autorenew</i>
+				</span>
+            			{{ correctButtonText }}
                         </button>
                     </div>
                 </div>

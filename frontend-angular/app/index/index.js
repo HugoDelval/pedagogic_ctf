@@ -20,6 +20,10 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace', 'angularModalService'])
                 });
             }
         });
+
+	$scope.executeButtonText = "Execute";
+	$scope.correctButtonText = "Check if your code is better than mine!";
+
         $scope.isShownHash = {};
         $scope.requestExecute = {};
         $scope.requestValidate = {};
@@ -88,6 +92,8 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace', 'angularModalService'])
             var message = "";
             var req = {};
             if (path.indexOf("execute") !== -1) {
+		var previousButtonText = $scope.executeButtonText;
+                $scope.executeButtonText = "Processing";
                 $http.post('/v1.0/challenge/' + challengeId + path, $scope.requestExecute[challengeId]).then(function (response) {
                     var challOutput = response.data;
                     $anchorScroll("output_" + challengeId);
@@ -95,9 +101,11 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace', 'angularModalService'])
                         $("#output_" + challengeId).html(challOutput.message); // To generate XSS !!
                     })
                     $("#output_" + challengeId).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750).qcss({ backgroundColor: '#FFFF70' }).delay(750).qcss({ backgroundColor: 'white' }).delay(750);
+		    $scope.executeButtonText = previousButtonText;
                 }, function (response) {
                     title = "Execution error";
                     message = response.data.message;
+		    $scope.executeButtonText = previousButtonText;
 	            showModal(title, message);
                 });
             }
@@ -114,14 +122,18 @@ angular.module('myApp.index', ['ngRoute', 'ui.ace', 'angularModalService'])
                 });
             } else if (path.indexOf("correct") !== -1) {
                 // correct
+		var previousButtonText = $scope.correctButtonText;
+                $scope.correctButtonText = "Checking";
                 $scope.requestCorrect[challengeId][extension].language_extension = extension;
                 $http.post('/v1.0/challenge/' + challengeId + path, $scope.requestCorrect[challengeId][extension]).then(function (response) {
                     title = "Success";
                     message = response.data.message;
+		    $scope.correctButtonText = previousButtonText;
 	            showModal(title, message);
                 }, function (response) {
                     title = "Correction error";
                     message = response.data.message;
+		    $scope.correctButtonText = previousButtonText;
 	            showModal(title, message);
                 });
             }
