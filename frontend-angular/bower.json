@@ -16,6 +16,10 @@
     "angular-messages": ">=1.5.8",
     "highlightjs": ">=9.6.0",
     "bootstrap-material-design": "0.5.10",
-    "angular-ui-ace": ">=0.2.3"
+    "angular-ui-ace": ">=0.2.3",
+    "angular-modal-service": ">=0.11.0"
+  },
+  "resolutions": {
+      "angular"  : ">=1.6.0"
   }
 }
