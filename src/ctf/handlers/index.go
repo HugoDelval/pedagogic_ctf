@@ -30,11 +30,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func GetScoreboard(w http.ResponseWriter, r *http.Request) {
 	// Get scoreboard
 
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
-
 	challenges, err := GetChallenges()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

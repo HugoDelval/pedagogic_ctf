@@ -65,11 +65,6 @@ func UserRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
-
 	var user model.User
 	notFound := db.Where(&model.User{Email: email}).First(&user).RecordNotFound()
 	if !notFound {
@@ -106,11 +101,6 @@ func UserAuthenticate(w http.ResponseWriter, r *http.Request) {
 	email := userAuth.Email
 	password := userAuth.Password
 
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
-
 	var user model.User
 	notFound := db.Where(&model.User{Email: email}).First(&user).RecordNotFound()
 	if notFound {
@@ -146,11 +136,6 @@ func IsUserAuthenticated(w http.ResponseWriter, r *http.Request) (registeredUser
 		return
 	}
 
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
-
 	notFound := db.Where(&model.User{Token: token}).First(&user).RecordNotFound()
 	if notFound {
 		return
@@ -168,11 +153,6 @@ func IsUserAuthenticated(w http.ResponseWriter, r *http.Request) (registeredUser
 func UserShow(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["userID"]
-
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
 
 	var user model.User
 	notFound := db.Where("id = ?", userID).First(&user).RecordNotFound()
@@ -204,10 +184,6 @@ func UserShowOwn(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserShowAll(w http.ResponseWriter, r *http.Request) {
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
 	var users model.Users
 	db.Find(&users)
 	for index, _ := range users {
@@ -221,11 +197,6 @@ func UserShowAll(w http.ResponseWriter, r *http.Request) {
 func UserShowValidatedChallenges(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["userID"]
-
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
 
 	challenges, err := GetChallenges()
 	if err != nil {
@@ -288,11 +259,6 @@ func UserChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
-
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -321,11 +287,6 @@ func UserDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := model.GetDB(w)
-	if err != nil {
-		return
-	}
-
 	user.Token = ""
 	user.TimeAuthenticated, _ = time.Parse(time.RFC3339, "1970-01-01T00:00:00+00:00")
 	db.Save(&user)
@@ -343,11 +304,6 @@ func UserLogout(w http.ResponseWriter, r *http.Request) {
 	if !registeredUser {
 		w.WriteHeader(http.StatusUnauthorized)
 		utils.SendResponseJSON(w, utils.NotLoggedInMessage)
-		return
-	}
-
-	db, err := model.GetDB(w)
-	if err != nil {
 		return
 	}
 

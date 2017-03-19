@@ -154,10 +154,6 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in.\n" + challenge.ResolvedConclusion})
 		return
 	} else {
-		db, err := model.GetDB(w)
-		if err != nil {
-			return
-		}
 
 		var alreadyValidated model.ValidatedChallenge
 		notFound := db.Where(&model.ValidatedChallenge{ChallengeID: challengeName, UserID: strconv.Itoa(int(user.ID))}).First(&alreadyValidated).RecordNotFound()
@@ -323,10 +319,6 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in.\n" + challenge.ResolvedConclusion})
 	} else {
-		db, err := model.GetDB(w)
-		if err != nil {
-			return
-		}
 
 		var alreadyValidated model.ValidatedChallenge
 		notFound := db.Where(&model.ValidatedChallenge{ChallengeID: challengeName, UserID: strconv.Itoa(int(user.ID))}).First(&alreadyValidated).RecordNotFound()
