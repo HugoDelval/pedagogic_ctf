@@ -30,22 +30,29 @@ chown root:root /srv/ctf_go/check_challenge_corrected.py
 chmod 500 /srv/ctf_go/check_challenge_corrected.py
 
 # Init challenges
-userdel injection_conf
-groupdel injection_conf
-printf "thesecret" > /srv/ctf_go/challs/injection_conf.dir/secret
-(cd /srv/ctf_go/ && ./load_challenges.py injection_conf)
-userdel command_injection
-groupdel command_injection
-printf "thesecret" > /srv/ctf_go/challs/command_injection.dir/secret
-(cd /srv/ctf_go/ && ./load_challenges.py command_injection)
-userdel race_condition
-groupdel race_condition
-printf "thesecret" > /srv/ctf_go/challs/race_condition.dir/secret
-(cd /srv/ctf_go/ && ./load_challenges.py race_condition)
-userdel php_exec
-groupdel php_exec
-printf "thesecret" > /srv/ctf_go/challs/php_exec.dir/secret
-(cd /srv/ctf_go/ && ./load_challenges.py php_exec)
+for chall_name in `ls challs|grep dir|sed "s/.dir$//"`
+do
+    userdel $chall_name
+    groupdel $chall_name
+    printf "thesecret" > /srv/ctf_go/challs/${chall_name}.dir/secret
+    (cd /srv/ctf_go/ && ./load_challenges.py $chall_name)
+done
+
+# Selenium based challs specific
+# TODO: add to init challenges
+cd /usr/local/bin
+wget "https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-linux64.tar.gz"
+tar xvzf geckodriver-v0.15.0-linux64.tar.gz
+chmod +x geckodriver
+
+chown root:stored_xss /srv/ctf_go/challs/stored_xss.dir/victim_browser.py
+chmod +x /srv/ctf_go/challs/stored_xss.dir/victim_browser.py
+touch /tmp/api.log
+chmod 666 /tmp/api.log
+
+touch /srv/ctf_go/challs/data_exposure.dir/key
+chown root:data_exposure /srv/ctf_go/challs/data_exposure.dir/key
+
 
 chown ctf_interne /srv/ctf_go/challenges.json
 

@@ -2,6 +2,9 @@
 database.db
 pkg/
 bin/
+venv/
+*.pyc
+*.swp
 ctf_go.iml
 .DS_Store
 challenges.json

@@ -1,0 +1,30 @@
+{
+	"name": "Broken Authentication",
+	"points": 50,
+	"description": "This API implements a bad token generation algorithm.\nYour goal is to access the restricted route \"/get-secret\"",
+	"parameters": [
+		{
+			"name": "username",
+			"placeholder": "ex: test"
+		},
+		{
+			"name": "token",
+			"placeholder": "ex: e6e8ea7465f12e4d3b5a067a4c4dc698436b3478"
+		},
+		{
+			"name": "endpoint",
+			"placeholder": "ex: /get-token or /get-secret"
+		}
+	],
+	"languages": [
+		{
+			"name": "PYTHON", 
+			"extension": ".py"
+		},
+		{
+			"name": "PERL", 
+			"extension": ".pl"
+		}
+	],
+	"resolved_conclusion":"\n\nAuthentication should be simple, centralized and standardized.\nUse the standard session id provided by your container."
+}

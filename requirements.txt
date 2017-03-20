@@ -1,0 +1,10 @@
+bleach
+bs4
+flask
+lxml
+mock
+pycrypto
+pyvirtualdisplay
+requests
+rq
+selenium

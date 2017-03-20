@@ -1,0 +1,22 @@
+{
+	"name": "Stored XSS",
+	"points": 150,
+	"description": "In this fake forum you can post comment.\nYour goal is to steal victim cookies.\nTo achieve this, you have set up an HTTP server on http://evil.com:8888\n\nTwo things on the output:\n- a screenshot of the victim's browser (Selenium-Firefox)\n- the logs of your HTTP server",
+	"parameters": [
+		{
+			"name": "comment",
+			"placeholder": "ex: my comment"
+		}
+	],
+	"languages": [
+		{
+			"name": "PYTHON", 
+			"extension": ".py"
+		},
+		{
+			"name": "PERL", 
+			"extension": ".pl"
+		}
+	],
+	"resolved_conclusion":"\n\nDon't include user supplied input in the output page.\nEncode all user supplied input.\nPerform 'white list' input validation."
+}

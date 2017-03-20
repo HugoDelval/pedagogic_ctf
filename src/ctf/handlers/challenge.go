@@ -1,21 +1,21 @@
 package handlers
 
 import (
-	"net/http"
-	"encoding/json"
-	"ctf/utils"
 	"ctf/model"
-	"io/ioutil"
-	"log"
+	"ctf/utils"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gorilla/mux"
-	"strconv"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 	"os/exec"
-	"time"
-	"errors"
-	"regexp"
 	"path/filepath"
+	"regexp"
+	"strconv"
+	"time"
 )
 
 // exists returns whether the given file or directory exists or not
@@ -34,7 +34,7 @@ func customCommand(name string, dir string, arg ...string) *exec.Cmd {
 	cmd := &exec.Cmd{
 		Path: name,
 		Args: append([]string{name}, arg...),
-		Dir: dir,
+		Dir:  dir,
 	}
 	if filepath.Base(name) == name {
 		if lp, err := exec.LookPath(name); err == nil {
@@ -130,8 +130,8 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	secret := ""
-	secretJSONVal, ok := secretJSON["secret"];
-	if (ok) {
+	secretJSONVal, ok := secretJSON["secret"]
+	if ok {
 		if err := json.Unmarshal(*secretJSONVal, &secret); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			utils.SendResponseJSON(w, utils.BadRequestMessage)
@@ -154,10 +154,6 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in.\n" + challenge.ResolvedConclusion})
 		return
 	} else {
-		db, err := model.GetDB(w)
-		if err != nil {
-			return
-		}
 
 		var alreadyValidated model.ValidatedChallenge
 		notFound := db.Where(&model.ValidatedChallenge{ChallengeID: challengeName, UserID: strconv.Itoa(int(user.ID))}).First(&alreadyValidated).RecordNotFound()
@@ -178,10 +174,10 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			newValidatedChall := model.ValidatedChallenge{
-				ChallengeID: challengeName,
-				UserID: strconv.Itoa(int(user.ID)),
-				IsExploited: true,
-				IsCorrected: false,
+				ChallengeID:   challengeName,
+				UserID:        strconv.Itoa(int(user.ID)),
+				IsExploited:   true,
+				IsCorrected:   false,
 				DateValidated: time.Now(),
 			}
 			// this is a new validatedChallenge
@@ -199,8 +195,20 @@ func ChallengeValidate(w http.ResponseWriter, r *http.Request) {
 }
 
 func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
-	_, challengeFolderPath, challenge, err := getChallengeInfos(w, r)
+	challengeName, challengeFolderPath, challenge, err := getChallengeInfos(w, r)
 	if err != nil {
+		return
+	}
+
+	// TODO: change Challenge Model
+	authenticatedCahllenges := map[string]bool{
+		"stored_xss": true,
+	}
+
+	registeredUser, user, _ := IsUserAuthenticated(w, r)
+	if !registeredUser && authenticatedCahllenges[challengeName] {
+		w.WriteHeader(http.StatusForbidden)
+		utils.SendResponseJSON(w, utils.Message{"You need to be logged in to execute this challenge"})
 		return
 	}
 
@@ -211,9 +219,10 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 	}
 	_ = json.Unmarshal(paramsRaw, &paramsJSON)
 
-	args := make([]string, len(challenge.Parameters))
+	args := make([]string, len(challenge.Parameters), len(challenge.Parameters)+1)
+
 	for index, arg := range challenge.Parameters {
-		paramJSONVal, ok := paramsJSON[arg.Name];
+		paramJSONVal, ok := paramsJSON[arg.Name]
 		if !ok {
 			args[index] = ""
 			continue
@@ -221,6 +230,10 @@ func ChallengeExecute(w http.ResponseWriter, r *http.Request) {
 		if err := json.Unmarshal(*paramJSONVal, &(args[index])); err != nil {
 			args[index] = ""
 		}
+	}
+
+	if authenticatedCahllenges[challengeName] { // Inject User email
+		args = append([]string{user.Email}, args...)
 	}
 
 	cmd := challengeFolderPath + "wrapper"
@@ -256,6 +269,7 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: Security, match available challenge extensions (avoid .sh injection for example)
 	regexLanguageExtension := regexp.MustCompile(`^\.[a-z0-9]{2,5}$`)
 	if !regexLanguageExtension.MatchString(correctedScript.LanguageExtension) {
 		w.WriteHeader(http.StatusBadRequest)
@@ -304,12 +318,7 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 	} else if !registeredUser {
 		w.WriteHeader(http.StatusOK)
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You did not earned any points because you're not logged in.\n" + challenge.ResolvedConclusion})
-		return
 	} else {
-		db, err := model.GetDB(w)
-		if err != nil {
-			return
-		}
 
 		var alreadyValidated model.ValidatedChallenge
 		notFound := db.Where(&model.ValidatedChallenge{ChallengeID: challengeName, UserID: strconv.Itoa(int(user.ID))}).First(&alreadyValidated).RecordNotFound()
@@ -330,10 +339,10 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			newValidatedChall := model.ValidatedChallenge{
-				ChallengeID: challengeName,
-				UserID: strconv.Itoa(int(user.ID)),
-				IsExploited: false,
-				IsCorrected: true,
+				ChallengeID:   challengeName,
+				UserID:        strconv.Itoa(int(user.ID)),
+				IsExploited:   false,
+				IsCorrected:   true,
 				DateValidated: time.Now(),
 			}
 			// this is a new validatedChallenge
@@ -344,32 +353,35 @@ func ChallengeCorrect(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-
 		w.WriteHeader(http.StatusOK)
 		utils.SendResponseJSON(w, utils.Message{"Congratz !! You did it :) You earned " + strconv.Itoa(int(challenge.Points)) + "pts for that.\n" + challenge.ResolvedConclusion})
 	}
-
-	w.WriteHeader(http.StatusOK)
-	utils.SendResponseJSON(w, utils.Message{"Congratz. That's a pretty source code (from what a bot can see ;) )."})
 }
 
-func ChallengeShowAll(w http.ResponseWriter, r *http.Request) {
+func GetChallenges() (challenges model.Challenges, err error) {
+
 	challengesPath := utils.BasePath + "challenges.json"
 
 	challengesRaw, err := ioutil.ReadFile(challengesPath)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		utils.SendResponseJSON(w, utils.InternalErrorMessage)
 		log.Printf("File error: %v\n", err)
 		return
 	}
 
-	var challenges model.Challenges
 	err = json.Unmarshal(challengesRaw, &challenges)
+	if err != nil {
+		log.Printf("File error: %v\n", err)
+		return
+	}
+	return challenges, err
+}
+
+func ChallengeShowAll(w http.ResponseWriter, r *http.Request) {
+
+	challenges, err := GetChallenges()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		utils.SendResponseJSON(w, utils.InternalErrorMessage)
-		log.Printf("File error: %v\n", err)
 		return
 	}
 

@@ -1,0 +1,30 @@
+{
+	"name": "Insecure Direct Object References",
+	"points": 50,
+	"description": "Unfortunately, this fake bank web app trust user inputs.",
+	"parameters": [
+		{
+			"name": "username",
+			"placeholder": "ex: marius"
+		},
+		{
+			"name": "token",
+			"placeholder": "ex: a4a5z45e46ae..."
+		},
+		{
+			"name": "endpoint",
+			"placeholder": "ex: /accounts/new"
+		}
+	],
+	"languages": [
+		{
+			"name": "PYTHON", 
+			"extension": ".py"
+		},
+		{
+			"name": "PERL", 
+			"extension": ".pl"
+		}
+	],
+	"resolved_conclusion":"\n\nEliminate the direct object reference and verify that the user is allowed to access it"
+}

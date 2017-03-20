@@ -1,21 +1,23 @@
 package main
 
 import (
-	"log"
-	"net/http"
+	"ctf/handlers"
 	"ctf/router"
 	"ctf/utils"
-	"ctf/model"
+	"log"
+	"net/http"
 )
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	router := router.NewRouter()
 
-	model.Migrate()
-	if utils.GetConfig().IsProduction{
+	handlers.InitDB("sqlite3", "database.db")
+	handlers.Migrate()
+
+	if utils.GetConfig().IsProduction {
 		log.Fatal(http.ListenAndServe("127.0.0.1:8080", router))
-	}else{
+	} else {
 		log.Fatal(http.ListenAndServe("0.0.0.0:8080", router))
 	}
 }

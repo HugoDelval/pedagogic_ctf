@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sqlite3, os
+import os
 import random, string
 import importlib.machinery
 

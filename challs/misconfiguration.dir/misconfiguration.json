@@ -1,0 +1,30 @@
+{
+	"name": "Security Misconfiguration",
+	"points": 50,
+	"description": "Debug is great ! (for debug ...)\nYour goal is to access the restricted route \"/get-secret\"",
+	"parameters": [
+		{
+			"name": "username",
+			"placeholder": "ex: test"
+		},
+		{
+			"name": "token",
+			"placeholder": "ex: e6e8ea7465f12e4d3b5a067a4c4dc698436b3478"
+		},
+		{
+			"name": "endpoint",
+			"placeholder": "ex: /me or /get-secret"
+		}
+	],
+	"languages": [
+		{
+			"name": "PYTHON", 
+			"extension": ".py"
+		},
+		{
+			"name": "PERL", 
+			"extension": ".pl"
+		}
+	],
+	"resolved_conclusion":"\n\nDebug directive must be remove when application goes in production."
+}
