@@ -35,7 +35,7 @@ def init_db(path, file_challenge_name):
 
     cur.execute(
         "INSERT INTO users(username, token) VALUES(?, ?)",
-        ('admin', '586b652384404848e2e0cba8aa51206f42da8b63')
+        ('admin', 'f5c828ff122cd8d0509051584236cceb28c78bfa')
     )
     conn.commit()
 

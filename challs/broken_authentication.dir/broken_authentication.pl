@@ -25,7 +25,7 @@ sub generateUserToken {
     #    Generates an API token for given username
     #
     my $username = shift;
-    my $encoded = encode_base64($username);
+    my $encoded = encode_base64($username, "");
     my $digest = sha1_hex($encoded);
     return $digest;
 }

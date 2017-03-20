@@ -1,7 +1,7 @@
 {
 	"name": "Race Condition",
 	"points": 250,
-	"description": "This application lets the user register and login.\nThere is a table in the DB that lists all the users who are forbidden to access the secret.\nWhen you register, an entry is inserted in this table. But if you are quick enough you can login just before this entry is inserted.\n\nThis attack is called a 'race condition' and is really common in API-like application.\nYou should always use transaction when your database can be in a instable state.\n\nHint : use curl :\ncurl 'http://167.114.243.84/v1.0/challenge/race_condition/execute' -d '{\"action\":\"register\",\"login\":\"testlogin\",\"password\":\"testlogin\"}'\ncurl 'http://167.114.243.84/v1.0/challenge/race_condition/execute' -d '{\"action\":\"login\",\"login\":\"testlogin\",\"password\":\"testlogin\"}'",
+	"description": "This application lets the user register and login.\nThere is a table in the DB that lists all the users who are forbidden to access the secret.\nWhen you register, an entry is inserted in this table. But if you are quick enough you can login just before this entry is inserted.\n\nThis attack is called a 'race condition' and is really common in API-like application.\nYou should always use transaction when your database can be in a instable state.\n\nHint : use curl :\ncurl 'http(s)://thishost.com/v1.0/challenge/race_condition/execute' -d '{\"action\":\"register\",\"login\":\"testlogin\",\"password\":\"testlogin\"}'\ncurl 'http(s)://thishost.com/v1.0/challenge/race_condition/execute' -d '{\"action\":\"login\",\"login\":\"testlogin\",\"password\":\"testlogin\"}'",
 	"parameters": [
 		{
 			"name": "action",
