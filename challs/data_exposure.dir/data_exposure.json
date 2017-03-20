@@ -1,0 +1,22 @@
+{
+	"name": "Sensitive Data Exposure",
+	"points": 50,
+	"description": "Encryption is boring and full of traps.\nThat's why we launch Message encryption as a services !\n How it work:\nencrypt a message\npass it to your application\nit will decrypt it\nTODO: support messages other than 16 bytes long",
+	"parameters": [
+		{
+			"name": "text to encrypt",
+			"placeholder": "ex: secret message to encrypt"
+		}
+	],
+	"languages": [
+		{
+			"name": "PYTHON",
+			"extension": ".py"
+		},
+		{
+			"name": "PERL",
+			"extension": ".pl"
+		}
+	],
+	"resolved_conclusion":"\n\nkey to cipher IS a sensitive data. Never log it."
+}

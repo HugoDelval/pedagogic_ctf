@@ -50,6 +50,9 @@ chmod +x /srv/ctf_go/challs/stored_xss.dir/victim_browser.py
 touch /tmp/api.log
 chmod 666 /tmp/api.log
 
+touch /srv/ctf_go/challs/data_exposure.dir/key
+chown root:data_exposure /srv/ctf_go/challs/data_exposure.dir/key
+
 
 chown ctf_interne /srv/ctf_go/challenges.json
 

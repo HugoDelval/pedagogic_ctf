@@ -13,6 +13,7 @@ RUN apt-get install --fix-missing -y libdbi-perl
 RUN apt-get install --fix-missing -y libdbd-sqlite3-perl
 RUN apt-get install --fix-missing -y libhtml-scrubber-perl
 RUN apt-get install --fix-missing -y libhtml-defang-perl
+RUN apt-get install --fix-missing -y libcrypt-cbc-perl
 RUN apt-get install --fix-missing -y libstring-random-perl
 RUN apt-get install --fix-missing -y python3-pip
 RUN apt-get install --fix-missing -y python3-bcrypt
@@ -24,6 +25,8 @@ RUN apt-get install --fix-missing -y dnsutils
 RUN apt-get install --fix-missing -y xvfb
 RUN apt-get install --fix-missing -y wget
 RUN apt-get install --fix-missing -y unzip
+RUN export PERL_MM_USE_DEFAULT=1
+RUN cpan CryptX
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 RUN npm install -g bower
 COPY frontend-angular /pedagogic_ctf/frontend-angular
